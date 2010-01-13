@@ -112,59 +112,59 @@ int evaluate(Board* b) {
 	int score[2] = { 0, 0 };
 	int material[2] = { 0, 0 };
 	// basic loop to evaluate each piece
-	for (int i = 0; i < 128; i++) {
+	for (int i = 0; i < BOARD_SIZE; i++) {
 		if (b->board[i] == EMPTY) {
 			continue;
 		}
 		// white
 		if (b->board[i] > 0) {
 			switch (b->board[i]) {
-				case PAWN:
+				case WHITE_PAWN:
 					material[0] += PAWN_VALUE;
 					score[0] += evaluate_pawn(b, i);
 					break;
-				case KNIGHT:
+				case WHITE_KNIGHT:
 					material[0] += KNIGHT_VALUE;
 					score[0] += evaluate_knight(b, i);
 					break;
-				case BISHOP:
+				case WHITE_BISHOP:
 					material[0] += BISHOP_VALUE;
 					score[0] += evaluate_bishop(b, i);
 					break;
-				case ROOK:
+				case WHITE_ROOK:
 					material[0] += ROOK_VALUE;
 					score[0] += evaluate_rook(b, i);
 					break;
-				case QUEEN:
+				case WHITE_QUEEN:
 					material[0] += QUEEN_VALUE;
 					score[0] += evaluate_queen(b, i);
 					break;
-				case KING:
+				case WHITE_KING:
 					break;
 			}
 		} else {
-			switch (abs(b->board[i])) {
-				case PAWN:
+			switch (b->board[i]) {
+				case BLACK_PAWN:
 					material[1] += PAWN_VALUE;
 					score[1] += evaluate_pawn(b, i);
 					break;
-				case KNIGHT:
+				case BLACK_KNIGHT:
 					material[1] += KNIGHT_VALUE;
 					score[1] += evaluate_knight(b, i);
 					break;
-				case BISHOP:
+				case BLACK_BISHOP:
 					material[1] += BISHOP_VALUE;
 					score[1] += evaluate_bishop(b, i);
 					break;
-				case ROOK:
+				case BLACK_ROOK:
 					material[1] += ROOK_VALUE;
 					score[1] += evaluate_rook(b, i);
 					break;
-				case QUEEN:
+				case BLACK_QUEEN:
 					material[1] += QUEEN_VALUE;
 					score[1] += evaluate_queen(b, i);
 					break;
-				case KING:
+				case BLACK_KING:
 					break;
 			}
 		}

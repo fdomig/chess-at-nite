@@ -31,13 +31,13 @@ public:
 
     bool get_move(vector<move>& available_moves, vector<history_item>& made_moves, move& m);
     void print();
+    bool book_open;
 
 private:
     void parse_book();
     bool set_first_and_last(string last_move_string, unsigned depth);
     bool validate_move(move move_move, vector<move>& available_moves, move* valid_move);
     ifstream book_file;
-    bool book_open;
     vector<vector<string> > book;
     unsigned int first;
     unsigned int last;

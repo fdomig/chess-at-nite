@@ -14,7 +14,7 @@
 #ifndef DEFINE_H_
 #define DEFINE_H_
 
-#define VERSION "0.6.0"
+#define VERSION "0.6.1"
 
 //defines for different compiles
 
