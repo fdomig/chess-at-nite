@@ -8,6 +8,7 @@ RM=rm -rf
 
 PRE=/usr/local
 BIN=$(PRE)/bin
+TEMP_BIN=bin
 
 SRC_DIR=src
 COMMON_SOURCES=$(SRC_DIR)/common/utils.cpp
@@ -17,7 +18,7 @@ PLAYER_SOURCES=$(SRC_DIR)/player/ComputerPlayer.cpp $(SRC_DIR)/player/HumanPlaye
 SOURCES=$(SRC_DIR)/chess.cpp $(COMMON_SOURCES) $(CONTROL_SOURCES) $(MODEL_SOURCES) $(PLAYER_SOURCES)
 
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=chess-at-nite
+EXECUTABLE=$(TEMP_BIN)/chess-at-nite
 
 all: $(SOURCES) $(EXECUTABLE)
 
