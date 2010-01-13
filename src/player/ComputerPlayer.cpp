@@ -1,8 +1,14 @@
 /*
- * ComputerPlayer.cpp
+ * This file is part of the chess-at-nite project.
  *
- *  Created on: Nov 10, 2009
- *      Author: lipis
+ * Copyright (c) 2009 by
+ *   Franziskus Domig
+ *   Panayiotis Lipiridis
+ *   Radoslav Petrik
+ *   Thai Gia Tuong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 #include "ComputerPlayer.h"

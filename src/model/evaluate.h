@@ -1,14 +1,14 @@
 /*
- * ChessAtNite
+ * This file is part of the chess-at-nite project.
  *
- * Written by:
+ * Copyright (c) 2009 by
  *   Franziskus Domig
  *   Panayiotis Lipiridis
  *   Radoslav Petrik
  *   Thai Gia Tuong
  *
- * Chess implementation for AI course during 5th semester at IHK
- *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 #ifndef EVALUATE_H_
