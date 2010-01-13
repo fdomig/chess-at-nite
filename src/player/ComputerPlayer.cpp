@@ -154,15 +154,14 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
         return DRAW;
     }
 
-    //TODO: maybe it's better to use the get_all_moves(move best_move) from
-    // move generator, cause this function puts the best move in front without
-    // changing of the moves.. don't forget that they are sorted
-    if (board->follow_pv) {
-        board->follow_pv = false;
-        moves = generator.get_all_moves(board->pv[0][board->ply]);
-    }
+	//TODO: maybe it's better to use the get_all_moves(move best_move) from
+	// move generator, cause this function puts the best move in front without
+	// changing of the moves.. don't forget that they are sorted
+	if (board->follow_pv) {
+	    sort_pv(moves);
+	}
 
-    bool played_move = false;
+	bool played_move = false;
     int score = 0;
     bool pvSearch = true;
 
@@ -278,4 +277,18 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
     }
     return alpha;
 
+}
+
+void ComputerPlayer::sort_pv(vector<move>& moves) {
+    board->follow_pv = false;
+    for (unsigned i = 0; i < moves.size(); i++) {
+        if (moves[i].pos_new == board->pv[0][board->ply].pos_new
+                && moves[i].pos_old == board->pv[0][board->ply].pos_old) {
+            board->follow_pv = true;
+            move tmp = moves[0];
+            moves[0] = moves[i];
+            moves[i] = tmp;
+            return;
+        }
+    }
 }

@@ -26,6 +26,7 @@ class ComputerPlayer: public Player {
 		move search_pv();
 		int alpha_beta(int depth, int alpha, int beta);
 		int quiescence(int alpha, int beta);
+		void sort_pv(vector<move>& moves);
 	public:
 		ComputerPlayer();
 		move get_move();
