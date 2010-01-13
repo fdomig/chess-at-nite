@@ -207,7 +207,7 @@ int evaluate(Board* b) {
 	return b->to_move * (score[0] - score[1]);
 }
 
-inline int evaluate_pawn(Board* b, int sq) {
+int evaluate_pawn(Board* b, int sq) {
 	if (b->board[sq] > 0) {
 		// add a penalty if there is another friendly pawn behind this
 		int score = pawn_table[sq];
@@ -223,35 +223,35 @@ inline int evaluate_pawn(Board* b, int sq) {
 	return score;
 }
 
-inline int evaluate_knight(Board* b, int sq) {
+int evaluate_knight(Board* b, int sq) {
 	if (b->board[sq] > 0) {
 		return knight_table[sq];
 	}
 	return knight_table[flip[sq]];
 }
 
-inline int evaluate_bishop(Board* b, int sq) {
+int evaluate_bishop(Board* b, int sq) {
 	if (b->board[sq] > 0) {
 		return bishop_table[sq];
 	}
 	return bishop_table[flip[sq]];
 }
 
-inline int evaluate_rook(Board* b, int sq) {
+int evaluate_rook(Board* b, int sq) {
 	if (b->board[sq] > 0) {
 		return rook_table[sq];
 	}
 	return rook_table[flip[sq]];
 }
 
-inline int evaluate_queen(Board* b, int sq) {
+int evaluate_queen(Board* b, int sq) {
 	if (b->board[sq] > 0) {
 		return queen_table[sq];
 	}
 	return queen_table[flip[sq]];
 }
 
-inline int evaluate_king(Board* b, int sq, int material_white, int material_black) {
+int evaluate_king(Board* b, int sq, int material_white, int material_black) {
 	int score = 0;
 
 	// WHITE
