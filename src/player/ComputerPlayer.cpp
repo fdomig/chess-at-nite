@@ -1,7 +1,7 @@
 /*
  * This file is part of the chess-at-nite project.
  *
- * Copyright (c) 2009 by
+ * Copyright (c) 2009-2010 by
  *   Franziskus Domig
  *   Panayiotis Lipiridis
  *   Radoslav Petrik
@@ -19,7 +19,9 @@ Player() {
 }
 
 move ComputerPlayer::get_move() {
-    move m;
+     move m;
+
+#ifdef USE_OPENING_BOOK
     if (opening_book.book_open) {
         MoveGenerator generator = MoveGenerator(board);
         generator.generate_all_moves();
@@ -29,6 +31,8 @@ move ComputerPlayer::get_move() {
             return m;
         }
     }
+#endif
+
     cout << "thinking... " << endl;
     m = search_pv();
     return m;

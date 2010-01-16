@@ -1,7 +1,7 @@
 /*
  * This file is part of the chess-at-nite project.
  *
- * Copyright (c) 2009 by
+ * Copyright (c) 2009-2010 by
  *   Franziskus Domig
  *   Panayiotis Lipiridis
  *   Radoslav Petrik

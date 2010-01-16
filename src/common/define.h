@@ -1,7 +1,7 @@
 /*
  * This file is part of the chess-at-nite project.
  *
- * Copyright (c) 2009 by
+ * Copyright (c) 2009-2010 by
  *   Franziskus Domig
  *   Panayiotis Lipiridis
  *   Radoslav Petrik
@@ -25,7 +25,10 @@
 #define SHOW_SEARCH_INFO
 #define SHOW_BEST_SCORE_
 #define SHOW_THINKING_
+
+// use features
 #define USE_HASH_TABLE_
+#define USE_OPENING_BOOK
 
 #ifndef WIN32
 #define UNICODE
