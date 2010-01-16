@@ -27,6 +27,12 @@
 void test();
 
 int main(int argc, char **argv) {
+#ifdef DEBUG
+    cout << "!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
+    cout << "!!! DEBUG MODE IS ON !!!"<< endl;
+    cout << "!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
+#endif
+
     init_globals();
     int user_option = 0;
     if (argc > 1) {

@@ -12,17 +12,16 @@
  */
 
 #include "ComputerPlayer.h"
-#include <memory.h>
 
 ComputerPlayer::ComputerPlayer() :
 Player() {
 }
 
 move ComputerPlayer::get_move() {
-     move m;
+    move m;
 
 #ifdef USE_OPENING_BOOK
-    if (opening_book.book_open) {
+    if (opening_book.is_opened()) {
         MoveGenerator generator = MoveGenerator(board);
         generator.generate_all_moves();
         vector<move> moves = generator.get_all_moves();
@@ -55,7 +54,7 @@ move ComputerPlayer::search_pv() {
     int best_moves_plys[MAX_SEARCH_DEPTH];
 
     int depth = 1;
-    bool found_mate = false;
+    bool found_checkmate = false;
     for (; depth < MAX_SEARCH_DEPTH && !board->time_exit; depth++) {
         board->follow_pv = true;
         int score = alpha_beta(depth, -EVALUATION_START, EVALUATION_START);
@@ -77,7 +76,7 @@ move ComputerPlayer::search_pv() {
         }
 #endif
         if (abs(score) >= MATE) {
-            found_mate = true;
+            found_checkmate = true;
             break;
         }
     }
@@ -90,7 +89,7 @@ move ComputerPlayer::search_pv() {
         best_move = best_moves[depth - 2];
         best_move_plys = best_moves_plys[depth - 2];
         best_score = best_scores[depth - 2];
-    } else if (found_mate) {
+    } else if (found_checkmate) {
         best_move = best_moves[depth];
         best_move_plys = best_moves_plys[depth];
         best_score = best_scores[depth];
@@ -109,8 +108,8 @@ move ComputerPlayer::search_pv() {
 #endif
 
 #ifdef SHOW_BEST_SCORE
-    cout << "Score for move " << move_to_string(best_move) << " is " << display_score(best_score);
-    cout << " (" << best_move_plys << " plys)";
+    cout << "Score for move " << move_to_string(best_move) << " is ";
+    cout << display_score(best_score) << " (" << best_move_plys << " plys)";
     cout << endl;
 #endif
 
@@ -185,7 +184,7 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
 
     bool played_move = false;
     int score = 0;
-    bool pvSearch = true;
+    bool pv_search = true;
 
 #ifdef USE_HASH_TABLE
     int o_alpha = alpha;
@@ -195,7 +194,7 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
     for (unsigned index = 0; index < moves.size(); index++) {
         board->fake_move(moves[index]);
         played_move = true;
-        if (pvSearch) {
+        if (pv_search) {
             score = -alpha_beta(depth - 1, -beta, -alpha);
         } else {
             score = -alpha_beta(depth - 1, -alpha - 1, -alpha);
@@ -224,12 +223,13 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
 #ifdef USE_HASH_TABLE
             best = moves[index];
 #endif
-            pvSearch = false;
+            pv_search = false;
 
             // store the new, better alpha node in the path
             board->pv[board->ply][board->ply] = moves[index];
-            for (int j = board->ply + 1; j < board->pv_length[board->ply + 1]; ++j)
+            for (int j = board->ply + 1; j < board->pv_length[board->ply + 1]; ++j) {
                 board->pv[board->ply][j] = board->pv[board->ply + 1][j];
+            }
             board->pv_length[board->ply] = board->pv_length[board->ply + 1];
         }
     }
@@ -271,10 +271,12 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
 
     // check with the evaluation function
     int e = evaluate(board);
-    if (e >= beta)
+    if (e >= beta) {
         return beta;
-    if (e > alpha)
+    }
+    if (e > alpha) {
         alpha = e;
+    }
 
     MoveGenerator generator = MoveGenerator(board);
     generator.generate_all_moves();
@@ -292,13 +294,13 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
 
             // store the new, better alpha node in the path
             board->pv[board->ply][board->ply] = moves[index];
-            for (int j = board->ply + 1; j < board->pv_length[board->ply + 1]; ++j)
+            for (int j = board->ply + 1; j < board->pv_length[board->ply + 1]; ++j) {
                 board->pv[board->ply][j] = board->pv[board->ply + 1][j];
+            }
             board->pv_length[board->ply] = board->pv_length[board->ply + 1];
         }
     }
     return alpha;
-
 }
 
 void ComputerPlayer::sort_pv(vector<move>& moves) {

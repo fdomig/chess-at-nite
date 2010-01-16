@@ -25,19 +25,19 @@
 class Player;
 
 class Game {
-	public:
-		Game(Board* board, Player* white_player, Player* black_player, int max_moves = 100000);
-		virtual ~Game();
-		void init();
-		void start_game();
-		void play(Player* player1, Player* player2);
-    private:
-        Board* board;
-        Player* white_player;
-        Player* black_player;
-        MoveGenerator* move_generator;
-        int max_moves;
-        bool game_over;
+public:
+    Game(Board* board, Player* white_player, Player* black_player, int max_moves = 100000);
+    virtual ~Game();
+    void init();
+    void start_game();
+    void play(Player* player1, Player* player2);
+private:
+    Board* board;
+    Player* white_player;
+    Player* black_player;
+    MoveGenerator* move_generator;
+    int max_moves;
+    bool game_over;
 };
 
 #endif /* GAME_H_ */

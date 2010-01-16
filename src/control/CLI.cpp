@@ -19,13 +19,14 @@
 
 CLI::CLI() {
     fen = DEFAULT_FEN;
-    user_option = -1;
+    inversed_board = false;
     show_about();
     start();
 }
 
 CLI::CLI(int option) {
     fen = DEFAULT_FEN;
+    inversed_board = false;
     show_about();
     apply_option(option);
 }
@@ -35,6 +36,7 @@ CLI::~CLI() {
 }
 
 void CLI::start() {
+    int user_option = -1;
     while (user_option != QUIT) {
         show_options();
         user_option = get_user_option();
@@ -43,51 +45,53 @@ void CLI::start() {
 }
 
 void CLI::init_game(int game_type) {
+    inversed_board = false;
     switch (game_type) {
-    case HUMAN_VS_CPU:
-        white_player = new HumanPlayer();
-        black_player = new ComputerPlayer();
-        break;
-    case CPU_VS_HUMAN:
-        white_player = new ComputerPlayer();
-        black_player = new HumanPlayer();
-        break;
-    case HUMAN_VS_HUMAN:
-        white_player = new HumanPlayer();
-        black_player = new HumanPlayer();
-        break;
-    case CPU_VS_CPU:
-        white_player = new ComputerPlayer();
-        black_player = new ComputerPlayer();
-        break;
+        case HUMAN_VS_CPU:
+            white_player = new HumanPlayer();
+            black_player = new ComputerPlayer();
+            break;
+        case CPU_VS_HUMAN:
+            white_player = new ComputerPlayer();
+            black_player = new HumanPlayer();
+            inversed_board = true;
+            break;
+        case HUMAN_VS_HUMAN:
+            white_player = new HumanPlayer();
+            black_player = new HumanPlayer();
+            break;
+        case CPU_VS_CPU:
+            white_player = new ComputerPlayer();
+            black_player = new ComputerPlayer();
+            break;
     }
 }
 
 void CLI::apply_option(int option) {
     switch (option) {
-    case HUMAN_VS_CPU:
-    case CPU_VS_HUMAN:
-    case HUMAN_VS_HUMAN:
-    case CPU_VS_CPU:
-        init_game(option);
-        start_game();
-        end_game();
-        break;
-    case SELECT_FEN:
-        select_fen();
-        break;
-    case SHOW_HELP:
-        print_help();
-        break;
-    case BENCHMARK:
-        run_benchmark();
-        break;
-    case WAC:
-        run_wac_test();
-        break;
-    case QUIT:
-        cout << "Thanks for playing...!! Have fun.." << endl;
-        break;
+        case HUMAN_VS_CPU:
+        case CPU_VS_HUMAN:
+        case HUMAN_VS_HUMAN:
+        case CPU_VS_CPU:
+            init_game(option);
+            start_game();
+            end_game();
+            break;
+        case SELECT_FEN:
+            select_fen();
+            break;
+        case SHOW_HELP:
+            print_help();
+            break;
+        case BENCHMARK:
+            run_benchmark();
+            break;
+        case WAC:
+            run_wac_test();
+            break;
+        case QUIT:
+            cout << "Thanks for playing...!! Have fun.." << endl;
+            break;
     }
 }
 
@@ -126,7 +130,7 @@ int CLI::get_user_option() {
 }
 
 void CLI::start_game() {
-    board = new Board(fen);
+    board = new Board(fen, inversed_board);
     game = new Game(board, white_player, black_player);
     game->start_game();
 }
@@ -140,14 +144,13 @@ void CLI::end_game() {
 }
 
 void CLI::show_about() {
-    cout << " Welcome to chess-at-nite, v" << VERSION << " (c) 2009-2010" << endl;
+    cout << " Welcome to " << PROJECT_NAME <<", v" << VERSION << " (c) 2009-2010" << endl;
     cout << "     http://chess-at-nite.googlecode.com" << endl;
 }
 
 void CLI::select_fen() {
-    fen = "3r2k1/R4p2/p2n3p/2pP2pP/2P2KP1/3B3r/P2R4/8 w - - 0 44";// en passant can escape from check, but it doesn't
+    fen = "3r2k1/R4p2/p2n3p/2pP2pP/2P2KP1/3B3r/P2R4/8 w - - 0 44"; // en passant can escape from check, but it doesn't
     fen = DEFAULT_FEN;
-    fen = "2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - - 0 1";
     Board b = Board(fen);
     cout << b << endl;
 }
@@ -177,7 +180,7 @@ void CLI::run_benchmark() {
     for (int i = 0; i < 3; i++) {
         double nps = (n[i] / (double) t[i]) * 1000;
         total += nps;
-        cout << "     Run "<< i + 1 << ": " << (int) nps << " nodes/sec" << endl;
+        cout << "     Run " << i + 1 << ": " << (int) nps << " nodes/sec" << endl;
     }
     cout << endl;
     cout << "   Average: " << (int) (total / 3) << " nodes/sec" << endl;

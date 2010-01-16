@@ -30,10 +30,10 @@ public:
     ~OpeningBook();
 
     bool get_move(vector<move>& available_moves, vector<history_item>& made_moves, move& m);
-    void print();
-    bool book_open;
-
+    void print_debug_info();
+    bool is_opened();
 private:
+    bool book_open;
     void parse_book();
     bool set_first_and_last(string last_move_string, unsigned depth);
     bool validate_move(move move_move, vector<move>& available_moves, move* valid_move);
@@ -44,7 +44,6 @@ private:
     unsigned int max_line_size;
     string last_move_string;
     unsigned int last_move_index;
-
 };
 
 #endif /* OPENINGBOOK_H_ */

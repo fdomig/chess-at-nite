@@ -22,6 +22,7 @@
 #include "../common/define.h"
 
 using namespace std;
+
 /*
  * Class to represent a chess board.
  *
@@ -29,111 +30,111 @@ using namespace std;
  * without function calling.
  */
 class Board {
-	public:
-		//representation of the 0x88 board
-		byte board[BOARD_SIZE];
+public:
+    //representation of the 0x88 board
+    byte board[BOARD_SIZE];
 
-		//side to move on the board
-		int to_move;
+    //side to move on the board
+    int to_move;
 
-		//square on the board where the en passant is available.. NO_SQUARE otherwise
-		int en_passant;
+    //square on the board where the en passant is available.. NO_SQUARE otherwise
+    int en_passant;
 
-		//white's ability to castle
-		int white_castle;
+    //white's ability to castle
+    int white_castle;
 
-		//black's ability to castle
-		int black_castle;
+    //black's ability to castle
+    int black_castle;
 
-		//Keeps track of half-moves (plys) without a capture for the 50-moves rule
-		int fifty_moves;
+    //Keeps track of half-moves (plys) without a capture for the 50-moves rule
+    int fifty_moves;
 
-		//The number of full moves
-		int full_moves;
+    //The number of full moves
+    int full_moves;
 
-		//The number of moves
-		int number_of_moves;
-		//Time to stop thinking for an AI player
-		int stop_time;
+    //The number of moves
+    int number_of_moves;
+    //Time to stop thinking for an AI player
+    int stop_time;
 
-		//Flag to stop the search on a time exit
-		bool time_exit;
+    //Flag to stop the search on a time exit
+    bool time_exit;
 
-		//Number of checked nodes in a current search
-		int checked_nodes;
+    //Number of checked nodes in a current search
+    int checked_nodes;
 
-		//squares where the kings are placed
-		int white_king;
-		int black_king;
+    //squares where the kings are placed
+    int white_king;
+    int black_king;
 
-		//captured pieces
-		vector<int> white_captures;
-		vector<int> black_captures;
+    //captured pieces
+    vector<int> white_captures;
+    vector<int> black_captures;
 
-		//history of moves
-		vector<history_item> history;
+    //history of moves
+    vector<history_item> history;
 
-		// current search path
-		move pv[MAX_PLY][MAX_PLY];
-		int pv_length[MAX_PLY];
-		bool follow_pv;
-		int ply;
+    // current search path
+    move pv[MAX_PLY][MAX_PLY];
+    int pv_length[MAX_PLY];
+    bool follow_pv;
+    int ply;
 
-		Board();
+    Board(bool inversed = false);
 
-		Board(string& fen);
-		Board(const Board& b);
-		virtual ~Board();
+    Board(string& fen, bool inversed = false);
+    Board(const Board& b);
+    virtual ~Board();
 
-		void parse_fen(string& fen);
-		string preparse_fen(string& fen);
+    void parse_fen(string& fen);
+    string preparse_fen(string& fen);
 
-		void fake_move(move m);
-		move unfake_move();
-		string get_fen();
+    void fake_move(move m);
+    move unfake_move();
+    string get_fen();
 
-		void play_move(move m);
-		//returns true if it was possible..
-		void undo_move();
+    void play_move(move m);
+    //returns true if it was possible..
+    void undo_move();
 
-		int get_hash();
+    int get_hash();
 
 #ifdef USE_HASH_TABLE
-		htype hash_probe(int depth, int* alpha, int beta);
-		void hash_store(int depth, htype type, int score, move best);
-		htentry* hash_entry(int key);
+    htype hash_probe(int depth, int* alpha, int beta);
+    void hash_store(int depth, htype type, int score, move best);
+    htentry* hash_entry(int key);
 #endif
 
-		void set_status(int status);
-		int get_status();
+    void set_status(int status);
+    int get_status();
+    friend ostream & operator<<(ostream& os, Board& board);
 
-	private:
-		//initialize values
-		void inititalize();
-		move parse_input(string& input);
+private:
+    //initialize values
+    void inititalize();
+    move parse_input(string& input);
 
-		void initialize_hash();
-		int generate_hash();
-		void update_hash(move m);
+    void initialize_hash();
+    int generate_hash();
+    void update_hash(move m);
 
-		int status;
-		/*
-		 * Current hash of this position
-		 */
-		int current_hash;
-		int hash_pieces[6][2][120]; // [piece][color][square];
-		int hash_casteling_white[4];
-		int hash_casteling_black[4];
-		int hash_en_passant[120];
-		int hash_side;
-		int hash_promotion[6];
+    bool inversed;
+    int status;
+
+    //Current hash of this position
+    int current_hash;
+    int hash_pieces[6][2][120]; // [piece][color][square];
+    int hash_casteling_white[4];
+    int hash_casteling_black[4];
+    int hash_en_passant[120];
+    int hash_side;
+    int hash_promotion[6];
 
 #ifdef USE_HASH_TABLE
-		htentry ht[HT_SIZE];
+    htentry ht[HT_SIZE];
 #endif
 
 };
 
-ostream& operator<<(ostream& os, Board& board);
 
 #endif /* BOARD_H_ */

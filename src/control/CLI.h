@@ -30,7 +30,7 @@ class Board;
 #define SELECT_FEN      5
 #define SHOW_HELP       6
 #define BENCHMARK       7
-#define WAC				8
+#define WAC             8
 
 class CLI {
 public:
@@ -46,9 +46,10 @@ private:
     Player* black_player;
     Board* board;
     Game* game;
+    //when the only human player is black.. 
+    bool inversed_board;
     std::string fen;
 
-    int user_option;
     void show_options();
     int get_user_option();
     void init_game(int game_type);

@@ -13,7 +13,7 @@
 
 #include "Board.h"
 
-Board::Board() {
+Board::Board(bool inversed) : inversed(inversed) {
     inititalize();
 }
 
@@ -35,7 +35,7 @@ Board::Board(const Board& b) {
     time_exit = b.time_exit;
 }
 
-Board::Board(string& fen) {
+Board::Board(string& fen, bool inversed) : inversed(inversed) {
     inititalize();
     vector<string> tokens;
     split(fen, tokens, ' ');
@@ -323,7 +323,7 @@ void Board::fake_move(move m) {
             fifty_moves = 0;
             break;
     }
-    to_move = to_move == WHITE ? BLACK : WHITE;
+    to_move = OPPONENT(to_move);
 
     ply++;
     update_hash(m);
@@ -407,7 +407,7 @@ move Board::unfake_move() {
             board[m.pos_new - m.moved_piece * NEXT_RANK] = m.content;
             break;
     }
-    to_move = to_move == WHITE ? BLACK : WHITE;
+    to_move = OPPONENT(to_move);
 
     if (to_move == BLACK) {
         full_moves--;
@@ -586,13 +586,7 @@ void Board::hash_store(int depth, htype type, int score, move best) {
 
 ostream & operator<<(ostream& os, Board& board) {
     int square;
-
-    bool inverse = false;
     unsigned int index;
-
-#ifdef TOURNAMENT
-    os << endl << board.get_fen() << endl;
-#endif
 
     int new_rank;
 
@@ -605,7 +599,7 @@ ostream & operator<<(ostream& os, Board& board) {
 
     for (int rank = SIZE; rank > 0; rank--) {
         new_rank = rank;
-        if (inverse) {
+        if (board.inversed) {
             new_rank = SIZE - rank + 1;
         }
         os << B_UD << " " << new_rank << " " << B_UD << " ";
@@ -627,8 +621,14 @@ ostream & operator<<(ostream& os, Board& board) {
         switch (rank) {
             case SIZE:
                 os << B_UD << " ";
-                for (index = 0; index < board.black_captures.size(); index++) {
-                    os << piece_symbol(board.black_captures[index]);
+                if (board.inversed) {
+                    for (index = 0; index < board.white_captures.size(); index++) {
+                        os << piece_symbol(board.white_captures[index]);
+                    }
+                } else {
+                    for (index = 0; index < board.black_captures.size(); index++) {
+                        os << piece_symbol(board.black_captures[index]);
+                    }
                 }
                 break;
             case 6:
@@ -654,8 +654,14 @@ ostream & operator<<(ostream& os, Board& board) {
                 break;
             case 1:
                 os << B_UD << " ";
-                for (index = 0; index < board.white_captures.size(); index++) {
-                    os << piece_symbol(board.white_captures[index]);
+                if (board.inversed) {
+                    for (index = 0; index < board.black_captures.size(); index++) {
+                        os << piece_symbol(board.black_captures[index]);
+                    }
+                } else {
+                    for (index = 0; index < board.white_captures.size(); index++) {
+                        os << piece_symbol(board.white_captures[index]);
+                    }
                 }
                 break;
             default:
@@ -701,10 +707,6 @@ ostream & operator<<(ostream& os, Board& board) {
 #else
 
 ostream & operator<<(ostream& os, Board& board) {
-#ifdef TOURNAMENT
-    os << endl << board.get_fen() << endl;
-#endif
-
     int square;
     for (int rank = SIZE; rank > 0; rank--) {
         os << rank << " ";

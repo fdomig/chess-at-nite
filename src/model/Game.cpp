@@ -15,11 +15,9 @@
 
 using namespace std;
 
-string default_board = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1";
-
 Game::Game(Board* board, Player* new_white_player, Player* new_black_player, int max_moves) :
-    board(board), white_player(new_white_player), black_player(new_black_player), max_moves(max_moves) {
-
+board(board), white_player(new_white_player), black_player(new_black_player),
+max_moves(max_moves) {
     move_generator = new MoveGenerator(board);
     white_player->set_board(board);
     black_player->set_board(board);
@@ -87,20 +85,20 @@ void Game::play(Player* player1, Player* player2) {
         move next_move = player1->get_move();
 
         switch (next_move.special) {
-        case MOVE_UNDO:
-            if (board->history.size() >= 2) {
-                board->undo_move();
-                board->undo_move();
-                cout << board << endl;
-                continue;
-            } else {
-                cout << "There is nothing in the history to undo.." << endl;
-                continue;
-            }
-        case MOVE_RESIGN:
-            cout << "Resigned... GG" << endl;
-            game_over = true;
-            break;
+            case MOVE_UNDO:
+                if (board->history.size() >= 2) {
+                    board->undo_move();
+                    board->undo_move();
+                    cout << board << endl;
+                    continue;
+                } else {
+                    cout << "There is nothing in the history to undo.." << endl;
+                    continue;
+                }
+            case MOVE_RESIGN:
+                cout << "Resigned... GG" << endl;
+                game_over = true;
+                break;
         }
 
         if (!game_over) {
