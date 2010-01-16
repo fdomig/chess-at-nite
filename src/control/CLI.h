@@ -32,6 +32,8 @@ class Board;
 #define BENCHMARK       7
 #define WAC             8
 
+#define BENCHMARK_FEN "r3r1k1/pp3pbp/1qp1b1p1/2B5/2BP4/Q1n2N2/P4PPP/3R1K1R w - - 0 18"
+
 class CLI {
 public:
     CLI();

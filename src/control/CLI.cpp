@@ -149,23 +149,33 @@ void CLI::show_about() {
 }
 
 void CLI::select_fen() {
-    fen = "3r2k1/R4p2/p2n3p/2pP2pP/2P2KP1/3B3r/P2R4/8 w - - 0 44"; // en passant can escape from check, but it doesn't
-    fen = DEFAULT_FEN;
+    fen = BENCHMARK_FEN;
     Board b = Board(fen);
     cout << b << endl;
 }
 
-/* bench: This is a little benchmark code that calculates how many
- nodes per second TSCP searches.
- It sets the position to move 17 of Bobby Fischer vs. J. Sherwin,
- New Jersey State Open Championship, 9/2/1957.
- Then it searches five ply three times. It calculates nodes per
- second from the best time. */
+/**
+ * Benchmark test that calculates how many nodes/second chess-at-nite searches.
+ *
+ * It sets the position to move 18 of "The Game of the Century"
+ * Donald Byrne vs Robert James Fischer (Rosenwald Memorial Tour, Oct 17 1956)
+ * More info:
+ *   - http://en.wikipedia.org/wiki/The_Game_of_the_Century_%28chess%29
+ *   - http://www.chessgames.com/perl/chessgame?gid=1008361
+ *   - http://goo.gl/Yp0o (shortet the above game)
+ */
 void CLI::run_benchmark() {
-    string fen = "rq3rk1/4bppp/p1Rp1n2/8/4p3/1B2BP2/PP4PP/3Q1RK1 w - - 0 17";
+    // old bench: "rq3rk1/4bppp/p1Rp1n2/8/4p3/1B2BP2/PP4PP/3Q1RK1 w - - 0 17"
+    string fen = BENCHMARK_FEN;
     Board* b = new Board(fen);
     Player* p = new ComputerPlayer();
     p->set_board(b);
+
+    cout << "----- The Game of the Century -----" << endl;
+    cout << "Donald Byrne vs Robert J. Fischer" << endl;
+    cout << "Rosenwald Memorial, Oct 17 1956" << endl;
+    cout << "More info: http://goo.gl/Yp0o" << endl;
+
     cout << *b;
     int t[3];
     int n[3];

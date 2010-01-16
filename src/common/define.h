@@ -15,13 +15,12 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.6.32"
+#define VERSION "0.6.4"
 
 
 //defines for different compiles
 
 #define DEBUG_
-
 //to run a command line interface
 #define COMMAND_LINE
 #define SHOW_SEARCH_INFO
