@@ -140,11 +140,8 @@ void CLI::end_game() {
 }
 
 void CLI::show_about() {
-    cout << " Welcome to ChessAtNite, v" << VERSION << " written by:" << endl;
-    cout << "  - Franziskus Domig" << endl;
-    cout << "  - Panayiotis Lipiridis" << endl;
-    cout << "  - Radoslav Petrik" << endl;
-    cout << "  - Thai Gia Tuong" << endl;
+    cout << " Welcome to chess-at-nite, v" << VERSION << " (c) 2009-2010" << endl;
+    cout << "     http://chess-at-nite.googlecode.com" << endl;
 }
 
 void CLI::select_fen() {
@@ -166,7 +163,7 @@ void CLI::run_benchmark() {
     Board* b = new Board(fen);
     Player* p = new ComputerPlayer();
     p->set_board(b);
-
+    cout << *b;
     int t[3];
     int n[3];
     for (int i = 0; i < 3; i++) {
@@ -175,16 +172,15 @@ void CLI::run_benchmark() {
         t[i] = get_ms() - start;
         n[i] = b->checked_nodes;
     }
-    cout << "-----------------------------------" << endl;
-    cout << "Benchmark Results:" << endl;
+    cout << "-------- Benchmark Results --------" << endl;
     double total = 0;
     for (int i = 0; i < 3; i++) {
         double nps = (n[i] / (double) t[i]) * 1000;
         total += nps;
-        cout << i + 1 << ": nodes/second: " << (int) nps << endl;
+        cout << "     Run "<< i + 1 << ": " << (int) nps << " nodes/sec" << endl;
     }
-
-    cout << "average: " << (int) (total / 3) << " nodes/second" << endl;
+    cout << endl;
+    cout << "   Average: " << (int) (total / 3) << " nodes/sec" << endl;
     delete p;
     delete b;
 }
@@ -199,8 +195,8 @@ void CLI::run_wac_test() {
     ifstream file;
     file.open(WAC_FILE);
     if (!file) {
-        cout << "Can not run Win At Chess test: Test file '" << WAC_FILE;
-        cout << "' is missing." << endl;
+        cerr << "Can not run Win At Chess test: Test file '" << WAC_FILE;
+        cerr << "' is missing." << endl;
         return;
     }
 
