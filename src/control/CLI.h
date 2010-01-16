@@ -17,6 +17,10 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include "../model/Game.h"
+#include "../model/Board.h"
+#include "../player/ComputerPlayer.h"
+#include "../player/HumanPlayer.h"
 
 class Player;
 class Game;
@@ -49,7 +53,7 @@ private:
     Board* board;
     Game* game;
     //when the only human player is black.. 
-    bool inversed_board;
+    bool rotated_board;
     std::string fen;
 
     void show_options();

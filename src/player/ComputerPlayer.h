@@ -14,11 +14,11 @@
 #ifndef COMPUTERPLAYER_H_
 #define COMPUTERPLAYER_H_
 
-#include "Player.h"
+#include <memory.h>
 #include <time.h>
+#include "Player.h"
 #include "../model/OpeningBook.h"
 #include "../model/evaluate.h"
-#include <memory.h>
 
 class ComputerPlayer: public Player {
 	private:

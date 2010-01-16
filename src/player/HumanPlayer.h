@@ -15,8 +15,8 @@
 #define HUMANPLAYER_H_
 
 
-#include "Player.h"
 #include <string>
+#include "Player.h"
 
 using namespace std;
 

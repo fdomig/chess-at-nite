@@ -81,9 +81,9 @@ public:
     bool follow_pv;
     int ply;
 
-    Board(bool inversed = false);
+    Board(bool rotated = false);
 
-    Board(string& fen, bool inversed = false);
+    Board(string& fen, bool rotated= false);
     Board(const Board& b);
     virtual ~Board();
 
@@ -119,7 +119,7 @@ private:
     int generate_hash();
     void update_hash(move m);
 
-    bool inversed;
+    bool rotated;
     int status;
 
     //Current hash of this position

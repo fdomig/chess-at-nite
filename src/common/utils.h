@@ -37,18 +37,18 @@ extern string get_piece_unicode(int piece);
 extern void print_possible_deltas(int* table);
 extern void print_legal_endings(bool* table);
 
-extern string move_to_string(move m, unsigned int length=0);
+extern string move_to_string(const move& m, unsigned int length=0);
 extern string empty_square_to_string(int square);
-extern string move_to_string_simple(move m);
-extern string move_to_string_basic(move m);
-extern string move_to_string_very_basic(move m);
-extern string move_to_algebraic(move m);
+extern string move_to_string_simple(const move& m);
+extern string move_to_string_basic(const move& m);
+extern string move_to_string_very_basic(const move& m);
+extern string move_to_algebraic(const move& m, const vector<move>& moves);
 extern string string_to_lower(string str);
 extern int get_promoted_piece(const char piece);
 extern bool same_move(move m1, move m2);
 
-extern void print_moves(vector<move>& moves);
-extern void print_history(vector<history_item>& history);
+extern void print_moves(const vector<move>& moves);
+extern void print_history(const vector<history_item>& history);
 extern string int_to_string(int);
 extern bool is_legal_move(const vector<move>& moves, move& m);
 

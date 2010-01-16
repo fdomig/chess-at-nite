@@ -12,21 +12,17 @@
  */
 
 #include "CLI.h"
-#include "../model/Game.h"
-#include "../model/Board.h"
-#include "../player/ComputerPlayer.h"
-#include "../player/HumanPlayer.h"
 
 CLI::CLI() {
     fen = DEFAULT_FEN;
-    inversed_board = false;
+    rotated_board = false;
     show_about();
     start();
 }
 
 CLI::CLI(int option) {
     fen = DEFAULT_FEN;
-    inversed_board = false;
+    rotated_board = false;
     show_about();
     apply_option(option);
 }
@@ -45,7 +41,7 @@ void CLI::start() {
 }
 
 void CLI::init_game(int game_type) {
-    inversed_board = false;
+    rotated_board = false;
     switch (game_type) {
         case HUMAN_VS_CPU:
             white_player = new HumanPlayer();
@@ -54,7 +50,7 @@ void CLI::init_game(int game_type) {
         case CPU_VS_HUMAN:
             white_player = new ComputerPlayer();
             black_player = new HumanPlayer();
-            inversed_board = true;
+            rotated_board = true;
             break;
         case HUMAN_VS_HUMAN:
             white_player = new HumanPlayer();
@@ -130,7 +126,7 @@ int CLI::get_user_option() {
 }
 
 void CLI::start_game() {
-    board = new Board(fen, inversed_board);
+    board = new Board(fen, rotated_board);
     game = new Game(board, white_player, black_player);
     game->start_game();
 }

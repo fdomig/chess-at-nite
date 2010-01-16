@@ -13,7 +13,7 @@
 
 #include "Board.h"
 
-Board::Board(bool inversed) : inversed(inversed) {
+Board::Board(bool rotated) : rotated(rotated) {
     inititalize();
 }
 
@@ -35,7 +35,7 @@ Board::Board(const Board& b) {
     time_exit = b.time_exit;
 }
 
-Board::Board(string& fen, bool inversed) : inversed(inversed) {
+Board::Board(string& fen, bool rotated) : rotated(rotated) {
     inititalize();
     vector<string> tokens;
     split(fen, tokens, ' ');
@@ -589,6 +589,7 @@ ostream & operator<<(ostream& os, Board& board) {
     unsigned int index;
 
     int new_rank;
+    int new_file;
 
     os << B_RD << B_LR << B_LR << B_LR << B_LRD << B_LR;
 
@@ -599,12 +600,17 @@ ostream & operator<<(ostream& os, Board& board) {
 
     for (int rank = SIZE; rank > 0; rank--) {
         new_rank = rank;
-        if (board.inversed) {
+        if (board.rotated) {
             new_rank = SIZE - rank + 1;
         }
         os << B_UD << " " << new_rank << " " << B_UD << " ";
         for (int file = 0; file < SIZE; file++) {
-            square = (new_rank - 1) * NEXT_RANK + file * NEXT_FILE;
+            new_file = file;
+            if (board.rotated) {
+                new_file = SIZE - file - 1;
+            }
+
+            square = (new_rank - 1) * NEXT_RANK + (new_file) * NEXT_FILE;
             if (board.board[square] != EMPTY) {
                 os << piece_symbol(board.board[square]);
             } else {
@@ -621,7 +627,7 @@ ostream & operator<<(ostream& os, Board& board) {
         switch (rank) {
             case SIZE:
                 os << B_UD << " ";
-                if (board.inversed) {
+                if (board.rotated) {
                     for (index = 0; index < board.white_captures.size(); index++) {
                         os << piece_symbol(board.white_captures[index]);
                     }
@@ -654,7 +660,7 @@ ostream & operator<<(ostream& os, Board& board) {
                 break;
             case 1:
                 os << B_UD << " ";
-                if (board.inversed) {
+                if (board.rotated) {
                     for (index = 0; index < board.black_captures.size(); index++) {
                         os << piece_symbol(board.black_captures[index]);
                     }
@@ -681,7 +687,12 @@ ostream & operator<<(ostream& os, Board& board) {
 
     os << piece_symbol(PAWN * board.to_move) << " ";
     os << B_UD;
-    os << " a b c d e f g h " << B_UD;
+    
+    if (!board.rotated) {
+        os << " a b c d e f g h " << B_UD;
+    } else {
+        os << " h g f e d c b a " << B_UD;
+    }
 
     //last move
     if (!board.history.empty()) {

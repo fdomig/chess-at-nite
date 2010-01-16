@@ -18,8 +18,8 @@
 #include <stdlib.h>
 
 #include "common/define.h"
-#include "model/Game.h"
 #include "model/MoveGenerator.h"
+#include "model/Game.h"
 #include "player/Player.h"
 #include "player/HumanPlayer.h"
 #include "player/ComputerPlayer.h"

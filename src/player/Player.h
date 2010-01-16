@@ -15,9 +15,9 @@
 #define PLAYER_H_
 
 #include "../common/define.h"
+#include "../common/utils.h"
 #include "../model/Board.h"
 #include "../model/MoveGenerator.h"
-#include "../common/utils.h"
 
 class Player {
 protected:

@@ -13,8 +13,6 @@
 
 #include "utils.h"
 
-using namespace std;
-
 byte lookup_piece(char piece) {
     switch (piece) {
         case 'K':
@@ -204,7 +202,7 @@ void print_legal_endings(bool* table) {
     }
 }
 
-string move_to_string_simple(move m) {
+string move_to_string_simple(const move& m) {
     string result = "";
     result.append(piece_symbol(m.moved_piece));
     result.append(": ");
@@ -219,7 +217,7 @@ string move_to_string_simple(move m) {
     return result;
 }
 
-string move_to_string_basic(move m) {
+string move_to_string_basic(const move& m) {
     string result("");
     switch (m.special) {
         case MOVE_CASTLE_LONG:
@@ -238,7 +236,7 @@ string move_to_string_basic(move m) {
 /*
  * Always returns string of 4 characters with pos_old and pos_new
  */
-string move_to_string_very_basic(move m) {
+string move_to_string_very_basic(const move& m) {
     string result("");
     result.append(square_to_string(m.pos_old));
     result.append(square_to_string(m.pos_new));
@@ -249,7 +247,7 @@ string move_to_string_very_basic(move m) {
  * String representation of the move..
  * define the length of that string if you want to..
  */
-string move_to_string(move m, unsigned int length) {
+string move_to_string(const move& m, unsigned int length) {
     int unicodes = 0;
 
 #ifdef UNICODE
@@ -414,7 +412,7 @@ move string_to_move(const string& text) {
     return m;
 }
 
-void print_moves(vector<move>& moves) {
+void print_moves(const vector<move>& moves) {
     if (moves.size() == 0) {
         cout << "No available moves... :(" << endl;
         return;
@@ -433,7 +431,7 @@ void print_moves(vector<move>& moves) {
     cout << "-----------------------------------" << endl;
 }
 
-void print_history(vector<history_item>& history) {
+void print_history(const vector<history_item>& history) {
     if (history.size() == 0) {
         cout << "Nothing in the history..." << endl;
         return;
@@ -512,7 +510,7 @@ void print_help() {
  * then the starting square-rank instead has to be added; if still no difference
  * both starting square-file and -rank has to be added.
  */
-string move_to_algebraic(move m) {
+string move_to_algebraic(const move& m, const vector<move> &moves) {
     string ret = "";
     if (m.special == CASTLE_LONG) {
         ret.append("O-O-O");

@@ -17,8 +17,8 @@
 #include <iostream>
 #include <vector>
 #include "../common/define.h"
-#include "Board.h"
 #include "../common/utils.h"
+#include "Board.h"
 
 using namespace std;
 
