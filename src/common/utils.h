@@ -14,8 +14,17 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <string.h>
+#include <vector>
+#include <iostream>
+#include <iomanip>
+#include <stdlib.h>
+#include <sstream>
+#include <sys/timeb.h>
+#include <stdio.h>
+
 #include "define.h"
-#include "../model/Board.h"
+
 using namespace std;
 
 extern byte lookup_piece(char piece);
@@ -33,8 +42,8 @@ extern string empty_square_to_string(int square);
 extern string move_to_string_simple(move m);
 extern string move_to_string_basic(move m);
 extern string move_to_string_very_basic(move m);
+extern string move_to_algebraic(move m);
 extern string string_to_lower(string str);
-extern string string_move_algebraic(move m);
 extern int get_promoted_piece(const char piece);
 extern bool same_move(move m1, move m2);
 

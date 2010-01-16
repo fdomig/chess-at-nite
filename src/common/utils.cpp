@@ -12,12 +12,8 @@
  */
 
 #include "utils.h"
-#include <sstream>
-#include <string>
-#include <cctype>
-#include <stdio.h>
-#include <sys/timeb.h>
-#include <string.h>
+
+using namespace std;
 
 byte lookup_piece(char piece) {
     switch (piece) {
@@ -516,7 +512,7 @@ void print_help() {
  * then the starting square-rank instead has to be added; if still no difference
  * both starting square-file and -rank has to be added.
  */
-string string_move_algebraic(move m) {
+string move_to_algebraic(move m) {
     string ret = "";
     if (m.special == CASTLE_LONG) {
         ret.append("O-O-O");
@@ -548,8 +544,8 @@ string string_move_algebraic(move m) {
     if (m.content != EMPTY && m.special != MOVE_PROMOTION) {
         if (abs(m.moved_piece) == PAWN) {
             // XXX: seems to be, that this sometimes adds "#" to the char?!
-            char fl = (char) FILE(m.pos_old) + 'a';
-            ret.append(&fl);
+            char file = FILE(m.pos_old) + 'a';
+            ret.push_back(file);
         }
         ret.append("x");
     }

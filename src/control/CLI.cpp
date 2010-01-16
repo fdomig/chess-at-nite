@@ -174,7 +174,7 @@ void CLI::run_benchmark() {
     cout << "----- The Game of the Century -----" << endl;
     cout << "Donald Byrne vs Robert J. Fischer" << endl;
     cout << "Rosenwald Memorial, Oct 17 1956" << endl;
-    cout << "More info: http://goo.gl/Yp0o" << endl;
+    cout << "Watch the game: http://goo.gl/Yp0o" << endl;
 
     cout << *b;
     int t[3];

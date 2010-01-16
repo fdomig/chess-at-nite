@@ -295,8 +295,4 @@ typedef struct {
 
 #define B_LRUD "\u256C"
 
-// include utils
-#include "utils.h"
-#include <stdlib.h>
-
 #endif /* DEFINE_H_ */

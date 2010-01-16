@@ -16,10 +16,11 @@
 
 #include <string>
 #include <iostream>
-#include <string>
+#include <stdlib.h>
 #include <vector>
 #include <iomanip>
 #include "../common/define.h"
+#include "../common/utils.h"
 
 using namespace std;
 
