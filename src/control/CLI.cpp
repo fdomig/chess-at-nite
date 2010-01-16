@@ -228,8 +228,8 @@ void CLI::run_wac_test() {
             Player* p = new ComputerPlayer();
             p->set_board(&b);
             move m = p->get_move();
-            cout << "Found: " << string_move_simple(m) << endl;
-            found.push_back(string_move_simple(m));
+            cout << "Found: " << move_to_string_simple(m) << endl;
+            found.push_back(move_to_string_simple(m));
             delete p;
         } else if (cmd.compare("srch") == 0) {
             cout << "Should be: " << line.substr(5, line.length() - 5) << endl;

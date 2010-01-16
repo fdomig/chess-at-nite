@@ -14,21 +14,34 @@
 #ifndef DEFINE_H_
 #define DEFINE_H_
 
-#define VERSION "0.6.1"
+#define VERSION "0.6.3"
 
 //defines for different compiles
 
-#define TOURNAMENT_
-#define SHOW_THINKING
 #define DEBUG_
-#define SHOW_BEST_SCORE
+
+//to run a command line interface
+#define COMMAND_LINE
+#define SHOW_SEARCH_INFO
+#define SHOW_BEST_SCORE_
+#define SHOW_THINKING_
 #define USE_HASH_TABLE_
 
 #ifndef WIN32
-#define UNICODE_
+#define UNICODE
 #endif
 
-#define COMMAND_LINE
+#ifdef DEBUG
+#define SHOW_THINKING
+#define SHOW_SEARCH_INFO
+#endif
+
+
+//time in milliseconds
+#define MAX_THINKING_TIME 16000
+#define MAX_SEARCH_DEPTH 20
+// do not change!
+#define MAX_PLY 64
 
 #define OPENING_BOOK "book"
 #define WAC_FILE "wac.ci"
@@ -136,81 +149,76 @@
 #define MV_DL (MV_D + MV_L) //move down left
 #define MV_DR (MV_D + MV_R) //move down right
 
-#define MAX_THINKING_TIME 15000 //ms
-#define MAX_SEARCH_DEPTH 20
-
-// do not change!
-#define MAX_PLY 64
-
 // typedef for a byte
 typedef signed char byte;
 
 // squares for the 0x88 board
+
 typedef enum _SQUARE {
-	A1 = 0,
-	A2 = 16,
-	A3 = 32,
-	A4 = 48,
-	A5 = 64,
-	A6 = 80,
-	A7 = 96,
-	A8 = 112,
-	B1 = 1,
-	B2 = 17,
-	B3 = 33,
-	B4 = 49,
-	B5 = 65,
-	B6 = 81,
-	B7 = 97,
-	B8 = 113,
-	C1 = 2,
-	C2 = 18,
-	C3 = 34,
-	C4 = 50,
-	C5 = 66,
-	C6 = 82,
-	C7 = 98,
-	C8 = 114,
-	D1 = 3,
-	D2 = 19,
-	D3 = 35,
-	D4 = 51,
-	D5 = 67,
-	D6 = 83,
-	D7 = 99,
-	D8 = 115,
-	E1 = 4,
-	E2 = 20,
-	E3 = 36,
-	E4 = 52,
-	E5 = 68,
-	E6 = 84,
-	E7 = 100,
-	E8 = 116,
-	F1 = 5,
-	F2 = 21,
-	F3 = 37,
-	F4 = 53,
-	F5 = 69,
-	F6 = 85,
-	F7 = 101,
-	F8 = 117,
-	G1 = 6,
-	G2 = 22,
-	G3 = 38,
-	G4 = 54,
-	G5 = 70,
-	G6 = 86,
-	G7 = 102,
-	G8 = 118,
-	H1 = 7,
-	H2 = 23,
-	H3 = 39,
-	H4 = 55,
-	H5 = 71,
-	H6 = 87,
-	H7 = 103,
-	H8 = 119
+    A1 = 0,
+    A2 = 16,
+    A3 = 32,
+    A4 = 48,
+    A5 = 64,
+    A6 = 80,
+    A7 = 96,
+    A8 = 112,
+    B1 = 1,
+    B2 = 17,
+    B3 = 33,
+    B4 = 49,
+    B5 = 65,
+    B6 = 81,
+    B7 = 97,
+    B8 = 113,
+    C1 = 2,
+    C2 = 18,
+    C3 = 34,
+    C4 = 50,
+    C5 = 66,
+    C6 = 82,
+    C7 = 98,
+    C8 = 114,
+    D1 = 3,
+    D2 = 19,
+    D3 = 35,
+    D4 = 51,
+    D5 = 67,
+    D6 = 83,
+    D7 = 99,
+    D8 = 115,
+    E1 = 4,
+    E2 = 20,
+    E3 = 36,
+    E4 = 52,
+    E5 = 68,
+    E6 = 84,
+    E7 = 100,
+    E8 = 116,
+    F1 = 5,
+    F2 = 21,
+    F3 = 37,
+    F4 = 53,
+    F5 = 69,
+    F6 = 85,
+    F7 = 101,
+    F8 = 117,
+    G1 = 6,
+    G2 = 22,
+    G3 = 38,
+    G4 = 54,
+    G5 = 70,
+    G6 = 86,
+    G7 = 102,
+    G8 = 118,
+    H1 = 7,
+    H2 = 23,
+    H3 = 39,
+    H4 = 55,
+    H5 = 71,
+    H6 = 87,
+    H7 = 103,
+    H8 = 119
 } square;
 
 /* 32-bit number to hold the whole information of a move
@@ -220,24 +228,25 @@ typedef enum _SQUARE {
  * and the board knows where to put the actual piece that was moved!
  */
 typedef union _MOVE {
-		unsigned int move;
-		struct {
-				unsigned char pos_old :8;
-				unsigned char pos_new :8;
-				unsigned char special :4; // all the special moves defined above
-				signed char moved_piece :4;
-				signed char content :4;
-				signed char promoted :4;
-		};
+    unsigned int move;
+
+    struct {
+        unsigned char pos_old : 8;
+        unsigned char pos_new : 8;
+        unsigned char special : 4; // all the special moves defined above
+        signed char moved_piece : 4;
+        signed char content : 4;
+        signed char promoted : 4;
+    };
 } move;
 
 typedef struct _HISTORY_ITEM {
-		move m;
-		int white_castle;
-		int black_castle;
-		int en_passant;
-		int fifty_moves;
-		int hash;
+    move m;
+    int white_castle;
+    int black_castle;
+    int en_passant;
+    int fifty_moves;
+    int hash;
 } history_item;
 
 #ifdef USE_HASH_TABLE
@@ -245,16 +254,16 @@ typedef struct _HISTORY_ITEM {
 #define HT_SIZE (1<<24)
 
 enum htype {
-	NO, EXACT, LOWER, UPPER
+    NO, EXACT, LOWER, UPPER
 };
 
 typedef struct {
-		int score;
-		int depth;
-		int wtm;
-		int key;
-		move best;
-		htype type;
+    int score;
+    int depth;
+    int wtm;
+    int key;
+    move best;
+    htype type;
 
 } htentry;
 #endif

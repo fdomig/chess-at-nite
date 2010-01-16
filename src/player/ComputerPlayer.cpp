@@ -15,7 +15,7 @@
 #include <memory.h>
 
 ComputerPlayer::ComputerPlayer() :
-    Player() {
+Player() {
 }
 
 move ComputerPlayer::get_move() {
@@ -25,7 +25,7 @@ move ComputerPlayer::get_move() {
         generator.generate_all_moves();
         vector<move> moves = generator.get_all_moves();
         if (opening_book.get_move(moves, board->history, m)) {
-            cout << string_move(m) << endl;
+            cout << move_to_string(m) << endl;
             return m;
         }
     }
@@ -42,60 +42,72 @@ move ComputerPlayer::search_pv() {
     board->ply = 0;
     board->checked_nodes = 0;
 
-    memset(board->pv, 0, sizeof(board->pv));
+    memset(board->pv, 0, sizeof (board->pv));
 #ifdef SHOW_THINKING
     printf("ply     time    nodes    score   pv\n");
 #endif
-    int searched = 0;
     move best_moves[MAX_SEARCH_DEPTH];
     int best_scores[MAX_SEARCH_DEPTH];
+    int best_moves_plys[MAX_SEARCH_DEPTH];
 
-    int i = 1;
-
-    for (; i < MAX_SEARCH_DEPTH && !board->time_exit; i++) {
+    int depth = 1;
+    bool found_mate = false;
+    for (; depth < MAX_SEARCH_DEPTH && !board->time_exit; depth++) {
         board->follow_pv = true;
-        int score = alpha_beta(i, -EVALUATION_START, EVALUATION_START);
-        best_moves[i] = board->pv[0][0];
-        best_scores[i] = score;
+        int score = alpha_beta(depth, -EVALUATION_START, EVALUATION_START);
+        best_moves[depth] = board->pv[0][0];
+        best_moves_plys[depth] = board->pv_length[0];
+        best_scores[depth] = score;
 
 #ifdef SHOW_THINKING
         if (!board->time_exit) {
-            printf("%3d  %4s  %7s  %7s  ", i,
-                    display_time(start_time, get_ms()), display_nodes_count(
-                            board->checked_nodes), display_score(score));
-            for (int j = 0; j < board->pv_length[0]; ++j)
-                printf(" %s", string_move_basic(board->pv[0][j]).c_str());
+            printf("%3d  %7s  %7s  %7s  ", depth,
+                    display_time(start_time, get_ms()),
+                    display_nodes_count(board->checked_nodes),
+                    display_score(score));
+            for (int j = 0; j < board->pv_length[0]; ++j) {
+                printf(" %s", move_to_string_basic(board->pv[0][j]).c_str());
+            }
             printf("\n");
             fflush(stdout);
         }
 #endif
-        searched++;
-
-        if (score >= MATE || score <= -MATE) {
-            int count = score >= MATE ? score - MATE : (score * -1) - MATE;
-            printf("Checkmate in %d ply.\n", count);
-            return board->pv[0][0];
+        if (abs(score) >= MATE) {
+            found_mate = true;
+            break;
         }
     }
 
     move best_move;
+    int best_move_plys;
     int best_score;
+
     if (board->time_exit) {
-        printf("Stopped after %s (%s nodes searched)\n", display_time(
-                start_time, get_ms()),
-                display_nodes_count(board->checked_nodes));
-        best_move = best_moves[i - 2];
-        best_score = best_scores[i - 2];
+        best_move = best_moves[depth - 2];
+        best_move_plys = best_moves_plys[depth - 2];
+        best_score = best_scores[depth - 2];
+    } else if (found_mate) {
+        best_move = best_moves[depth];
+        best_move_plys = best_moves_plys[depth];
+        best_score = best_scores[depth];
     } else {
-        printf("Found after %s (%s nodes searched)\n", display_time(start_time,
-                get_ms()), display_nodes_count(board->checked_nodes));
-        best_move = best_moves[i - 1];
-        best_score = best_scores[i - 1];
+        best_move = best_moves[depth - 1];
+        best_move_plys = best_moves_plys[depth - 1];
+        best_score = best_scores[depth - 1];
     }
 
+#ifdef SHOW_SEARCH_INFO
+    float total_time = (float) (get_ms() - start_time) / 1000;
+    printf("%s nodes searched in %.2f secs (%.1fK nodes/sec)\n",
+            display_nodes_count(board->checked_nodes),
+            total_time,
+            (board->checked_nodes / 1000.0) / total_time);
+#endif
+    
 #ifdef SHOW_BEST_SCORE
-    cout << "Score for move " << string_move(best_move) << " is "
-            << display_score(best_score) << endl;
+    cout << "Score for move " << move_to_string(best_move) << " is " << display_score(best_score);
+    cout << " (" << best_move_plys << " plys)";
+    cout << endl;
 #endif
 
     return best_move;
@@ -120,26 +132,26 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
     // EXPERIMENTAL: check for a hash entry
     switch (board->hash_probe(depth, &alpha, beta)) {
         case EXACT:
-        if (alpha < beta) {
+            if (alpha < beta) {
 
-            board->pv_length[board->ply] = board->ply;
-            htentry* entry = board->hash_entry(board->get_hash());
-            board->pv[board->ply][board->ply] = entry->best;
+                board->pv_length[board->ply] = board->ply;
+                htentry* entry = board->hash_entry(board->get_hash());
+                board->pv[board->ply][board->ply] = entry->best;
 
-            for (int j = board->ply + 1; j < board->pv_length[board->ply
-                    + 1]; ++j) {
-                board->pv[board->ply][j] = board->pv[board->ply + 1][j];
+                for (int j = board->ply + 1; j < board->pv_length[board->ply
+                        + 1]; ++j) {
+                    board->pv[board->ply][j] = board->pv[board->ply + 1][j];
+                }
+                board->pv_length[board->ply] = board->pv_length[board->ply + 1];
+
             }
-            board->pv_length[board->ply] = board->pv_length[board->ply + 1];
-
-        }
-        return alpha;
+            return alpha;
         case LOWER:
-        return beta;
+            return beta;
         case UPPER:
-        return alpha;
+            return alpha;
         case NO:
-        break;
+            break;
     }
 #endif // USE_HASH_TABLE
     board->pv_length[board->ply] = board->ply;
@@ -160,14 +172,14 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
         return DRAW;
     }
 
-	//TODO: maybe it's better to use the get_all_moves(move best_move) from
-	// move generator, cause this function puts the best move in front without
-	// changing of the moves.. don't forget that they are sorted
-	if (board->follow_pv) {
-	    sort_pv(moves);
-	}
+    //TODO: maybe it's better to use the get_all_moves(move best_move) from
+    // move generator, cause this function puts the best move in front without
+    // changing of the moves.. don't forget that they are sorted
+    if (board->follow_pv) {
+        sort_pv(moves);
+    }
 
-	bool played_move = false;
+    bool played_move = false;
     int score = 0;
     bool pvSearch = true;
 

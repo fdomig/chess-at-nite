@@ -197,11 +197,11 @@ string Board::get_fen() {
         fen.push_back('-');
     }
     fen.append(" ");
-    fen.append(get_square_by_index(en_passant));
+    fen.append(square_to_string(en_passant));
     fen.append(" ");
-    fen.append(to_string(fifty_moves));
+    fen.append(int_to_string(fifty_moves));
     fen.append(" ");
-    fen.append(to_string(full_moves));
+    fen.append(int_to_string(full_moves));
     return fen;
 }
 
@@ -612,7 +612,7 @@ ostream& operator<<(ostream& os, Board& board) {
             if (board.board[square] != EMPTY) {
                 os << piece_symbol(board.board[square]);
             } else {
-                os << string_square(square);
+                os << empty_square_to_string(square);
             }
 
             if (!board.history.empty() && (board.history.back().m.pos_new == square)) {
@@ -677,7 +677,7 @@ ostream& operator<<(ostream& os, Board& board) {
 
     //last move
     if (!board.history.empty()) {
-        os << " " << string_move(board.history.back().m);
+        os << " " << move_to_string(board.history.back().m);
     }
 
     os << endl;
@@ -690,8 +690,8 @@ ostream& operator<<(ostream& os, Board& board) {
     os << endl;
 #ifdef DEBUG
     os << "wc: " << board.white_castle << " bc: " << board.black_castle;
-    os << " wk: " << get_square_by_index(board.white_king) << " bk: " << get_square_by_index(board.black_king);
-    os << " en: " << get_square_by_index(board.en_passant);
+    os << " wk: " << square_to_string(board.white_king) << " bk: " << square_to_string(board.black_king);
+    os << " en: " << square_to_string(board.en_passant);
     os << " 50r: " << board.fifty_moves << " full: " << board.full_moves << endl;
     os << board.get_fen() << endl;
 #endif
@@ -767,12 +767,12 @@ ostream& operator<<(ostream& os, Board& board) {
     os << "  a b c d e f g h    ";
     //last move
     if (!board.history.empty()) {
-        os << " " << string_move(board.history.back().m);
+        os << " " << move_to_string(board.history.back().m);
     }
 
     os << endl;
 #ifdef DEBUG
-    os << "wc: " << board.white_castle << " bc: " << board.black_castle << "  en: " << get_square_by_index(board.en_passant)<< endl;
+    os << "wc: " << board.white_castle << " bc: " << board.black_castle << "  en: " << square_to_string(board.en_passant)<< endl;
     os <<board.get_fen()<<endl;
 #endif
 

@@ -12,10 +12,6 @@
  */
 
 /*
- * TODO:
- * to cover this state! It's possible to en passant and eliminate the threat! but now it's not working
- * "3r2k1/R4p2/p2n3p/2pP2pP/2P2KP1/3B3r/P2R4/8 w - - 0 44"
- *
  * TODO: make the code more readable by adding inline functions!
  */
 

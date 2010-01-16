@@ -83,7 +83,7 @@ bool OpeningBook::get_move(vector<move>& available_moves,
 
 	//Check if the last move is in the book.
 	last_move = made_moves.back().m;
-	last_move_string = string_move_very_basic(last_move);
+	last_move_string = move_to_string_very_basic(last_move);
 	if (!set_first_and_last(last_move_string, made_moves.size() - 1)) {
 		book_open = false;
 		return false;
