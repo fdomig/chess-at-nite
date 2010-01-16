@@ -103,7 +103,7 @@ move ComputerPlayer::search_pv() {
             total_time,
             (board->checked_nodes / 1000.0) / total_time);
 #endif
-    
+
 #ifdef SHOW_BEST_SCORE
     cout << "Score for move " << move_to_string(best_move) << " is " << display_score(best_score);
     cout << " (" << best_move_plys << " plys)";

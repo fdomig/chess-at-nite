@@ -227,7 +227,7 @@ string move_to_string_basic(move m) {
     string result("");
     switch (m.special) {
         case MOVE_CASTLE_LONG:
-            result.append("0-00");
+            result.append("0-0-0");
             break;
         case MOVE_CASTLE_SHORT:
             result.append("0-0 ");

@@ -55,18 +55,18 @@ Board::Board(string& fen) {
     if (tokens[2].compare("-") != 0) {
         for (unsigned i = 0; i < tokens[2].length(); i++) {
             switch (tokens[2][i]) {
-            case 'k':
-                black_castle = black_castle | CASTLE_SHORT;
-                break;
-            case 'q':
-                black_castle = black_castle | CASTLE_LONG;
-                break;
-            case 'K':
-                white_castle = white_castle | CASTLE_SHORT;
-                break;
-            case 'Q':
-                white_castle = white_castle | CASTLE_LONG;
-                break;
+                case 'k':
+                    black_castle = black_castle | CASTLE_SHORT;
+                    break;
+                case 'q':
+                    black_castle = black_castle | CASTLE_LONG;
+                    break;
+                case 'K':
+                    white_castle = white_castle | CASTLE_SHORT;
+                    break;
+                case 'Q':
+                    white_castle = white_castle | CASTLE_LONG;
+                    break;
             }
         }
     }
@@ -126,6 +126,7 @@ string Board::preparse_fen(string& fen) {
 }
 
 // Castling flags need to be add, possibly also en passant, half-move clock and full-move number.
+
 void Board::parse_fen(string& fen) {
     vector<string> ranks;
     split(fen, ranks, '/');
@@ -135,17 +136,16 @@ void Board::parse_fen(string& fen) {
             square = (7 - rank) * NEXT_RANK + file * NEXT_FILE;
             board[square] = lookup_piece(ranks[rank][file]);
             switch (board[square]) {
-            case WHITE_KING:
-                white_king = square;
-                break;
-            case BLACK_KING:
-                black_king = square;
-                break;
+                case WHITE_KING:
+                    white_king = square;
+                    break;
+                case BLACK_KING:
+                    black_king = square;
+                    break;
             }
         }
     }
 }
-
 
 void Board::set_status(int s) {
     status = s;
@@ -229,99 +229,99 @@ void Board::fake_move(move m) {
     }
 
     switch (m.special) {
-    case MOVE_ORDINARY:
-        board[m.pos_old] = EMPTY;
-        board[m.pos_new] = m.moved_piece;
+        case MOVE_ORDINARY:
+            board[m.pos_old] = EMPTY;
+            board[m.pos_new] = m.moved_piece;
 
-        if (m.content != EMPTY) {
-            fifty_moves = 0;
-        }
-        switch (m.moved_piece) {
-        case WHITE_KING:
-            white_king = m.pos_new;
-            if (m.pos_old == WHITE_KING_INIT_SQUARE) {
+            if (m.content != EMPTY) {
+                fifty_moves = 0;
+            }
+            switch (m.moved_piece) {
+                case WHITE_KING:
+                    white_king = m.pos_new;
+                    if (m.pos_old == WHITE_KING_INIT_SQUARE) {
+                        white_castle = CASTLE_NONE;
+                    }
+                    break;
+                case BLACK_KING:
+                    black_king = m.pos_new;
+                    if (m.pos_old == BLACK_KING_INIT_SQUARE) {
+                        black_castle = CASTLE_NONE;
+                    }
+                    break;
+                case WHITE_ROOK:
+                    switch (m.pos_old) {
+                        case WHITE_ROOK_SHORT_SQUARE:
+                            white_castle &= ~CASTLE_SHORT;
+                            break;
+                        case WHITE_ROOK_LONG_SQUARE:
+                            white_castle &= ~CASTLE_LONG;
+                            break;
+                    }
+                    break;
+                case BLACK_ROOK:
+                    switch (m.pos_old) {
+                        case BLACK_ROOK_SHORT_SQUARE:
+                            black_castle &= ~CASTLE_SHORT;
+                            break;
+                        case BLACK_ROOK_LONG_SQUARE:
+                            black_castle &= ~CASTLE_LONG;
+                            break;
+                    }
+                    break;
+                case BLACK_PAWN:
+                case WHITE_PAWN:
+                    //if the pawn is moving two ranks.. then the square that it's between is the en passant square
+                    if (abs((m.pos_new - m.pos_old) >> 1) == NEXT_RANK) {
+                        en_passant = ((m.pos_new - m.pos_old) >> 1) + m.pos_old;
+                    }
+                    fifty_moves = 0;
+                    break;
+            }
+            break;
+        case MOVE_CASTLE_SHORT:
+            //king
+            board[m.pos_new] = m.moved_piece;
+            board[m.pos_old] = EMPTY;
+            //rook
+            board[m.pos_old + NEXT_FILE] = board[m.pos_old + CASTLING_SHORT_DIST_ROOK * NEXT_FILE];
+            board[m.pos_old + CASTLING_SHORT_DIST_ROOK * NEXT_FILE] = EMPTY;
+            //white moves
+            if (m.moved_piece == WHITE_KING) {
                 white_castle = CASTLE_NONE;
-            }
-            break;
-        case BLACK_KING:
-            black_king = m.pos_new;
-            if (m.pos_old == BLACK_KING_INIT_SQUARE) {
+                white_king = m.pos_new;
+            } else {
                 black_castle = CASTLE_NONE;
+                black_king = m.pos_new;
             }
             break;
-        case WHITE_ROOK:
-            switch (m.pos_old) {
-            case WHITE_ROOK_SHORT_SQUARE:
-                white_castle &= ~CASTLE_SHORT;
-                break;
-            case WHITE_ROOK_LONG_SQUARE:
-                white_castle &= ~CASTLE_LONG;
-                break;
+        case MOVE_CASTLE_LONG:
+            //king
+            board[m.pos_new] = m.moved_piece;
+            board[m.pos_old] = EMPTY;
+            //rook
+            board[m.pos_old - NEXT_FILE] = board[m.pos_old - CASTLING_LONG_DIST_ROOK * NEXT_FILE];
+            board[m.pos_old - CASTLING_LONG_DIST_ROOK * NEXT_FILE] = EMPTY;
+
+            if (m.moved_piece == WHITE_KING) {
+                white_castle = CASTLE_NONE;
+                white_king = m.pos_new;
+            } else {
+                black_castle = CASTLE_NONE;
+                black_king = m.pos_new;
             }
             break;
-        case BLACK_ROOK:
-            switch (m.pos_old) {
-            case BLACK_ROOK_SHORT_SQUARE:
-                black_castle &= ~CASTLE_SHORT;
-                break;
-            case BLACK_ROOK_LONG_SQUARE:
-                black_castle &= ~CASTLE_LONG;
-                break;
-            }
-            break;
-        case BLACK_PAWN:
-        case WHITE_PAWN:
-            //if the pawn is moving two ranks.. then the square that it's between is the en passant square
-            if (abs((m.pos_new - m.pos_old) >> 1) == NEXT_RANK) {
-                en_passant = ((m.pos_new - m.pos_old) >> 1) + m.pos_old;
-            }
+        case MOVE_PROMOTION:
+            board[m.pos_old] = EMPTY;
+            board[m.pos_new] = m.promoted;
             fifty_moves = 0;
             break;
-        }
-        break;
-    case MOVE_CASTLE_SHORT:
-        //king
-        board[m.pos_new] = m.moved_piece;
-        board[m.pos_old] = EMPTY;
-        //rook
-        board[m.pos_old + NEXT_FILE] = board[m.pos_old + CASTLING_SHORT_DIST_ROOK * NEXT_FILE];
-        board[m.pos_old + CASTLING_SHORT_DIST_ROOK * NEXT_FILE] = EMPTY;
-        //white moves
-        if (m.moved_piece == WHITE_KING) {
-            white_castle = CASTLE_NONE;
-            white_king = m.pos_new;
-        } else {
-            black_castle = CASTLE_NONE;
-            black_king = m.pos_new;
-        }
-        break;
-    case MOVE_CASTLE_LONG:
-        //king
-        board[m.pos_new] = m.moved_piece;
-        board[m.pos_old] = EMPTY;
-        //rook
-        board[m.pos_old - NEXT_FILE] = board[m.pos_old - CASTLING_LONG_DIST_ROOK * NEXT_FILE];
-        board[m.pos_old - CASTLING_LONG_DIST_ROOK * NEXT_FILE] = EMPTY;
-
-        if (m.moved_piece == WHITE_KING) {
-            white_castle = CASTLE_NONE;
-            white_king = m.pos_new;
-        } else {
-            black_castle = CASTLE_NONE;
-            black_king = m.pos_new;
-        }
-        break;
-    case MOVE_PROMOTION:
-        board[m.pos_old] = EMPTY;
-        board[m.pos_new] = m.promoted;
-        fifty_moves = 0;
-        break;
-    case MOVE_EN_PASSANT:
-        board[m.pos_old] = EMPTY;
-        board[m.pos_new] = m.moved_piece;
-        board[m.pos_new - m.moved_piece * NEXT_RANK] = EMPTY;
-        fifty_moves = 0;
-        break;
+        case MOVE_EN_PASSANT:
+            board[m.pos_old] = EMPTY;
+            board[m.pos_new] = m.moved_piece;
+            board[m.pos_new - m.moved_piece * NEXT_RANK] = EMPTY;
+            fifty_moves = 0;
+            break;
     }
     to_move = to_move == WHITE ? BLACK : WHITE;
 
@@ -356,56 +356,56 @@ move Board::unfake_move() {
 
     move m = last_item.m;
     switch (m.special) {
-    case MOVE_ORDINARY:
-    case MOVE_PROMOTION:
-        board[m.pos_new] = m.content;
-        board[m.pos_old] = m.moved_piece;
-        switch (m.moved_piece) {
-        case WHITE_KING:
-            white_king = m.pos_old;
+        case MOVE_ORDINARY:
+        case MOVE_PROMOTION:
+            board[m.pos_new] = m.content;
+            board[m.pos_old] = m.moved_piece;
+            switch (m.moved_piece) {
+                case WHITE_KING:
+                    white_king = m.pos_old;
+                    break;
+                case BLACK_KING:
+                    black_king = m.pos_old;
+                    break;
+            }
             break;
-        case BLACK_KING:
-            black_king = m.pos_old;
+        case MOVE_CASTLE_SHORT:
+            board[m.pos_old] = m.moved_piece;
+            board[m.pos_old + CASTLING_SHORT_DIST_ROOK * NEXT_FILE] = board[m.pos_old + NEXT_FILE];
+            board[m.pos_new] = EMPTY;
+            board[m.pos_old + NEXT_FILE] = EMPTY;
+            switch (m.moved_piece) {
+                case WHITE_KING:
+                    //the previous white_castle flags are stored in promoted...
+                    white_king = m.pos_old;
+                    break;
+                case BLACK_KING:
+                    //the previous black_castle flags are stored in promoted...
+                    black_king = m.pos_old;
+                    break;
+            }
             break;
-        }
-        break;
-    case MOVE_CASTLE_SHORT:
-        board[m.pos_old] = m.moved_piece;
-        board[m.pos_old + CASTLING_SHORT_DIST_ROOK * NEXT_FILE] = board[m.pos_old + NEXT_FILE];
-        board[m.pos_new] = EMPTY;
-        board[m.pos_old + NEXT_FILE] = EMPTY;
-        switch (m.moved_piece) {
-        case WHITE_KING:
-            //the previous white_castle flags are stored in promoted...
-            white_king = m.pos_old;
+        case MOVE_CASTLE_LONG:
+            board[m.pos_old] = m.moved_piece;
+            board[m.pos_old - CASTLING_LONG_DIST_ROOK * NEXT_FILE] = board[m.pos_old - NEXT_FILE];
+            board[m.pos_new] = EMPTY;
+            board[m.pos_old - NEXT_FILE] = EMPTY;
+            switch (m.moved_piece) {
+                case WHITE_KING:
+                    //the previous white_castle flags are stored in promoted...
+                    white_king = m.pos_old;
+                    break;
+                case BLACK_KING:
+                    //the previous black_castle flags are stored in promoted...
+                    black_king = m.pos_old;
+                    break;
+            }
             break;
-        case BLACK_KING:
-            //the previous black_castle flags are stored in promoted...
-            black_king = m.pos_old;
+        case MOVE_EN_PASSANT:
+            board[m.pos_old] = m.moved_piece;
+            board[m.pos_new] = EMPTY;
+            board[m.pos_new - m.moved_piece * NEXT_RANK] = m.content;
             break;
-        }
-        break;
-    case MOVE_CASTLE_LONG:
-        board[m.pos_old] = m.moved_piece;
-        board[m.pos_old - CASTLING_LONG_DIST_ROOK * NEXT_FILE] = board[m.pos_old - NEXT_FILE];
-        board[m.pos_new] = EMPTY;
-        board[m.pos_old - NEXT_FILE] = EMPTY;
-        switch (m.moved_piece) {
-        case WHITE_KING:
-            //the previous white_castle flags are stored in promoted...
-            white_king = m.pos_old;
-            break;
-        case BLACK_KING:
-            //the previous black_castle flags are stored in promoted...
-            black_king = m.pos_old;
-            break;
-        }
-        break;
-    case MOVE_EN_PASSANT:
-        board[m.pos_old] = m.moved_piece;
-        board[m.pos_new] = EMPTY;
-        board[m.pos_new - m.moved_piece * NEXT_RANK] = m.content;
-        break;
     }
     to_move = to_move == WHITE ? BLACK : WHITE;
 
@@ -501,25 +501,25 @@ void Board::update_hash(move m) {
     }
 
     switch (m.special) {
-    case MOVE_CASTLE_LONG:
-        if (color == WHITE) {
-            key ^= hash_casteling_white[CASTLE_LONG];
-        } else {
-            key ^= hash_casteling_black[CASTLE_LONG];
-        }
-        break;
-    case MOVE_CASTLE_SHORT:
-        if (color == WHITE) {
-            key ^= hash_casteling_white[CASTLE_SHORT];
-        } else {
-            key ^= hash_casteling_black[CASTLE_SHORT];
-        }
-        break;
-    case MOVE_EN_PASSANT:
-        key ^= hash_en_passant[m.pos_new - m.moved_piece * NEXT_RANK];
-        break;
-    case MOVE_PROMOTION:
-        key ^= hash_promotion[abs(m.promoted) - 1];
+        case MOVE_CASTLE_LONG:
+            if (color == WHITE) {
+                key ^= hash_casteling_white[CASTLE_LONG];
+            } else {
+                key ^= hash_casteling_black[CASTLE_LONG];
+            }
+            break;
+        case MOVE_CASTLE_SHORT:
+            if (color == WHITE) {
+                key ^= hash_casteling_white[CASTLE_SHORT];
+            } else {
+                key ^= hash_casteling_black[CASTLE_SHORT];
+            }
+            break;
+        case MOVE_EN_PASSANT:
+            key ^= hash_en_passant[m.pos_new - m.moved_piece * NEXT_RANK];
+            break;
+        case MOVE_PROMOTION:
+            key ^= hash_promotion[abs(m.promoted) - 1];
     }
     current_hash = key;
 }
@@ -542,11 +542,12 @@ int Board::generate_hash() {
 }
 
 #ifdef USE_HASH_TABLE
+
 htype Board::hash_probe(int depth, int* alpha, int beta) {
     htentry* entry = hash_entry(current_hash);
     if (entry->key == current_hash) {
         if (entry->depth >= depth) {
-            switch(entry->type) {
+            switch (entry->type) {
                 case EXACT:
                     *alpha = entry->score;
                     return EXACT;
@@ -582,7 +583,8 @@ void Board::hash_store(int depth, htype type, int score, move best) {
 #endif // USE_HASH_TABLE
 
 #ifdef UNICODE
-ostream& operator<<(ostream& os, Board& board) {
+
+ostream & operator<<(ostream& os, Board& board) {
     int square;
 
     bool inverse = false;
@@ -623,41 +625,41 @@ ostream& operator<<(ostream& os, Board& board) {
         }
 
         switch (rank) {
-        case SIZE:
-            os << B_UD << " ";
-            for (index = 0; index < board.black_captures.size(); index++) {
-                os << piece_symbol(board.black_captures[index]);
-            }
-            break;
-        case 6:
-            os << B_UD << " ";
-            os << (board.to_move == WHITE ? "White's move: " : "Black's move: ") << board.full_moves;
-            break;
-        case 5:
-            os << B_UD << " ";
-            switch (board.get_status()) {
-            case STATUS_CHECK:
-                os << "Check";
+            case SIZE:
+                os << B_UD << " ";
+                for (index = 0; index < board.black_captures.size(); index++) {
+                    os << piece_symbol(board.black_captures[index]);
+                }
                 break;
-            case STATUS_CHECKMATE:
-                os << "Checkmate.. gg";
+            case 6:
+                os << B_UD << " ";
+                os << (board.to_move == WHITE ? "White's move: " : "Black's move: ") << board.full_moves;
                 break;
-            case STATUS_STALEMATE:
-                os << "Stalemate.. gg";
+            case 5:
+                os << B_UD << " ";
+                switch (board.get_status()) {
+                    case STATUS_CHECK:
+                        os << "Check";
+                        break;
+                    case STATUS_CHECKMATE:
+                        os << "Checkmate.. gg";
+                        break;
+                    case STATUS_STALEMATE:
+                        os << "Stalemate.. gg";
+                        break;
+                    case STATUS_DRAW:
+                        os << "Draw";
+                        break;
+                }
                 break;
-            case STATUS_DRAW:
-                os << "Draw";
+            case 1:
+                os << B_UD << " ";
+                for (index = 0; index < board.white_captures.size(); index++) {
+                    os << piece_symbol(board.white_captures[index]);
+                }
                 break;
-            }
-            break;
-        case 1:
-            os << B_UD << " ";
-            for (index = 0; index < board.white_captures.size(); index++) {
-                os << piece_symbol(board.white_captures[index]);
-            }
-            break;
-        default:
-            os << B_UD;
+            default:
+                os << B_UD;
         }
         os << endl;
     }
@@ -689,10 +691,8 @@ ostream& operator<<(ostream& os, Board& board) {
     os << B_LU;
     os << endl;
 #ifdef DEBUG
-    os << "wc: " << board.white_castle << " bc: " << board.black_castle;
-    os << " wk: " << square_to_string(board.white_king) << " bk: " << square_to_string(board.black_king);
-    os << " en: " << square_to_string(board.en_passant);
-    os << " 50r: " << board.fifty_moves << " full: " << board.full_moves << endl;
+    os << "w_king: " << square_to_string(board.white_king);
+    os << "  b_king: " << square_to_string(board.black_king) << endl;
     os << board.get_fen() << endl;
 #endif
     return os;
@@ -700,12 +700,12 @@ ostream& operator<<(ostream& os, Board& board) {
 
 #else
 
-ostream& operator<<(ostream& os, Board& board) {
+ostream & operator<<(ostream& os, Board& board) {
 #ifdef TOURNAMENT
     os << endl << board.get_fen() << endl;
 #endif
 
-	int square;
+    int square;
     for (int rank = SIZE; rank > 0; rank--) {
         os << rank << " ";
         for (int file = 0; file < SIZE; file++) {
@@ -729,7 +729,7 @@ ostream& operator<<(ostream& os, Board& board) {
 
         switch (rank) {
             case SIZE:
-            os << "  ";
+                os << "  ";
                 for (unsigned i = 0; i < board.black_captures.size(); i++) {
                     os << piece_symbol(board.black_captures[i]);
                 }
@@ -741,18 +741,18 @@ ostream& operator<<(ostream& os, Board& board) {
             case 5:
                 os << "  ";
                 switch (board.get_status()) {
-                case STATUS_CHECK:
-                    os << "Check";
-                    break;
-                case STATUS_CHECKMATE:
-                    os << "Checkmate";
-                    break;
-                case STATUS_STALEMATE:
-                    os << "Stalemate";
-                    break;
-                case STATUS_DRAW:
-                    os << "Draw";
-                    break;
+                    case STATUS_CHECK:
+                        os << "Check";
+                        break;
+                    case STATUS_CHECKMATE:
+                        os << "Checkmate";
+                        break;
+                    case STATUS_STALEMATE:
+                        os << "Stalemate";
+                        break;
+                    case STATUS_DRAW:
+                        os << "Draw";
+                        break;
                 }
                 break;
             case 1:
@@ -772,8 +772,9 @@ ostream& operator<<(ostream& os, Board& board) {
 
     os << endl;
 #ifdef DEBUG
-    os << "wc: " << board.white_castle << " bc: " << board.black_castle << "  en: " << square_to_string(board.en_passant)<< endl;
-    os <<board.get_fen()<<endl;
+    os << "w_king: " << square_to_string(board.white_king);
+    os << "  b_king: " << square_to_string(board.black_king) << endl;
+    os << board.get_fen() << endl;
 #endif
 
     return os;
