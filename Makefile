@@ -11,7 +11,7 @@ BIN=$(PRE)/bin
 TEMP_BIN=bin
 
 SRC_DIR=src
-COMMON_SOURCES=$(SRC_DIR)/common/utils.cpp
+COMMON_SOURCES=$(SRC_DIR)/common/utils.cpp $(SRC_DIR)/common/extra_utils.cpp
 CONTROL_SOURCES=$(SRC_DIR)/control/CLI.cpp
 MODEL_SOURCES=$(SRC_DIR)/model/Board.cpp $(SRC_DIR)/model/evaluate.cpp $(SRC_DIR)/model/Game.cpp $(SRC_DIR)/model/MoveGenerator.cpp $(SRC_DIR)/model/OpeningBook.cpp
 PLAYER_SOURCES=$(SRC_DIR)/player/ComputerPlayer.cpp $(SRC_DIR)/player/HumanPlayer.cpp $(SRC_DIR)/player/Player.cpp

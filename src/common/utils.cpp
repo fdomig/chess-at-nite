@@ -297,6 +297,123 @@ string move_to_string(const move& m, unsigned int length) {
     return result;
 }
 
+/**
+ * TODO: this method is not finished!
+ *
+ * open tasks:
+ *
+ * Add "+" for check, and "#" for checkmate. Needs special flag in the move to
+ * show if this move is check/checkmate.
+ *
+ * If there is more than one piece that can move to the given square, then the
+ * starting square-file has to be added; if still not enough to distinguish,
+ * then the starting square-rank instead has to be added; if still no difference
+ * both starting square-file and -rank has to be added.
+ */
+string move_to_algebraic(const move& m, const vector<move> &moves) {
+
+    string ret = "";
+
+    //castlings
+    if (m.special == CASTLE_LONG) {
+        ret.append("O-O-O");
+        return ret;
+    } else if (m.special == CASTLE_SHORT) {
+        ret.append("O-O");
+        return ret;
+    }
+
+    //moved piece
+    switch (abs(m.moved_piece)) {
+        case PAWN:
+            break;
+        case KNIGHT:
+            ret.append("N");
+            break;
+        case BISHOP:
+            ret.append("B");
+            break;
+        case ROOK:
+            ret.append("R");
+            break;
+        case QUEEN:
+            ret.append("Q");
+            break;
+        case KING:
+            ret.append("K");
+            break;
+    }
+
+    vector<move> same;
+    //disambiguating moves
+    //same piece and same destination
+    same.clear();
+    for (unsigned int index = 0; index < moves.size(); index++) {
+        if ((moves[index].pos_old != m.pos_old) &&
+                (moves[index].moved_piece == m.moved_piece) &&
+                (moves[index].pos_new == m.pos_new)) {
+            same.push_back(moves[index]);
+        }
+    }
+    int count = 0;
+    //check for different FILE of departure
+    for (unsigned int index = 0; index < same.size(); index++) {
+        if (FILE(same[index].pos_old) == FILE(m.pos_old)) {
+            count++;
+        }
+    }
+
+    if (!same.empty() && count == 0) {
+        char file = FILE(m.pos_old) + 'a';
+        ret.push_back(file);
+    } else if (count > 0) {
+        count = 0;
+        for (unsigned int index = 0; index < same.size(); index++) {
+            if (RANK(same[index].pos_old) == RANK(m.pos_old)) {
+                count++;
+            }
+        }
+        if (!same.empty() && count == 0) {
+            char rank = RANK(m.pos_old) + '1';
+            ret.push_back(rank);
+        } else if (count > 0) {
+            //square of departure
+            ret.append(square_to_string(m.pos_old));
+        }
+    }
+
+    //captures
+    if (m.content != EMPTY && m.special != MOVE_PROMOTION) {
+        if (abs(m.moved_piece) == PAWN) {
+            char file = FILE(m.pos_old) + 'a';
+            ret.push_back(file);
+        }
+        ret.append("x");
+    }
+
+    //square of destination
+    ret.append(square_to_string(m.pos_new));
+
+    //promotions
+    if (m.special == MOVE_PROMOTION) {
+        switch (abs(m.content)) {
+            case KNIGHT:
+                ret.append("N");
+                break;
+            case BISHOP:
+                ret.append("B");
+                break;
+            case ROOK:
+                ret.append("R");
+                break;
+            case QUEEN:
+                ret.append("Q");
+                break;
+        }
+    }
+    return ret;
+}
+
 string empty_square_to_string(int square) {
     if ((RANK(square) + FILE(square)) & 1) {
         return ".";
@@ -369,6 +486,9 @@ move string_to_move(const string& text) {
             case 'm':
                 m.special = MOVE_SHOW_MOVES;
                 break;
+            case 'a':
+                m.special = MOVE_SHOW_ALGEBRAIC;
+                break;
             case 'h':
                 m.special = MOVE_SHOW_HISOTRY;
                 break;
@@ -421,6 +541,27 @@ void print_moves(const vector<move>& moves) {
     unsigned int i;
     for (i = 0; i < moves.size(); i++) {
         cout << move_to_string(moves[i], 20);
+        if ((i % 2) != 0) {
+            cout << endl;
+        }
+    }
+    if ((i % 2) != 0) {
+        cout << endl;
+    }
+    cout << "-----------------------------------" << endl;
+}
+
+void print_algebraic_moves(const vector<move>& moves) {
+    if (moves.size() == 0) {
+        cout << "No available moves... :(" << endl;
+        return;
+    }
+    cout << "---------" << setw(2) << moves.size() << " available moves--------" << endl;
+    unsigned int i;
+    string move;
+    for (i = 0; i < moves.size(); i++) {
+        move = move_to_algebraic(moves[i], moves);
+        cout << move << setw(20 - move.length()) << " ";
         if ((i % 2) != 0) {
             cout << endl;
         }
@@ -489,82 +630,13 @@ void print_help() {
     cout << "  " << endl;
     cout << "Extra commands during the game: " << endl;
     cout << " /m - all the available moves" << endl;
+    cout << " /a - algebraic notation of moves" << endl;
     cout << " /h - history of moves" << endl;
     cout << " /r - resign from the game" << endl;
     cout << " /u - undo 2 moves" << endl;
     cout << " /b - current board state" << endl;
     cout << " /? - help" << endl;
     cout << "-------------------------------------------" << endl;
-}
-
-/**
- * TODO: this method is not finished!
- *
- * open tasks:
- *
- * Add "+" for check, and "#" for checkmate. Needs special flag in the move to
- * show if this move is check/checkmate.
- *
- * If there is more than one piece that can move to the given square, then the
- * starting square-file has to be added; if still not enough to distinguish,
- * then the starting square-rank instead has to be added; if still no difference
- * both starting square-file and -rank has to be added.
- */
-string move_to_algebraic(const move& m, const vector<move> &moves) {
-    string ret = "";
-    if (m.special == CASTLE_LONG) {
-        ret.append("O-O-O");
-        return ret;
-    } else if (m.special == CASTLE_SHORT) {
-        ret.append("O-O");
-        return ret;
-    }
-
-    switch (abs(m.moved_piece)) {
-        case PAWN:
-            break;
-        case KNIGHT:
-            ret.append("N");
-            break;
-        case BISHOP:
-            ret.append("B");
-            break;
-        case ROOK:
-            ret.append("R");
-            break;
-        case QUEEN:
-            ret.append("Q");
-            break;
-        case KING:
-            ret.append("K");
-            break;
-    }
-    if (m.content != EMPTY && m.special != MOVE_PROMOTION) {
-        if (abs(m.moved_piece) == PAWN) {
-            // XXX: seems to be, that this sometimes adds "#" to the char?!
-            char file = FILE(m.pos_old) + 'a';
-            ret.push_back(file);
-        }
-        ret.append("x");
-    }
-    ret.append(square_to_string(m.pos_new));
-    if (m.special == MOVE_PROMOTION) {
-        switch (abs(m.content)) {
-            case KNIGHT:
-                ret.append("N");
-                break;
-            case BISHOP:
-                ret.append("B");
-                break;
-            case ROOK:
-                ret.append("R");
-                break;
-            case QUEEN:
-                ret.append("Q");
-                break;
-        }
-    }
-    return ret;
 }
 
 char* display_nodes_count(float nodes) {

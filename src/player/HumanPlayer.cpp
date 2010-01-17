@@ -60,6 +60,9 @@ move HumanPlayer::get_valid_move_from_user() {
         case MOVE_SHOW_MOVES:
             print_moves(moves);
             continue;
+        case MOVE_SHOW_ALGEBRAIC:
+            print_algebraic_moves(moves);
+            continue;
         case MOVE_RESIGN:
             found = true;
             break;

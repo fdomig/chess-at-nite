@@ -145,6 +145,8 @@ void CLI::show_about() {
 }
 
 void CLI::select_fen() {
+    //lots of knights to test the algebraic notation
+    fen = "k7/8/8/2N1N3/1N3N2/8/1N3N2/2N1N2K w - - 0 18";
     fen = BENCHMARK_FEN;
     Board b = Board(fen);
     cout << b << endl;
@@ -229,13 +231,16 @@ void CLI::run_wac_test() {
         } else if (cmd.compare("svfe") == 0) {
             string fen = "";
             fen = line.substr(5, line.length() - 5);
-            Board b = Board(fen);
-            Player* p = new ComputerPlayer();
-            p->set_board(&b);
-            move m = p->get_move();
-            cout << "Found: " << move_to_string_simple(m) << endl;
-            found.push_back(move_to_string_simple(m));
-            delete p;
+            Board board = Board(fen);
+            Player* player = new ComputerPlayer();
+            player->set_board(&board);
+            move m = player->get_move();
+            MoveGenerator move_generator = MoveGenerator(&board);
+            vector<move> moves = move_generator.get_all_moves();
+            string algebraic = move_to_algebraic(m, moves);
+            cout << "Found:     " << algebraic << endl;
+            found.push_back(algebraic);
+            delete player;
         } else if (cmd.compare("srch") == 0) {
             cout << "Should be: " << line.substr(5, line.length() - 5) << endl;
             should.push_back(line.substr(5, line.length() - 5));

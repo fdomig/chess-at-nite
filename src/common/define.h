@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.6.4"
+#define VERSION "0.6.5"
 
 
 //defines for different compiles
@@ -85,9 +85,10 @@
 #define MOVE_RESIGN            7
 #define MOVE_DRAW              8
 #define MOVE_SHOW_MOVES        9
-#define MOVE_SHOW_HISOTRY     10
-#define MOVE_SHOW_BOARD       11
-#define MOVE_SHOW_HELP        12
+#define MOVE_SHOW_ALGEBRAIC   10
+#define MOVE_SHOW_HISOTRY     11
+#define MOVE_SHOW_BOARD       12
+#define MOVE_SHOW_HELP        13
 
 //for the status of the game!
 #define STATUS_NORMAL          0

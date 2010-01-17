@@ -19,6 +19,7 @@
 #include <string>
 #include "../model/Game.h"
 #include "../model/Board.h"
+#include "../model/MoveGenerator.h"
 #include "../player/ComputerPlayer.h"
 #include "../player/HumanPlayer.h"
 
