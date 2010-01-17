@@ -49,34 +49,28 @@ void Game::start_game() {
  * Recursive play :)
  */
 void Game::play(Player* player1, Player* player2) {
-    vector<move> moves;
-    move_generator->generate_all_moves();
-    moves = move_generator->get_all_moves();
     string color;
+    int status;
     while (!game_over && board->number_of_moves < max_moves) {
         color = board -> to_move == WHITE ? "White" : "Black";
-        moves = move_generator->get_all_moves();
+        status = update_board_status(board);
 
-        if (moves.empty()) {
-            if (move_generator->king_under_check) {
-                board->set_status(STATUS_CHECKMATE);
+        board -> set_status(status);
+        cout << *board << endl;
+
+        //what to do in different cases
+        switch (status) {
+            case STATUS_CHECKMATE:
+            case STATUS_STALEMATE:
                 game_over = true;
-            } else {
-                board->set_status(STATUS_STALEMATE);
-                game_over = true;
-            }
-        } else if (move_generator->king_under_check) {
-            board->set_status(STATUS_CHECK);
-        } else {
-            board->set_status(STATUS_NORMAL);
+            break;
         }
 
-        cout << *board << endl;
-        // if the game is stalemate or checkmate..
         if (game_over) {
             break;
         }
 
+        //TODO: should leave from here...
         if (repetitions(board) >= 2) {
             cout << "You could claim a draw...!" << endl;
         }
@@ -107,6 +101,8 @@ void Game::play(Player* player1, Player* player2) {
                 game_over = true;
                 break;
             }
+
+            board->add_pgn(move_to_algebraic(next_move, *board));
             board->play_move(next_move);
             play(player2, player1);
         }

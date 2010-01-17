@@ -42,13 +42,11 @@ extern string empty_square_to_string(int square);
 extern string move_to_string_simple(const move& m);
 extern string move_to_string_basic(const move& m);
 extern string move_to_string_very_basic(const move& m);
-extern string move_to_algebraic(const move& m, const vector<move>& moves);
 extern string string_to_lower(string str);
 extern int get_promoted_piece(const char piece);
 extern bool same_move(move m1, move m2);
 
 extern void print_moves(const vector<move>& moves);
-extern void print_algebraic_moves(const vector<move>& moves);
 extern void print_history(const vector<history_item>& history);
 extern string int_to_string(int);
 extern bool is_legal_move(const vector<move>& moves, move& m);

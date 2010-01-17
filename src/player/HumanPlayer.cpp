@@ -61,7 +61,7 @@ move HumanPlayer::get_valid_move_from_user() {
             print_moves(moves);
             continue;
         case MOVE_SHOW_ALGEBRAIC:
-            print_algebraic_moves(moves);
+            print_algebraic_moves(moves, *board);
             continue;
         case MOVE_RESIGN:
             found = true;

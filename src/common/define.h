@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.6.5"
+#define VERSION "0.6.8"
 
 
 //defines for different compiles
@@ -38,6 +38,7 @@
 #ifdef DEBUG
 #define SHOW_THINKING
 #define SHOW_SEARCH_INFO
+#define SHOW_BEST_SCORE
 #endif
 
 

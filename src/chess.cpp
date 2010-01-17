@@ -24,6 +24,7 @@
 #include "player/HumanPlayer.h"
 #include "player/ComputerPlayer.h"
 #include "control/CLI.h"
+#include "common/extra_utils.h"
 
 void test();
 
@@ -63,17 +64,8 @@ void test() {
 
     Board board = Board(default_board);
 
-    MoveGenerator mg = MoveGenerator(&board);
-    mg.generate_all_moves();
-    vector<move> moves = mg.get_all_moves();
-    cout << board << endl;
-    print_moves(moves);
-    mg.print_debug_info();
-
-    Player* white_player = new ComputerPlayer();
-    Player* black_player = new HumanPlayer();
-
-    string test = piece_symbol(KING) + " " + piece_symbol(WHITE_ROOK);
+    Player* white_player = new HumanPlayer();
+    Player* black_player = new ComputerPlayer();
 
     Game game = Game(&board, white_player, black_player);
     game.start_game();

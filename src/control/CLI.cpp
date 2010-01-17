@@ -235,9 +235,7 @@ void CLI::run_wac_test() {
             Player* player = new ComputerPlayer();
             player->set_board(&board);
             move m = player->get_move();
-            MoveGenerator move_generator = MoveGenerator(&board);
-            vector<move> moves = move_generator.get_all_moves();
-            string algebraic = move_to_algebraic(m, moves);
+            string algebraic = move_to_algebraic(m, board);
             cout << "Found:     " << algebraic << endl;
             found.push_back(algebraic);
             delete player;

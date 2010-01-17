@@ -26,13 +26,13 @@ move ComputerPlayer::get_move() {
         generator.generate_all_moves();
         vector<move> moves = generator.get_all_moves();
         if (opening_book.get_move(moves, board->history, m)) {
-            cout << move_to_string(m) << endl;
+            cout << " from book: " << move_to_algebraic(m, *board) << endl;
             return m;
         }
     }
 #endif
 
-    cout << "thinking... " << endl;
+    cout << " thinking... " << endl;
     m = search_pv();
     return m;
 }
@@ -47,7 +47,7 @@ move ComputerPlayer::search_pv() {
 
     memset(board->pv, 0, sizeof (board->pv));
 #ifdef SHOW_THINKING
-    printf("ply     time    nodes    score   pv\n");
+    printf("ply    time    nodes  score  pv\n");
 #endif
     move best_moves[MAX_SEARCH_DEPTH];
     int best_scores[MAX_SEARCH_DEPTH];
@@ -64,12 +64,15 @@ move ComputerPlayer::search_pv() {
 
 #ifdef SHOW_THINKING
         if (!board->time_exit) {
-            printf("%3d  %7s  %7s  %7s  ", depth,
+            printf("%3d %7s  %7s %6s ", depth,
                     display_time(start_time, get_ms()),
                     display_nodes_count(board->checked_nodes),
                     display_score(score));
+            //you have to simulate the game to print the algebraic correct
+            Board temp_board = Board(*board);
             for (int j = 0; j < board->pv_length[0]; ++j) {
-                printf(" %s", move_to_string_basic(board->pv[0][j]).c_str());
+                printf(" %s", move_to_algebraic(board->pv[0][j], temp_board).c_str());
+                temp_board.play_move(board->pv[0][j]);
             }
             printf("\n");
             fflush(stdout);
@@ -108,7 +111,7 @@ move ComputerPlayer::search_pv() {
 #endif
 
 #ifdef SHOW_BEST_SCORE
-    cout << "Score for move " << move_to_string(best_move) << " is ";
+    cout << "Score for move " << move_to_algebraic(best_move, *board) << " is ";
     cout << display_score(best_score) << " (" << best_move_plys << " plys)";
     cout << endl;
 #endif

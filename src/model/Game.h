@@ -21,6 +21,7 @@
 #include "Board.h"
 #include "evaluate.h"
 #include "../player/Player.h"
+#include "../common/extra_utils.h"
 
 class Player;
 

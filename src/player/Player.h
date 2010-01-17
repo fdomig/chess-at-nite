@@ -18,6 +18,7 @@
 #include "../common/utils.h"
 #include "../model/Board.h"
 #include "../model/MoveGenerator.h"
+#include "../common/extra_utils.h"
 
 class Player {
 protected:

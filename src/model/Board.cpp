@@ -17,22 +17,32 @@ Board::Board(bool rotated) : rotated(rotated) {
     inititalize();
 }
 
+//TODO: it's not copying eeeverything.. use it at your own risk!!!
 Board::Board(const Board& b) {
     for (int i = 0; i < BOARD_SIZE; i++) {
         board[i] = b.board[i];
     }
+    for (unsigned i = 0; i < b.history.size(); i++) {
+        history.push_back(b.history[i]);
+    }
+    for (unsigned i = 0; i < b.pgn.size(); i++) {
+        pgn.push_back(b.pgn[i]);
+    }
+    
+    black_king = b.black_king;
+    white_king = b.white_king;
     black_castle = b.black_castle;
     white_castle = b.white_castle;
+
     en_passant = b.en_passant;
     fifty_moves = b.fifty_moves;
     full_moves = b.full_moves;
-    for (unsigned i = 0; i < b.history.size(); i++) {
-        history[i] = b.history[i];
-    }
     stop_time = b.stop_time;
     to_move = b.to_move;
     checked_nodes = b.checked_nodes;
     time_exit = b.time_exit;
+    rotated = b.rotated;
+    status = b.status;
 }
 
 Board::Board(string& fen, bool rotated) : rotated(rotated) {
@@ -102,6 +112,7 @@ void Board::inititalize() {
     full_moves = 1;
 
     history.clear();
+    pgn.clear();
     white_captures.clear();
     black_captures.clear();
 
@@ -448,7 +459,17 @@ void Board::undo_move() {
         }
         number_of_moves--;
     }
+
+    //remove last pgn...
+    if (!pgn.empty()) {
+        pgn.pop_back();
+    }
 }
+
+void Board::add_pgn(string algebraic) {
+    pgn.push_back(algebraic);
+}
+
 
 void Board::initialize_hash() {
     // pieces
@@ -695,8 +716,12 @@ ostream & operator<<(ostream& os, Board& board) {
     }
 
     //last move
+    if (!board.pgn.empty()) {
+        os << " " << board.pgn.back();
+    }
+
     if (!board.history.empty()) {
-        os << " " << move_to_string(board.history.back().m);
+        os << "  " << move_to_string(board.history.back().m);
     }
 
     os << endl;
@@ -779,10 +804,13 @@ ostream & operator<<(ostream& os, Board& board) {
     }
     os << "  a b c d e f g h    ";
     //last move
-    if (!board.history.empty()) {
-        os << " " << move_to_string(board.history.back().m);
+    if (!board.pgn.empty()) {
+        os << " " << board.pgn.back();
     }
 
+    if (!board.history.empty()) {
+        os << "  " << move_to_string(board.history.back().m);
+    }
     os << endl;
 #ifdef DEBUG
     os << "w_king: " << square_to_string(board.white_king);

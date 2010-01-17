@@ -74,6 +74,7 @@ public:
 
     //history of moves
     vector<history_item> history;
+    vector<string> pgn;
 
     // current search path
     move pv[MAX_PLY][MAX_PLY];
@@ -89,16 +90,21 @@ public:
 
     void parse_fen(string& fen);
     string preparse_fen(string& fen);
+    string get_fen();
 
     void fake_move(move m);
     move unfake_move();
-    string get_fen();
 
     void play_move(move m);
     //returns true if it was possible..
     void undo_move();
+    void add_pgn(string algebraic);
 
     int get_hash();
+
+    void set_status(int status);
+    int get_status();
+    friend ostream & operator<<(ostream& os, Board& board);
 
 #ifdef USE_HASH_TABLE
     htype hash_probe(int depth, int* alpha, int beta);
@@ -106,9 +112,6 @@ public:
     htentry* hash_entry(int key);
 #endif
 
-    void set_status(int status);
-    int get_status();
-    friend ostream & operator<<(ostream& os, Board& board);
 
 private:
     //initialize values

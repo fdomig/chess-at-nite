@@ -14,7 +14,16 @@
 #ifndef _EXTRA_UTILS_H
 #define	_EXTRA_UTILS_H
 
+#include "define.h"
+#include "../model/Board.h"
+#include "../model/MoveGenerator.h"
+#include "utils.h"
 
+extern int board_status(const Board& board);
+extern int update_board_status(Board* board);
+extern string move_to_algebraic_simple(const move& m, const vector<move>& moves);
+extern string move_to_algebraic(const move& m, const Board& board);
+extern void print_algebraic_moves(const vector<move>& moves, const Board& board);
 
 #endif	/* _EXTRA_UTILS_H */
 
