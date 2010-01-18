@@ -149,7 +149,6 @@ void CLI::select_fen() {
     //lots of knights to test the algebraic notation
     fen = "k7/8/8/2N1N3/1N3N2/8/1N3N2/2N1N2K w - - 0 18";
     fen = BENCHMARK_FEN;
-    fen = "5rk1/pp4p1/2n1p2p/2Npq3/2p5/6P1/P3P1BP/R4Q1K w - - 0 1";
     Board b = Board(fen);
     cout << b << endl;
 }
@@ -262,7 +261,7 @@ void CLI::run_wac_test() {
             delete player;
         } else if (cmd.compare("srch") == 0) {
             string answer = line.substr(5, line.length() - 5);
-            should.push_back(line.substr(5, line.length() - 5));
+            should.push_back(answer);
             bool success = compare_found_move(algebraic, answer);
             results.push_back(success);
             total_tested++;
