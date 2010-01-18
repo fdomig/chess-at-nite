@@ -17,6 +17,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <time.h>
 
 #include "../common/define.h"
 #include "../common/utils.h"

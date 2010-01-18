@@ -13,15 +13,16 @@
 
 #include "ComputerPlayer.h"
 
-ComputerPlayer::ComputerPlayer() :
-    Player() {
+ComputerPlayer::ComputerPlayer(bool use_book) :
+Player(), use_opening_book(use_book) {
 }
 
 move ComputerPlayer::get_move() {
     move m;
 
 #ifdef USE_OPENING_BOOK
-    if (opening_book.is_opened()) {
+    if (use_opening_book && opening_book.is_opened()) {
+        cout << "in da book" << endl;
         MoveGenerator generator = MoveGenerator(board);
         generator.generate_all_moves();
         vector<move> moves = generator.get_all_moves();

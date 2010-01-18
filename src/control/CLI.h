@@ -22,6 +22,7 @@
 #include "../model/MoveGenerator.h"
 #include "../player/ComputerPlayer.h"
 #include "../player/HumanPlayer.h"
+#include "../common/utils.h"
 
 class Player;
 class Game;
@@ -68,6 +69,8 @@ private:
     void run_wac_test();
     void apply_option(int option);
     std::string get_line();
+
+    bool compare_found_move(string found, string should);
 };
 
 #endif /* CLI_H_ */

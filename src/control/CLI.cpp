@@ -140,8 +140,8 @@ void CLI::end_game() {
 }
 
 void CLI::show_about() {
-    cout << " Welcome to " << PROJECT_NAME << ", v" << VERSION
-            << " (c) 2009-2010" << endl;
+    cout << " Welcome to " << PROJECT_NAME << ", v" << VERSION;
+    cout << " (c) 2009-2010" << endl;
     cout << "     http://chess-at-nite.googlecode.com" << endl;
 }
 
@@ -149,6 +149,7 @@ void CLI::select_fen() {
     //lots of knights to test the algebraic notation
     fen = "k7/8/8/2N1N3/1N3N2/8/1N3N2/2N1N2K w - - 0 18";
     fen = BENCHMARK_FEN;
+    fen = "5rk1/pp4p1/2n1p2p/2Npq3/2p5/6P1/P3P1BP/R4Q1K w - - 0 1";
     Board b = Board(fen);
     cout << b << endl;
 }
@@ -167,7 +168,7 @@ void CLI::run_benchmark() {
     // old bench: "rq3rk1/4bppp/p1Rp1n2/8/4p3/1B2BP2/PP4PP/3Q1RK1 w - - 0 17"
     string fen = BENCHMARK_FEN;
     Board* b = new Board(fen);
-    Player* p = new ComputerPlayer();
+    Player* p = new ComputerPlayer(false);
     p->set_board(b);
 
     cout << "----- The Game of the Century -----" << endl;
@@ -198,6 +199,18 @@ void CLI::run_benchmark() {
     delete b;
 }
 
+bool CLI::compare_found_move(string found, string should) {
+    vector<string> moves;
+    split(should, moves, ' ');
+
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        if (found.compare(moves[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /*
  * Testsuite "Win at Chess"
  *
@@ -215,16 +228,19 @@ void CLI::run_wac_test() {
 
     vector<string> found;
     vector<string> should;
-    int solved = 0;
-    int tested = 0;
+    vector<bool> results;
+    vector<string> fens;
     string algebraic = "";
+
+    int total_tested = 0;
+    int total_solved = 0;
 
     string line = "";
     while (!file.eof()) {
-
         getline(file, line);
-        if (line.size() < 4)
+        if (line.size() < 4) {
             continue;
+        }
 
         string cmd = "";
         cmd = line.substr(0, 4);
@@ -236,48 +252,57 @@ void CLI::run_wac_test() {
         } else if (cmd.compare("svfe") == 0) {
             string fen = "";
             fen = line.substr(5, line.length() - 5);
+            fens.push_back(fen);
             Board board = Board(fen);
-            Player* player = new ComputerPlayer();
+            Player* player = new ComputerPlayer(false);
             player->set_board(&board);
             move m = player->get_move();
             algebraic = move_to_algebraic(m, board);
             found.push_back(algebraic);
-            tested++;
             delete player;
         } else if (cmd.compare("srch") == 0) {
-            string possible = "";
-            possible = line.substr(5, line.length() - 5);
-            vector<string> solutions;
-            split(possible, solutions, ' ');
+            string answer = line.substr(5, line.length() - 5);
             should.push_back(line.substr(5, line.length() - 5));
-
-            bool success = false;
-            for (unsigned i = 0; i < solutions.size(); i++) {
-                if (algebraic.compare(solutions[i]) == 0) {
-                    solved++;
-                    success = true;
-                    break;
-                }
-            }
+            bool success = compare_found_move(algebraic, answer);
+            results.push_back(success);
+            total_tested++;
 
             if (success) {
-                cout << "Test " << tested << " successful. Found: "
-                        << algebraic << endl;
+                total_solved++;
+                cout << "Test " << total_tested << " successful. ";
+                cout << "Found: " << algebraic << endl;
             } else {
-                cout << "Test " << tested << " failed. Found: " << algebraic
-                        << ", should be: " << possible << endl;
+                cout << "Test " << total_tested << " failed. ";
+                cout << "Found: " << algebraic;
+                cout << ", should be: " << answer << endl;
             }
-
-            cout << "Solved: [" << solved << "/" << tested << "]" << endl;
+            printf("Solved %d/%d tests (%.1f%%)\n\n",
+                    total_solved, total_tested,
+                    (float) (total_solved) / total_tested * 100);
         }
     }
 
     file.close();
 
-    cout << "Test Results:" << endl;
-    cout << "Found     Should" << endl;
-    for (unsigned i = 0; i < should.size() && found.size(); i++) {
-        cout << found[i] << "    " << should[i] << endl;
+    cout << "---- Test Results ----" << endl;
+    printf("Solved %d/%d tests (%.1f%%)\n\n",
+            total_solved,
+            total_tested,
+            (float) (total_solved) / total_tested * 100);
+
+    cout << "---- Failed results ----" << endl;
+
+    if (found.size() == should.size() && fens.size() == results.size()
+            && fens.size() == found.size()) {
+        for (unsigned i = 0; i < results.size(); i++) {
+            if (!results[i]) {
+                cout << setw(3) << i + 1 << ". " << fens[i] << endl;
+                cout << "     Found: " << found[i] << ", should be: " << should[i] << endl;
+                cout << endl;
+            }
+        }
+    } else {
+        cerr << "Something went wrong with the results. Check the test file." << endl;
     }
 }
 

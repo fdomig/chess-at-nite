@@ -61,7 +61,7 @@ bool OpeningBook::get_move(vector<move>& available_moves,
             set_first_and_last(move_string, 0);
             return true;
         } else {
-            // Something went wrong, book doesn't contain valid moves for this board configuration
+            // Something went wrong, the game might not have history :(
             book_open = false;
             return false;
         }
@@ -113,7 +113,7 @@ bool OpeningBook::validate_move(move move_move, vector<move>& available_moves,
 bool OpeningBook::set_first_and_last(string last_move_string, unsigned depth) {
     bool entry_found = false;
     if (first > last) {
-        cerr  << "You should have never seen this message. Something must ";
+        cerr << "You should have never seen this message. Something must ";
         cerr << "have gone terribly wrong in the book." << endl;
     }
     last_move_string = string_to_lower(last_move_string);
@@ -163,7 +163,7 @@ void OpeningBook::parse_book() {
                 if (valid) {
                     book_line.push_back(turn);
                 } else {
-                    cerr << "Wrong book entry at line: " << line_number 
+                    cerr << "Wrong book entry at line: " << line_number
                             << " index: " << index << " in book: "
                             << OPENING_BOOK << endl;
                     error_at_line = true;

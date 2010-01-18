@@ -20,16 +20,17 @@
 #include "../model/OpeningBook.h"
 #include "../model/evaluate.h"
 
-class ComputerPlayer: public Player {
-	private:
-		OpeningBook opening_book;
-		move search_pv();
-		int alpha_beta(int depth, int alpha, int beta);
-		int quiescence(int alpha, int beta);
-		void sort_pv(vector<move>& moves);
-	public:
-		ComputerPlayer();
-		move get_move();
+class ComputerPlayer : public Player {
+public:
+    ComputerPlayer(bool use_opening_book = true);
+    move get_move();
+private:
+    bool use_opening_book;
+    OpeningBook opening_book;
+    move search_pv();
+    int alpha_beta(int depth, int alpha, int beta);
+    int quiescence(int alpha, int beta);
+    void sort_pv(vector<move>& moves);
 };
 
 #endif /* COMPUTERPLAYER_H_ */

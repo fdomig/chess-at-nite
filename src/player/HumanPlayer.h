@@ -20,13 +20,13 @@
 
 using namespace std;
 
-class HumanPlayer: public Player {
-	public:
-		move get_move();
+class HumanPlayer : public Player {
+public:
+    move get_move();
 
-	protected:
-		move get_move_from_user();
-		move get_valid_move_from_user();
+protected:
+    move get_move_from_user();
+    move get_valid_move_from_user();
 };
 
 #endif /* HUMANPLAYER_H_ */

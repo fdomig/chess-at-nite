@@ -21,13 +21,13 @@
 #include "../common/extra_utils.h"
 
 class Player {
-protected:
-    Board* board;
 public:
     Player();
     virtual ~Player();
     void set_board(Board* board);
     virtual move get_move() = 0;
+protected:
+    Board* board;
 };
 
 #endif // PLAYER_H_
