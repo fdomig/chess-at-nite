@@ -527,6 +527,6 @@ char* display_score(int score) {
 char* display_time(int start, int stop) {
     static char out[10];
     double end = (double) (stop - start) / 1000;
-    sprintf(out, "%.2fs", end);
+    sprintf(out, "%.2f", end);
     return (out);
 }

@@ -38,7 +38,6 @@
 #ifdef DEBUG
 #define SHOW_THINKING
 #define SHOW_SEARCH_INFO
-#define SHOW_BEST_SCORE
 #endif
 
 
