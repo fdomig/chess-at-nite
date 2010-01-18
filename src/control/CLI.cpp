@@ -140,7 +140,8 @@ void CLI::end_game() {
 }
 
 void CLI::show_about() {
-    cout << " Welcome to " << PROJECT_NAME <<", v" << VERSION << " (c) 2009-2010" << endl;
+    cout << " Welcome to " << PROJECT_NAME << ", v" << VERSION
+            << " (c) 2009-2010" << endl;
     cout << "     http://chess-at-nite.googlecode.com" << endl;
 }
 
@@ -188,7 +189,8 @@ void CLI::run_benchmark() {
     for (int i = 0; i < 3; i++) {
         double nps = (n[i] / (double) t[i]) * 1000;
         total += nps;
-        cout << "     Run " << i + 1 << ": " << (int) nps << " nodes/sec" << endl;
+        cout << "     Run " << i + 1 << ": " << (int) nps << " nodes/sec"
+                << endl;
     }
     cout << endl;
     cout << "   Average: " << (int) (total / 3) << " nodes/sec" << endl;
@@ -213,6 +215,9 @@ void CLI::run_wac_test() {
 
     vector<string> found;
     vector<string> should;
+    int solved = 0;
+    int tested = 0;
+    string algebraic = "";
 
     string line = "";
     while (!file.eof()) {
@@ -235,13 +240,35 @@ void CLI::run_wac_test() {
             Player* player = new ComputerPlayer();
             player->set_board(&board);
             move m = player->get_move();
-            string algebraic = move_to_algebraic(m, board);
-            cout << "Found:     " << algebraic << endl;
+            algebraic = move_to_algebraic(m, board);
             found.push_back(algebraic);
+            tested++;
             delete player;
         } else if (cmd.compare("srch") == 0) {
-            cout << "Should be: " << line.substr(5, line.length() - 5) << endl;
+            string possible = "";
+            possible = line.substr(5, line.length() - 5);
+            vector<string> solutions;
+            split(possible, solutions, ' ');
             should.push_back(line.substr(5, line.length() - 5));
+
+            bool success = false;
+            for (unsigned i = 0; i < solutions.size(); i++) {
+                if (algebraic.compare(solutions[i]) == 0) {
+                    solved++;
+                    success = true;
+                    break;
+                }
+            }
+
+            if (success) {
+                cout << "Test " << tested << " successful. Found: "
+                        << algebraic << endl;
+            } else {
+                cout << "Test " << tested << " failed. Found: " << algebraic
+                        << ", should be: " << possible << endl;
+            }
+
+            cout << "Solved: [" << solved << "/" << tested << "]" << endl;
         }
     }
 

@@ -14,7 +14,7 @@
 #include "ComputerPlayer.h"
 
 ComputerPlayer::ComputerPlayer() :
-Player() {
+    Player() {
 }
 
 move ComputerPlayer::get_move() {
@@ -45,7 +45,7 @@ move ComputerPlayer::search_pv() {
     board->ply = 0;
     board->checked_nodes = 0;
 
-    memset(board->pv, 0, sizeof (board->pv));
+    memset(board->pv, 0, sizeof(board->pv));
 #ifdef SHOW_THINKING
     printf("ply    time    nodes  score  pv\n");
 #endif
@@ -105,8 +105,7 @@ move ComputerPlayer::search_pv() {
 #ifdef SHOW_SEARCH_INFO
     float total_time = (float) (get_ms() - start_time) / 1000;
     printf("%s nodes searched in %.2f secs (%.1fK nodes/sec)\n",
-            display_nodes_count(board->checked_nodes),
-            total_time,
+            display_nodes_count(board->checked_nodes), total_time,
             (board->checked_nodes / 1000.0) / total_time);
 #endif
 

@@ -106,6 +106,7 @@ int king_table_end[] = {
 #define END_GAME_LEVEL 1500
 #define MATE_SEARCH_LEVEL 600
 #define CHECK_BONUS 50
+#define BONUS_ENDGAME_PAWN_MOVE 50
 
 int evaluate(Board* b) {
     // score for both sides
