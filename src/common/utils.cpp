@@ -299,7 +299,7 @@ string empty_square_to_string(int square) {
     if ((RANK(square) + FILE(square)) & 1) {
         return ".";
     } else {
-        return "-";
+        return ",";
     }
 }
 

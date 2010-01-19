@@ -754,11 +754,7 @@ ostream & operator<<(ostream& os, Board& board) {
             if (board.board[square] != EMPTY) {
                 os << piece_symbol(board.board[square]);
             } else {
-                if ((file + rank) & 1) {
-                    os << ".";
-                } else {
-                    os << "-";
-                }
+                os << empty_square_to_string(square);
             }
             if (!board.history.empty() && board.history.back().m.pos_new
                     == square) {
