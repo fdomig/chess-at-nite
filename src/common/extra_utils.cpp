@@ -202,18 +202,19 @@ void print_algebraic_moves(const vector<move>& moves, const Board& board) {
 
 /**
  * Removes all the special characters from algebraic notation. They are not
- * affecting the uniquenes of the move. And also covnerts the string to 
- * lowercase for easier comparison.
+ * affecting the uniquenes of the move.
  *
+ * Case matters here.. example:
+ *  bxc3 - Pawn is capturing the piece on square c3
+ *  Bxc3 - Bishop is capturing the piece on square c3
  */
 string strip_algebraic(const string& algebraic) {
     string stripped = "";
-    string lower = string_to_lower(algebraic);
 
-    for (unsigned int i = 0; i < lower.size(); i++) {
-        if (lower[i] != 'x' && lower[i] != '+' && lower[i] != '#'
-                && lower[i] != '=' && lower[i] != ':') {
-            stripped.push_back(lower[i]);
+    for (unsigned int i = 0; i < algebraic.size(); i++) {
+        if (algebraic[i] != 'x' && algebraic[i] != '+' && algebraic[i] != '#'
+                && algebraic[i] != '=' && algebraic[i] != ':') {
+            stripped.push_back(algebraic[i]);
         }
     }
     return stripped;

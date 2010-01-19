@@ -480,9 +480,9 @@ void print_help() {
     cout << "------------------ HELP -------------------" << endl;
     cout << "Entering a move:" << endl;
     cout << "  You can enter a move by using algebraic" << endl;
-    cout << "  chess notation and you avoid special " << endl;
-    cout << "  symbols like 'x', '+', '#', '='..." << endl;
-    cout << "  If you have no idea what is that use the" << endl;
+    cout << "  chess notation. Case matters, but you can " << endl;
+    cout << "  avoid special symbols (x, +, #, =, etc)." << endl;
+    cout << "  If you have no idea what is that, use the" << endl;
     cout << "  following rules to enter your move." << endl;
     cout << "" << endl;
     cout << "Normal moves: " << endl;
@@ -500,7 +500,7 @@ void print_help() {
     cout << " /m - all the available moves" << endl;
     cout << " /h - history of moves" << endl;
     cout << " /r - resign from the game" << endl;
-    cout << " /u - undo a move" << endl;
+    cout << " /u - undo your move" << endl;
     cout << " /b - current board state" << endl;
     cout << " /? - help" << endl;
     cout << "-------------------------------------------" << endl;
