@@ -194,8 +194,49 @@ void print_algebraic_moves(const vector<move>& moves, const Board& board) {
         move = move_to_algebraic(moves[i], board);
         cout << move << setw(8 - move.length()) << " ";
     }
-    
+
     cout << endl;
     cout << "-----------------------------------" << endl;
 }
 
+
+/**
+ * Removes all the special characters from algebraic notation. They are not
+ * affecting the uniquenes of the move. And also covnerts the string to 
+ * lowercase for easier comparison.
+ *
+ */
+string strip_algebraic(const string& algebraic) {
+    string stripped = "";
+    string lower = string_to_lower(algebraic);
+
+    for (unsigned int i = 0; i < lower.size(); i++) {
+        if (lower[i] != 'x' && lower[i] != '+' && lower[i] != '#'
+                && lower[i] != '=' && lower[i] != ':') {
+            stripped.push_back(lower[i]);
+        }
+    }
+    return stripped;
+}
+
+
+/*
+ * Converts the input given by a user to a move. First tries to find a match
+ * in all legal moves by algebraic notation and then by a simple string to move
+ * converter.
+ */
+ move algebraic_to_move(const string& algebraic, const Board& board) {
+    Board b = Board(board);
+    MoveGenerator move_generator = MoveGenerator(&b);
+    move_generator.generate_all_moves();
+    vector<move> moves = move_generator.get_all_moves();
+
+    for (unsigned int i = 0; i < moves.size(); i++) {
+        if (strip_algebraic(algebraic).compare(
+                strip_algebraic(move_to_algebraic(moves[i], board))) == 0) {
+            return moves[i];
+        }
+    }
+
+    return string_to_move(algebraic);
+}

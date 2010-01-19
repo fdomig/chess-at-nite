@@ -445,7 +445,8 @@ void Board::play_move(move m) {
 /*
  * Because we do more than just undo if it's an actual undo by a human player
  */
-void Board::undo_move() {
+bool Board::undo_move() {
+    bool result = false;
     if (!history.empty()) {
         move last_move = unfake_move();
         if (last_move.content > EMPTY) {
@@ -458,12 +459,14 @@ void Board::undo_move() {
             }
         }
         number_of_moves--;
+        result = true;
     }
 
     //remove last pgn...
     if (!pgn.empty()) {
         pgn.pop_back();
     }
+    return result;
 }
 
 void Board::add_pgn(string algebraic) {

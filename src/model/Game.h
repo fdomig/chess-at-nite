@@ -27,18 +27,21 @@ class Player;
 
 class Game {
 public:
-    Game(Board* board, Player* white_player, Player* black_player, int max_moves = 100000);
+    Game(Board* board, Player* white_player, Player* black_player, 
+            bool both_human = false);
+    
     virtual ~Game();
     void init();
     void start_game();
-    void play(Player* player1, Player* player2);
 private:
     Board* board;
     Player* white_player;
     Player* black_player;
     MoveGenerator* move_generator;
-    int max_moves;
+
+    bool both_human;
     bool game_over;
+    void play(Player* player1, Player* player2);
 };
 
 #endif /* GAME_H_ */

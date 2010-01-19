@@ -24,6 +24,8 @@ extern int update_board_status(Board* board);
 extern string move_to_algebraic_simple(const move& m, const vector<move>& moves);
 extern string move_to_algebraic(const move& m, const Board& board);
 extern void print_algebraic_moves(const vector<move>& moves, const Board& board);
+extern string strip_algebraic(const string& algebraic);
+extern move algebraic_to_move(const string& algebraic, const Board& board);
 
 #endif	/* _EXTRA_UTILS_H */
 

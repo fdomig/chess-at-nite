@@ -97,7 +97,7 @@ public:
 
     void play_move(move m);
     //returns true if it was possible..
-    void undo_move();
+    bool undo_move();
     void add_pgn(string algebraic);
 
     int get_hash();

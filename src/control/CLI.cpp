@@ -42,6 +42,7 @@ void CLI::start() {
 
 void CLI::init_game(int game_type) {
     rotated_board = false;
+    both_human = false;
     switch (game_type) {
         case HUMAN_VS_CPU:
             white_player = new HumanPlayer();
@@ -55,6 +56,7 @@ void CLI::init_game(int game_type) {
         case HUMAN_VS_HUMAN:
             white_player = new HumanPlayer();
             black_player = new HumanPlayer();
+            both_human = true;
             break;
         case CPU_VS_CPU:
             white_player = new ComputerPlayer();
@@ -127,7 +129,7 @@ int CLI::get_user_option() {
 
 void CLI::start_game() {
     board = new Board(fen, rotated_board);
-    game = new Game(board, white_player, black_player);
+    game = new Game(board, white_player, black_player, both_human);
     game->start_game();
 }
 

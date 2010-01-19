@@ -22,7 +22,6 @@ move ComputerPlayer::get_move() {
 
 #ifdef USE_OPENING_BOOK
     if (use_opening_book && opening_book.is_opened()) {
-        cout << "in da book" << endl;
         MoveGenerator generator = MoveGenerator(board);
         generator.generate_all_moves();
         vector<move> moves = generator.get_all_moves();

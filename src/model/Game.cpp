@@ -15,9 +15,10 @@
 
 using namespace std;
 
-Game::Game(Board* board, Player* new_white_player, Player* new_black_player, int max_moves) :
+Game::Game(Board* board, Player* new_white_player, Player* new_black_player,
+        bool both_human) :
 board(board), white_player(new_white_player), black_player(new_black_player),
-max_moves(max_moves) {
+both_human(both_human) {
     move_generator = new MoveGenerator(board);
     white_player->set_board(board);
     black_player->set_board(board);
@@ -51,19 +52,24 @@ void Game::start_game() {
 void Game::play(Player* player1, Player* player2) {
     string color;
     int status;
-    while (!game_over && board->number_of_moves < max_moves) {
+    bool success = true;
+    while (!game_over) {
         color = board -> to_move == WHITE ? "White" : "Black";
         status = update_board_status(board);
 
         board -> set_status(status);
-        cout << *board << endl;
+
+        //if the move was successfull or the undo was valid then print.
+        if (success) {
+            cout << *board << endl;
+        }
 
         //what to do in different cases
         switch (status) {
             case STATUS_CHECKMATE:
             case STATUS_STALEMATE:
                 game_over = true;
-            break;
+                break;
         }
 
         if (game_over) {
@@ -80,15 +86,19 @@ void Game::play(Player* player1, Player* player2) {
 
         switch (next_move.special) {
             case MOVE_UNDO:
-                if (board->history.size() >= 2) {
-                    board->undo_move();
-                    board->undo_move();
-                    cout << board << endl;
-                    continue;
+                success = board->undo_move();
+                //that means that you have to undo 2 moves in order to give
+                //the chance for the human player to move again..
+                if (!both_human) {
+                    success = board->undo_move();
+                }
+
+                if (success) {
+                    cout << *board << endl;
                 } else {
                     cout << "There is nothing in the history to undo.." << endl;
-                    continue;
                 }
+                continue;
             case MOVE_RESIGN:
                 cout << "Resigned... GG" << endl;
                 game_over = true;
@@ -104,6 +114,7 @@ void Game::play(Player* player1, Player* player2) {
 
             board->add_pgn(move_to_algebraic(next_move, *board));
             board->play_move(next_move);
+            success = true;
             play(player2, player1);
         }
     }

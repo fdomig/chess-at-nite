@@ -61,9 +61,11 @@ void split(string& str, vector<string>& tokens, const char delimiter) {
 }
 
 string string_to_lower(string str) {
-    for (unsigned i = 0; i < strlen(str.c_str()); i++)
-        if (str[i] >= 0x41 && str[i] <= 0x5A)
+    for (unsigned i = 0; i < strlen(str.c_str()); i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') {
             str[i] = str[i] + 0x20;
+        }
+    }
     return str;
 }
 
@@ -217,19 +219,15 @@ string move_to_string_simple(const move& m) {
     return result;
 }
 
+/**
+ * Do not add anything special.. like O-O and O-O-O. This should only return
+ * departure/destination squares.
+ * 
+ */
 string move_to_string_basic(const move& m) {
     string result("");
-    switch (m.special) {
-        case MOVE_CASTLE_LONG:
-            result.append("0-0-0");
-            break;
-        case MOVE_CASTLE_SHORT:
-            result.append("0-0 ");
-            break;
-        default:
-            result.append(square_to_string(m.pos_old));
-            result.append(square_to_string(m.pos_new));
-    }
+    result.append(square_to_string(m.pos_old));
+    result.append(square_to_string(m.pos_new));
     return result;
 }
 
@@ -480,6 +478,13 @@ int get_ms() {
 
 void print_help() {
     cout << "------------------ HELP -------------------" << endl;
+    cout << "Entering a move:" << endl;
+    cout << "  You can enter a move by using algebraic" << endl;
+    cout << "  chess notation and you avoid special " << endl;
+    cout << "  symbols like 'x', '+', '#', '='..." << endl;
+    cout << "  If you have no idea what is that use the" << endl;
+    cout << "  following rules to enter your move." << endl;
+    cout << "" << endl;
     cout << "Normal moves: " << endl;
     cout << " Write from/to squares (e2e4)" << endl;
     cout << "Castling moves: " << endl;
@@ -491,11 +496,11 @@ void print_help() {
     cout << " Normal move of a pawn (e5d6)" << endl;
     cout << "  " << endl;
     cout << "Extra commands during the game: " << endl;
-    cout << " /m - all the available moves" << endl;
     cout << " /a - algebraic notation of moves" << endl;
+    cout << " /m - all the available moves" << endl;
     cout << " /h - history of moves" << endl;
     cout << " /r - resign from the game" << endl;
-    cout << " /u - undo 2 moves" << endl;
+    cout << " /u - undo a move" << endl;
     cout << " /b - current board state" << endl;
     cout << " /? - help" << endl;
     cout << "-------------------------------------------" << endl;

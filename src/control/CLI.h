@@ -56,6 +56,7 @@ private:
     Game* game;
     //when the only human player is black.. 
     bool rotated_board;
+    bool both_human;
     std::string fen;
 
     void show_options();
