@@ -29,9 +29,9 @@ class Game {
 public:
     Game(Board* board, Player* white_player, Player* black_player, 
             bool both_human = false);
-    
+
+    Game(const Game& game);
     virtual ~Game();
-    void init();
     void start_game();
 private:
     Board* board;

@@ -247,7 +247,7 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
         return DRAW;
     }
 
-    if (board->fifty_moves >= 100) {
+    if (board->fifty_moves >= FIFTY_MOVES_RULE) {
         return DRAW;
     }
 #ifdef USE_HASH_TABLE

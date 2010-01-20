@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.6.9"
+#define VERSION "0.6.908"
 
 
 //defines for different compiles
@@ -50,8 +50,12 @@
 #define OPENING_BOOK "book"
 #define WAC_FILE "wac.ci"
 
-#define BOARD_SIZE 128
-#define SIZE 8
+#define BOARD_SIZE               128
+#define SIZE                       8
+#define FIFTY_MOVES_RULE         100
+//how many repititions of the last move in history occured, without including
+//the last move. 2 is the value to define if the same position occured three times
+#define THREEFOLD_REPITITION_RULE  2
 
 #define DEFAULT_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
@@ -93,9 +97,12 @@
 //for the status of the game!
 #define STATUS_NORMAL          0
 #define STATUS_CHECK           1
-#define STATUS_CHECKMATE       2
-#define STATUS_STALEMATE       3
-#define STATUS_DRAW            4
+#define STATUS_WHITE_CHECKMATE 2
+#define STATUS_BLACK_CHECKMATE 3
+#define STATUS_STALEMATE       4
+#define STATUS_DRAW            5
+#define STATUS_WHITE_WINS      6
+#define STATUS_BLACK_WINS      7
 
 // side
 #define WHITE  1

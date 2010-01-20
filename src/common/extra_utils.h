@@ -17,6 +17,7 @@
 #include "define.h"
 #include "../model/Board.h"
 #include "../model/MoveGenerator.h"
+#include "../model/evaluate.h"
 #include "utils.h"
 
 extern int board_status(const Board& board);

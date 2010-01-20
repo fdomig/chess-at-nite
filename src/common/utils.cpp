@@ -478,12 +478,11 @@ int get_ms() {
 
 void print_help() {
     cout << "------------------ HELP -------------------" << endl;
-    cout << "Entering a move:" << endl;
     cout << "  You can enter a move by using algebraic" << endl;
-    cout << "  chess notation. Case matters, but you can " << endl;
-    cout << "  avoid special symbols (x, +, #, =, etc)." << endl;
-    cout << "  If you have no idea what is that, use the" << endl;
-    cout << "  following rules to enter your move." << endl;
+    cout << "chess notation. Case matters, but you can " << endl;
+    cout << "avoid special symbols (x, +, #, =, etc)." << endl;
+    cout << "If you have no idea what is that, use the" << endl;
+    cout << "following rules to enter your move." << endl;
     cout << "" << endl;
     cout << "Normal moves: " << endl;
     cout << " Write from/to squares (e2e4)" << endl;

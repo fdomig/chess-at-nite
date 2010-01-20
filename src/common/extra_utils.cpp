@@ -18,18 +18,17 @@ int board_status(const Board& board) {
     Board b = Board(board);
     MoveGenerator move_generator = MoveGenerator(&b);
     move_generator.generate_all_moves();
-
     if (move_generator.get_all_moves().empty()) {
         if (move_generator.king_under_check) {
-            return STATUS_CHECKMATE;
+            return OPPONENT(b.to_move) ? STATUS_WHITE_CHECKMATE : STATUS_BLACK_CHECKMATE;
         } else {
             return STATUS_STALEMATE;
         }
     } else if (move_generator.king_under_check) {
         return STATUS_CHECK;
-    } else if (true) {
-        //TODO: check repetitions and threefold.. to return draw
-        //return STATUS_DRAW;
+    } else if (b.fifty_moves >= FIFTY_MOVES_RULE ||
+            repetitions(&b) >= THREEFOLD_REPITITION_RULE) {
+        return STATUS_DRAW;
     }
 
     return STATUS_NORMAL;
@@ -171,7 +170,8 @@ string move_to_algebraic(const move& m, const Board& board) {
         case STATUS_CHECK:
             algebraic.append("+");
             break;
-        case STATUS_CHECKMATE:
+        case STATUS_WHITE_CHECKMATE:
+        case STATUS_BLACK_CHECKMATE:
             algebraic.append("#");
             break;
     }
@@ -199,7 +199,6 @@ void print_algebraic_moves(const vector<move>& moves, const Board& board) {
     cout << "-----------------------------------" << endl;
 }
 
-
 /**
  * Removes all the special characters from algebraic notation. They are not
  * affecting the uniquenes of the move.
@@ -220,13 +219,12 @@ string strip_algebraic(const string& algebraic) {
     return stripped;
 }
 
-
 /*
  * Converts the input given by a user to a move. First tries to find a match
  * in all legal moves by algebraic notation and then by a simple string to move
  * converter.
  */
- move algebraic_to_move(const string& algebraic, const Board& board) {
+move algebraic_to_move(const string& algebraic, const Board& board) {
     Board b = Board(board);
     MoveGenerator move_generator = MoveGenerator(&b);
     move_generator.generate_all_moves();

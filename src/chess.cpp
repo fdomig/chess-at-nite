@@ -61,6 +61,20 @@ void test() {
     string default_board = DEFAULT_FEN;
 
     default_board = "5q2/k113PP/2Q5/8/2K4r/3P4/4P3/8 w - - 0 20";
+    default_board = "8/4p3/k3p3/4P3/8/K7/8/8 w - - 0 100";
+    default_board = "bn6/8/k3p3/4P3/8/K7/8/BN6 w - - 0 100";
+
+    //Bishop and knight checkmate (wikipedia)
+    //white to move will checkmate black!
+    default_board = "7k/8/5K2/4N3/8/3B4/8/8 w - - 0 1";
+    //Deletang's second triangle
+    default_board = "3k4/8/4K3/1B1N4/8/8/8/8 w - - 0 1";
+
+    //two Queens vs a Queen..
+    default_board = "6k1/5qq1/8/8/8/8/Q7/4K3 w - - 0 1";
+
+    //two Rooks vs a Rook..
+    default_board = "6k1/5rr1/8/8/8/8/R7/4K3 w - - 0 1";
 
     Board board = Board(default_board);
 

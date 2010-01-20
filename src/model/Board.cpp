@@ -43,6 +43,7 @@ Board::Board(const Board& b) {
     time_exit = b.time_exit;
     rotated = b.rotated;
     status = b.status;
+    current_hash = b.current_hash;
 }
 
 Board::Board(string& fen, bool rotated) : rotated(rotated) {
@@ -669,16 +670,25 @@ ostream & operator<<(ostream& os, Board& board) {
                 os << B_UD << " ";
                 switch (board.get_status()) {
                     case STATUS_CHECK:
-                        os << "Check";
+                        os << "Check..!";
                         break;
-                    case STATUS_CHECKMATE:
-                        os << "Checkmate.. gg";
+                    case STATUS_WHITE_CHECKMATE:
+                        os << "White Checkmate..! gg";
+                        break;
+                    case STATUS_BLACK_CHECKMATE:
+                        os << "Black Checkmate..! gg";
+                        break;
+                    case STATUS_WHITE_WINS:
+                        os << "White Wins..! gg";
+                        break;
+                    case STATUS_BLACK_WINS:
+                        os << "Black Wins..! gg";
                         break;
                     case STATUS_STALEMATE:
                         os << "Stalemate.. gg";
                         break;
                     case STATUS_DRAW:
-                        os << "Draw";
+                        os << "Draw.. gg";
                         break;
                 }
                 break;
@@ -779,16 +789,25 @@ ostream & operator<<(ostream& os, Board& board) {
                 os << "  ";
                 switch (board.get_status()) {
                     case STATUS_CHECK:
-                        os << "Check";
+                        os << "Check..!";
                         break;
-                    case STATUS_CHECKMATE:
-                        os << "Checkmate";
+                    case STATUS_WHITE_CHECKMATE:
+                        os << "White Checkmate..! gg";
+                        break;
+                    case STATUS_BLACK_CHECKMATE:
+                        os << "Black Checkmate..! gg";
+                        break;
+                    case STATUS_WHITE_WINS:
+                        os << "White Wins..! gg";
+                        break;
+                    case STATUS_BLACK_WINS:
+                        os << "Black Wins..! gg";
                         break;
                     case STATUS_STALEMATE:
-                        os << "Stalemate";
+                        os << "Stalemate.. gg";
                         break;
                     case STATUS_DRAW:
-                        os << "Draw";
+                        os << "Draw.. gg";
                         break;
                 }
                 break;

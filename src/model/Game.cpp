@@ -24,12 +24,17 @@ both_human(both_human) {
     black_player->set_board(board);
 }
 
-Game::~Game() {
-    delete move_generator;
+Game::Game(const Game& game) {
+    board = game.board;
+    white_player = game.white_player;
+    black_player = game.black_player;
+    move_generator = game.move_generator;
+    both_human = game.both_human;
+    game_over = game.game_over;
 }
 
-void Game::init() {
-
+Game::~Game() {
+    delete move_generator;
 }
 
 void Game::start_game() {
@@ -59,26 +64,28 @@ void Game::play(Player* player1, Player* player2) {
 
         board -> set_status(status);
 
-        //if the move was successfull or the undo was valid then print.
+        //if the move (last iteration) was successfull or the undo was valid 
         if (success) {
             cout << *board << endl;
         }
 
+#ifdef DEBUG
+        cout << "threefold repititions: " << repetitions(board) << endl;
+#endif
         //what to do in different cases
         switch (status) {
-            case STATUS_CHECKMATE:
+            case STATUS_WHITE_CHECKMATE:
+            case STATUS_BLACK_CHECKMATE:
+            case STATUS_WHITE_WINS:
+            case STATUS_BLACK_WINS:
             case STATUS_STALEMATE:
+            case STATUS_DRAW:
                 game_over = true;
                 break;
         }
 
         if (game_over) {
             break;
-        }
-
-        //TODO: should leave from here...
-        if (repetitions(board) >= 2) {
-            cout << "You could claim a draw...!" << endl;
         }
 
         cout << color << "'s move " << "[" << board->number_of_moves / 2 + 1 << "]...";
@@ -100,14 +107,23 @@ void Game::play(Player* player1, Player* player2) {
                 }
                 continue;
             case MOVE_RESIGN:
-                cout << "Resigned... GG" << endl;
+                status = board->to_move == WHITE ? STATUS_BLACK_WINS : STATUS_WHITE_WINS;
+                board->set_status(status);
+
+                if (status == STATUS_BLACK_WINS) {
+                    cout << "White ";
+                } else {
+                    cout << "Black ";
+                }
+                cout << "resigned... GG" << endl;
                 game_over = true;
                 break;
         }
 
         if (!game_over) {
             if (next_move.moved_piece == EMPTY) {
-                cerr << "Game tried to make an empty move.. we have to stop it.. sorry!" << endl;
+                cerr << "If you can read this.. Something went terribly wrong :(" << endl;
+                cerr << "Game tried to make an empty move.. we have to end the game.. sorry!" << endl;
                 game_over = true;
                 break;
             }

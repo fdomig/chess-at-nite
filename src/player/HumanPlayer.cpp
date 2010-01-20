@@ -48,48 +48,56 @@ move HumanPlayer::get_valid_move_from_user() {
     bool found = false;
     while (!found) {
         found = false;
-        cout << "Enter your move: ";
-        m = get_move_from_user();
-        switch (m.special) {
-        case MOVE_ERROR:
-            cout << "Wrong input.. try /? for help" << endl;
-            continue;
-        case MOVE_UNDO:
-            found = true;
-            break;
-        case MOVE_SHOW_MOVES:
-            print_moves(moves);
-            continue;
-        case MOVE_SHOW_ALGEBRAIC:
-            print_algebraic_moves(moves, *board);
-            continue;
-        case MOVE_RESIGN:
-            found = true;
-            break;
-        case MOVE_DRAW:
-            cout << "Asked for draw..!!" << endl;
-            continue;
-        case MOVE_SHOW_HISOTRY:
-            print_history(board->history);
-            continue;
-        case MOVE_SHOW_BOARD:
-            cout << *board;
-            continue;
-        case MOVE_SHOW_HELP:
-            print_help();
-            continue;
-            //cause from the get_move_from_user we are getting only these:
-        case MOVE_ORDINARY:
-        case MOVE_PROMOTION:
-            if (board->to_move * board->board[m.pos_old] > 0) {
-                m.moved_piece = board->board[m.pos_old];
-                m.content = board->board[m.pos_new];
-                found = is_legal_move(moves, m);
-            }
+        if (board->get_status() == STATUS_CHECK) {
+            cout << "Enter your move (Check!): ";
+        } else {
+            cout << "Enter your move: ";
         }
 
+        m = get_move_from_user();
+        switch (m.special) {
+            case MOVE_ERROR:
+                cerr << "Wrong input.. try /? for help" << endl;
+                continue;
+            case MOVE_UNDO:
+                found = true;
+                break;
+            case MOVE_SHOW_MOVES:
+                print_moves(moves);
+                continue;
+            case MOVE_SHOW_ALGEBRAIC:
+                print_algebraic_moves(moves, *board);
+                continue;
+            case MOVE_RESIGN:
+                found = true;
+                break;
+            case MOVE_DRAW:
+                cout << "Asked for draw..!!" << endl;
+                continue;
+            case MOVE_SHOW_HISOTRY:
+                print_history(board->history);
+                continue;
+            case MOVE_SHOW_BOARD:
+                cout << *board;
+                continue;
+            case MOVE_SHOW_HELP:
+                print_help();
+                continue;
+                //cause from the get_move_from_user we are getting only these:
+            case MOVE_ORDINARY:
+            case MOVE_PROMOTION:
+                if (board->to_move * board->board[m.pos_old] > 0) {
+                    m.moved_piece = board->board[m.pos_old];
+                    m.content = board->board[m.pos_new];
+                    found = is_legal_move(moves, m);
+                }
+        }
         if (!found) {
-            cout << "You entered an illegal move! Try again..." << endl;
+            cerr << "Your move is illegal! Try again..." << endl;
+            if (board->get_status() == STATUS_CHECK) {
+                cerr << "..and don't forgtet that you are in Check..!" << endl;
+            }
+
         }
     }
     return m;
