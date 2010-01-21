@@ -212,7 +212,7 @@ string strip_algebraic(const string& algebraic) {
 
     for (unsigned int i = 0; i < algebraic.size(); i++) {
         if (algebraic[i] != 'x' && algebraic[i] != '+' && algebraic[i] != '#'
-                && algebraic[i] != '=' && algebraic[i] != ':') {
+                && algebraic[i] != '=' && algebraic[i] != ':' && algebraic[i] != '-') {
             stripped.push_back(algebraic[i]);
         }
     }

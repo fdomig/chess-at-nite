@@ -83,8 +83,10 @@ move HumanPlayer::get_valid_move_from_user() {
             case MOVE_SHOW_HELP:
                 print_help();
                 continue;
-                //cause from the get_move_from_user we are getting only these:
             case MOVE_ORDINARY:
+            case MOVE_CASTLE_SHORT:
+            case MOVE_CASTLE_LONG:
+            case MOVE_EN_PASSANT:
             case MOVE_PROMOTION:
                 if (board->to_move * board->board[m.pos_old] > 0) {
                     m.moved_piece = board->board[m.pos_old];
