@@ -99,9 +99,7 @@ void MoveGenerator::add_move(move possible_move) {
  */
 void MoveGenerator::sort_moves() {
     //insert the captures of the last moved piece in the beginning of the capture list...
-    for (vector<move>::iterator iter = captures_of_last_moved_piece.begin(); iter != captures_of_last_moved_piece.end(); iter++) {
-        capture_moves.insert(capture_moves.begin(), *iter);
-    }    
+    all_moves.insert(all_moves.end(), captures_of_last_moved_piece.rbegin(), captures_of_last_moved_piece.rend());
     all_moves.insert(all_moves.end(), capture_moves.begin(), capture_moves.end());
     all_moves.insert(all_moves.end(), promotion_moves.begin(), promotion_moves.end());
     all_moves.insert(all_moves.end(), castling_moves.begin(), castling_moves.end());
@@ -450,8 +448,10 @@ vector<move>& MoveGenerator::get_all_moves(move best_move) {
 /*
  * returns only the capture moves
  */
-MoveGenerator::CaptureMovesCont& MoveGenerator::get_all_capture_moves() {
-    return capture_moves;
+void MoveGenerator::get_all_capture_moves(vector<move>& moves) {
+    moves.reserve(capture_moves.size() + captures_of_last_moved_piece.size());
+    moves.insert(moves.end(), captures_of_last_moved_piece.rbegin(), captures_of_last_moved_piece.rend());
+    moves.insert(moves.end(), capture_moves.begin(), capture_moves.end());
 }
 
 /*

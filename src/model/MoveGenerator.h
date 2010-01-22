@@ -45,7 +45,7 @@ public:
 
     void generate_all_moves();
     vector<move>& get_all_moves();
-    CaptureMovesCont& get_all_capture_moves();
+    void get_all_capture_moves(vector<move>& moves);
     vector<move>& get_all_moves(move best_move);
 
     //returns true if somebody can attack a specific square and stores in threats the attacked squares

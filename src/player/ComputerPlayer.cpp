@@ -285,9 +285,10 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
 
     MoveGenerator generator(board);
     generator.generate_all_moves();
-    MoveGenerator::CaptureMovesCont& moves = generator.get_all_capture_moves();
+    vector<move> moves;
+    generator.get_all_capture_moves(moves);
 
-    for (MoveGenerator::CaptureMovesCont::const_iterator it = moves.begin(); it != moves.end(); ++it) {
+    for (vector<move>::const_iterator it = moves.begin(); it != moves.end(); ++it) {
         board->fake_move(*it);
         int score = -quiescence(-beta, -alpha);
         board->unfake_move();
