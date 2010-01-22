@@ -1,1 +1,19 @@
-INSTALL
+Linux/MacOS Users
+
+You need to have a g++ compiler installed.
+
+If you don't have a previous version, try doing this:
+
+$ svn checkout http://chess-at-nite.googlecode.com/svn/trunk/ chess-at-nite
+$ cd chess-at-nite
+$ make
+$ cd bin
+$ ./chess-at-nite
+
+If you want to update your previous version, locate the directory and try this:
+
+$ svn update
+$ make clean
+$ make
+$ cd bin
+$ ./chess-at-nite

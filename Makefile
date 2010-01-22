@@ -1,5 +1,7 @@
 # Makefile for the chess project
 # written by Franziskus Domig
+#
+# http://code.google.com/p/chess-at-nite/
 
 CC=g++
 CFLAGS=-O3 -c -Wall -fmessage-length=0
