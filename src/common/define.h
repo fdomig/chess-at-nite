@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.6.908"
+#define VERSION "0.6.910"
 
 
 //defines for different compiles
@@ -25,7 +25,7 @@
 #define COMMAND_LINE
 #define SHOW_SEARCH_INFO
 #define SHOW_BEST_SCORE_
-#define SHOW_THINKING
+#define SHOW_THINKING_
 
 // use features
 #define USE_HASH_TABLE_
