@@ -39,11 +39,10 @@ move HumanPlayer::get_move_from_user() {
 
 move HumanPlayer::get_valid_move_from_user() {
     move m;
-    vector<move> moves;
-    MoveGenerator move_generator = MoveGenerator(board);
+    MoveGenerator move_generator(board);
 
     move_generator.generate_all_moves();
-    moves = move_generator.get_all_moves();
+    vector<move>& moves = move_generator.get_all_moves();
 
     bool found = false;
     while (!found) {

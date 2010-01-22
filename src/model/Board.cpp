@@ -19,16 +19,10 @@ Board::Board(bool rotated) : rotated(rotated) {
 
 //TODO: it's not copying eeeverything.. use it at your own risk!!!
 Board::Board(const Board& b) {
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        board[i] = b.board[i];
-    }
-    for (unsigned i = 0; i < b.history.size(); i++) {
-        history.push_back(b.history[i]);
-    }
-    for (unsigned i = 0; i < b.pgn.size(); i++) {
-        pgn.push_back(b.pgn[i]);
-    }
-    
+    memcpy(board, b.board, sizeof(board[0]) * BOARD_SIZE);
+    history.insert(history.end(), b.history.begin(), b.history.end());
+    pgn.insert(pgn.end(), b.pgn.begin(), b.pgn.end());
+
     black_king = b.black_king;
     white_king = b.white_king;
     black_castle = b.black_castle;
@@ -556,7 +550,7 @@ int Board::generate_hash() {
         if (piece > 0) {
             key ^= hash_pieces[piece - 1][0][i];
         } else if (piece < 0) {
-            key ^= hash_pieces[abs(piece) - 1][1][i];
+            key ^= hash_pieces[-piece - 1][1][i];
         }
     }
     key ^= hash_casteling_white[white_castle];

@@ -108,106 +108,6 @@ int king_table_end[] = {
 #define CHECK_BONUS              50
 #define BONUS_ENDGAME_PAWN_MOVE  50
 
-int evaluate(Board* b) {
-    // score for both sides
-    int score[2] = {0, 0};
-    int material[2] = {0, 0};
-    // basic loop to evaluate each piece
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        if (b->board[i] == EMPTY) {
-            continue;
-        }
-        // white
-        if (b->board[i] > 0) {
-            switch (b->board[i]) {
-                case WHITE_PAWN:
-                    material[0] += PAWN_VALUE;
-                    score[0] += evaluate_pawn(b, i);
-                    break;
-                case WHITE_KNIGHT:
-                    material[0] += KNIGHT_VALUE;
-                    score[0] += evaluate_knight(b, i);
-                    break;
-                case WHITE_BISHOP:
-                    material[0] += BISHOP_VALUE;
-                    score[0] += evaluate_bishop(b, i);
-                    break;
-                case WHITE_ROOK:
-                    material[0] += ROOK_VALUE;
-                    score[0] += evaluate_rook(b, i);
-                    break;
-                case WHITE_QUEEN:
-                    material[0] += QUEEN_VALUE;
-                    score[0] += evaluate_queen(b, i);
-                    break;
-                case WHITE_KING:
-                    break;
-            }
-        } else {
-            switch (b->board[i]) {
-                case BLACK_PAWN:
-                    material[1] += PAWN_VALUE;
-                    score[1] += evaluate_pawn(b, i);
-                    break;
-                case BLACK_KNIGHT:
-                    material[1] += KNIGHT_VALUE;
-                    score[1] += evaluate_knight(b, i);
-                    break;
-                case BLACK_BISHOP:
-                    material[1] += BISHOP_VALUE;
-                    score[1] += evaluate_bishop(b, i);
-                    break;
-                case BLACK_ROOK:
-                    material[1] += ROOK_VALUE;
-                    score[1] += evaluate_rook(b, i);
-                    break;
-                case BLACK_QUEEN:
-                    material[1] += QUEEN_VALUE;
-                    score[1] += evaluate_queen(b, i);
-                    break;
-                case BLACK_KING:
-                    break;
-            }
-        }
-    }
-
-    // mate level?
-    if (material[0] <= MATE_SEARCH_LEVEL || material[1] <= MATE_SEARCH_LEVEL) {
-        MoveGenerator g = MoveGenerator(b);
-        if (g.check_for_check_simple(WHITE)) {
-            score[1] += CHECK_BONUS;
-        } else if (g.check_for_check_simple(BLACK)) {
-            score[0] += CHECK_BONUS;
-        }
-    }
-
-    // evaluate kings
-    score[0] += evaluate_king(b, b->white_king, material[0], material[1]);
-    score[1] += evaluate_king(b, b->black_king, material[0], material[1]);
-
-
-    // special moves
-    // TODO: not all implemented
-
-    // Castling bonus
-    if (b->to_move == BLACK
-            && (b->history.back().m.special == MOVE_CASTLE_LONG
-            || b->history.back().m.special == MOVE_CASTLE_SHORT)) {
-        score[0] += b->history.back().m.special * BONUS_CASTELING;
-    }
-    if (b->to_move == WHITE
-            && (b->history.back().m.special == MOVE_CASTLE_LONG
-            || b->history.back().m.special == MOVE_CASTLE_SHORT)) {
-        score[1] += b->history.back().m.special * BONUS_CASTELING;
-    }
-
-    score[0] += material[0];
-    score[1] += material[1];
-
-    // final score is relative to the side to move
-    return b->to_move * (score[0] - score[1]);
-}
-
 int evaluate_pawn(Board* b, int sq) {
     if (b->board[sq] > 0) {
         // add a penalty if there is another friendly pawn behind this
@@ -295,3 +195,104 @@ int repetitions(Board* b) {
     }
     return r;
 }
+
+int evaluate(Board* b) {
+    // score for both sides
+    int score[2] = {0, 0};
+    int material[2] = {0, 0};
+    // basic loop to evaluate each piece
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        if (b->board[i] == EMPTY) {
+            continue;
+        }
+        // white
+        if (b->board[i] > 0) {
+            switch (b->board[i]) {
+                case WHITE_PAWN:
+                    material[0] += PAWN_VALUE;
+                    score[0] += evaluate_pawn(b, i);
+                    break;
+                case WHITE_KNIGHT:
+                    material[0] += KNIGHT_VALUE;
+                    score[0] += evaluate_knight(b, i);
+                    break;
+                case WHITE_BISHOP:
+                    material[0] += BISHOP_VALUE;
+                    score[0] += evaluate_bishop(b, i);
+                    break;
+                case WHITE_ROOK:
+                    material[0] += ROOK_VALUE;
+                    score[0] += evaluate_rook(b, i);
+                    break;
+                case WHITE_QUEEN:
+                    material[0] += QUEEN_VALUE;
+                    score[0] += evaluate_queen(b, i);
+                    break;
+                case WHITE_KING:
+                    break;
+            }
+        } else {
+            switch (b->board[i]) {
+                case BLACK_PAWN:
+                    material[1] += PAWN_VALUE;
+                    score[1] += evaluate_pawn(b, i);
+                    break;
+                case BLACK_KNIGHT:
+                    material[1] += KNIGHT_VALUE;
+                    score[1] += evaluate_knight(b, i);
+                    break;
+                case BLACK_BISHOP:
+                    material[1] += BISHOP_VALUE;
+                    score[1] += evaluate_bishop(b, i);
+                    break;
+                case BLACK_ROOK:
+                    material[1] += ROOK_VALUE;
+                    score[1] += evaluate_rook(b, i);
+                    break;
+                case BLACK_QUEEN:
+                    material[1] += QUEEN_VALUE;
+                    score[1] += evaluate_queen(b, i);
+                    break;
+                case BLACK_KING:
+                    break;
+            }
+        }
+    }
+
+    // mate level?
+    if (material[0] <= MATE_SEARCH_LEVEL || material[1] <= MATE_SEARCH_LEVEL) {
+        MoveGenerator g(b);
+        if (g.check_for_check_simple(WHITE)) {
+            score[1] += CHECK_BONUS;
+        } else if (g.check_for_check_simple(BLACK)) {
+            score[0] += CHECK_BONUS;
+        }
+    }
+
+    // evaluate kings
+    score[0] += evaluate_king(b, b->white_king, material[0], material[1]);
+    score[1] += evaluate_king(b, b->black_king, material[0], material[1]);
+
+
+    // special moves
+    // TODO: not all implemented
+
+    // Castling bonus
+    if (b->to_move == BLACK
+            && (b->history.back().m.special == MOVE_CASTLE_LONG
+            || b->history.back().m.special == MOVE_CASTLE_SHORT)) {
+        score[0] += b->history.back().m.special * BONUS_CASTELING;
+    }
+    if (b->to_move == WHITE
+            && (b->history.back().m.special == MOVE_CASTLE_LONG
+            || b->history.back().m.special == MOVE_CASTLE_SHORT)) {
+        score[1] += b->history.back().m.special * BONUS_CASTELING;
+    }
+
+    score[0] += material[0];
+    score[1] += material[1];
+
+    // final score is relative to the side to move
+    return b->to_move * (score[0] - score[1]);
+}
+

@@ -329,23 +329,24 @@ int get_promoted_piece(const char piece) {
     return EMPTY;
 }
 
-bool same_move(move m1, move m2) {
+bool operator == (const move& m1, const move& m2)
+{
     return (m1.pos_new == m2.pos_new) && (m1.pos_old == m2.pos_old);
 }
 
 bool is_legal_move(const vector<move>& moves, move& m) {
-    for (unsigned int i = 0; i < moves.size(); i++) {
-        if (same_move(moves[i], m)) {
+    for (vector<move>::const_iterator it = moves.begin(); it != moves.end(); ++it) {
+        if (*it == m) {
             if (m.special == MOVE_PROMOTION) {
                 //if it's the promotion move.. then the moved_piece is the pawn (-1 or 1)
                 //and the promoted has usually a positive value.. in order to make legal 
                 // we have to change the sign!
                 m.promoted = m.moved_piece * abs(m.promoted);
                 return true;
-            } else if (moves[i].special == MOVE_PROMOTION && m.special != MOVE_PROMOTION) {
+            } else if (it->special == MOVE_PROMOTION && m.special != MOVE_PROMOTION) {
                 return false;
             } else {
-                m = moves[i];
+                m = *it;
                 return true;
             }
         }

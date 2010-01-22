@@ -44,7 +44,7 @@ extern string move_to_string_basic(const move& m);
 extern string move_to_string_very_basic(const move& m);
 extern string string_to_lower(string str);
 extern int get_promoted_piece(const char piece);
-extern bool same_move(move m1, move m2);
+bool operator == (const move& m1, const move& m2);
 
 extern void print_moves(const vector<move>& moves);
 extern void print_history(const vector<history_item>& history);

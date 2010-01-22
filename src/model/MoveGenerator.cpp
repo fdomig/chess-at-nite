@@ -80,19 +80,7 @@ void MoveGenerator::add_move(move possible_move) {
         captures_of_last_moved_piece.push_back(possible_move);
     } else if (possible_move.content != EMPTY) {
         //capture moves here..
-        if (capture_moves.empty()) {
-            capture_moves.push_back(possible_move);
-        } else {
-            //sort them with the highest captured value first
-            vector<move>::iterator iter;
-            iter = capture_moves.begin();
-            for (iter = capture_moves.begin(); iter != capture_moves.end(); iter++) {
-                if (abs((*iter).content) < abs(possible_move.content)) {
-                    break;
-                }
-            }
-            capture_moves.insert(iter, possible_move);
-        }
+        capture_moves.insert(possible_move);
     } else if (possible_move.special == MOVE_CASTLE_SHORT || possible_move.special == MOVE_CASTLE_LONG) {
         castling_moves.push_back(possible_move);
     } else if (possible_move.special == MOVE_PROMOTION) {
@@ -110,23 +98,11 @@ void MoveGenerator::add_move(move possible_move) {
  *      add in the beginning all the moves that attacking the last moved piece!
  */
 void MoveGenerator::sort_moves() {
-    vector<move>::iterator iter;
-    //insert the captures of the last moved piece in the beginning of the capture list...
-    for (iter = captures_of_last_moved_piece.begin(); iter != captures_of_last_moved_piece.end(); iter++) {
-        capture_moves.insert(capture_moves.begin(), *iter);
-    }
-    for (iter = capture_moves.begin(); iter != capture_moves.end(); iter++) {
-        all_moves.push_back(*iter);
-    }
-    for (iter = promotion_moves.begin(); iter != promotion_moves.end(); iter++) {
-        all_moves.push_back(*iter);
-    }
-    for (iter = castling_moves.begin(); iter != castling_moves.end(); iter++) {
-        all_moves.push_back(*iter);
-    }
-    for (iter = normal_moves.begin(); iter != normal_moves.end(); iter++) {
-        all_moves.push_back(*iter);
-    }
+    all_moves.insert(all_moves.end(), captures_of_last_moved_piece.rbegin(), captures_of_last_moved_piece.rend());
+    all_moves.insert(all_moves.end(), capture_moves.begin(), capture_moves.end());
+    all_moves.insert(all_moves.end(), promotion_moves.begin(), promotion_moves.end());
+    all_moves.insert(all_moves.end(), castling_moves.begin(), castling_moves.end());
+    all_moves.insert(all_moves.end(), normal_moves.begin(), normal_moves.end());
 }
 
 //before returning .. sort the moves...!!
@@ -458,7 +434,7 @@ vector<move>& MoveGenerator::get_all_moves(move best_move) {
     best_move_in_front = all_moves;
 
     for (vector<move>::iterator iter = best_move_in_front.begin(); iter != best_move_in_front.end(); iter++) {
-        if (same_move(*iter, best_move)) {
+        if (*iter == best_move) {
             best_move_in_front.erase(iter);
             break;
         }
@@ -471,7 +447,7 @@ vector<move>& MoveGenerator::get_all_moves(move best_move) {
 /*
  * returns only the capture moves
  */
-vector<move>& MoveGenerator::get_all_capture_moves() {
+MoveGenerator::CaptureMovesCont& MoveGenerator::get_all_capture_moves() {
     return capture_moves;
 }
 

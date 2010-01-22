@@ -12,6 +12,7 @@
  */
 
 #include "OpeningBook.h"
+#include <algorithm>
 
 OpeningBook::OpeningBook() {
     srand(time(NULL));
@@ -101,11 +102,10 @@ bool OpeningBook::get_move(vector<move>& available_moves,
 
 bool OpeningBook::validate_move(move move_move, vector<move>& available_moves,
         move* valid_move) {
-    for (unsigned int index = 0; index < available_moves.size(); index++) {
-        if (same_move(move_move, available_moves[index])) {
-            *valid_move = available_moves[index];
-            return true;
-        }
+    vector<move>::iterator it = find(available_moves.begin(), available_moves.end(), move_move);
+    if (it != available_moves.end()) {
+        *valid_move = *it;
+        return true;
     }
     return false;
 }

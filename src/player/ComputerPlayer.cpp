@@ -22,9 +22,9 @@ move ComputerPlayer::get_move() {
 
 #ifdef USE_OPENING_BOOK
     if (use_opening_book && opening_book.is_opened()) {
-        MoveGenerator generator = MoveGenerator(board);
+        MoveGenerator generator(board);
         generator.generate_all_moves();
-        vector<move> moves = generator.get_all_moves();
+        vector<move>& moves = generator.get_all_moves();
         if (opening_book.get_move(moves, board->history, m)) {
             cout << " from book: " << move_to_algebraic(m, *board) << endl;
             return m;
@@ -164,9 +164,9 @@ int ComputerPlayer::alpha_beta(int depth, int alpha, int beta) {
 #endif // USE_HASH_TABLE
     board->pv_length[board->ply] = board->ply;
 
-    MoveGenerator generator = MoveGenerator(board);
+    MoveGenerator generator(board);
     generator.generate_all_moves();
-    vector<move> moves = generator.get_all_moves();
+    vector<move>& moves = generator.get_all_moves();
 
     // are we in check? so we search deeper
     bool check = generator.king_under_check;
@@ -283,12 +283,12 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
         alpha = e;
     }
 
-    MoveGenerator generator = MoveGenerator(board);
+    MoveGenerator generator(board);
     generator.generate_all_moves();
-    vector<move> moves = generator.get_all_capture_moves();
+    MoveGenerator::CaptureMovesCont& moves = generator.get_all_capture_moves();
 
-    for (unsigned index = 0; index < moves.size(); index++) {
-        board->fake_move(moves[index]);
+    for (MoveGenerator::CaptureMovesCont::const_iterator it = moves.begin(); it != moves.end(); ++it) {
+        board->fake_move(*it);
         int score = -quiescence(-beta, -alpha);
         board->unfake_move();
         if (score > alpha) {
@@ -298,7 +298,7 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
             alpha = score;
 
             // store the new, better alpha node in the path
-            board->pv[board->ply][board->ply] = moves[index];
+            board->pv[board->ply][board->ply] = *it;
             for (int j = board->ply + 1; j < board->pv_length[board->ply + 1]; ++j) {
                 board->pv[board->ply][j] = board->pv[board->ply + 1][j];
             }
@@ -311,8 +311,7 @@ int ComputerPlayer::quiescence(int alpha, int beta) {
 void ComputerPlayer::sort_pv(vector<move>& moves) {
     board->follow_pv = false;
     for (unsigned i = 0; i < moves.size(); i++) {
-        if (moves[i].pos_new == board->pv[0][board->ply].pos_new
-                && moves[i].pos_old == board->pv[0][board->ply].pos_old) {
+        if (moves[i] == board->pv[0][board->ply]) {
             board->follow_pv = true;
             move tmp = moves[0];
             moves[0] = moves[i];

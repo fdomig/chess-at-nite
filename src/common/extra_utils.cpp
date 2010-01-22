@@ -16,7 +16,7 @@
 
 int board_status(const Board& board) {
     Board b = Board(board);
-    MoveGenerator move_generator = MoveGenerator(&b);
+    MoveGenerator move_generator(&b);
     move_generator.generate_all_moves();
     if (move_generator.get_all_moves().empty()) {
         if (move_generator.king_under_check) {
@@ -159,7 +159,7 @@ string move_to_algebraic_simple(const move& m, const vector<move> &moves) {
 string move_to_algebraic(const move& m, const Board& board) {
     //cause we don't want to messing around with the original board!!
     Board b = Board(board);
-    MoveGenerator move_generator = MoveGenerator(&b);
+    MoveGenerator move_generator(&b);
     move_generator.generate_all_moves();
 
     string algebraic = move_to_algebraic_simple(m, move_generator.get_all_moves());
@@ -226,9 +226,9 @@ string strip_algebraic(const string& algebraic) {
  */
 move algebraic_to_move(const string& algebraic, const Board& board) {
     Board b = Board(board);
-    MoveGenerator move_generator = MoveGenerator(&b);
+    MoveGenerator move_generator(&b);
     move_generator.generate_all_moves();
-    vector<move> moves = move_generator.get_all_moves();
+    vector<move>& moves = move_generator.get_all_moves();
 
     for (unsigned int i = 0; i < moves.size(); i++) {
         if (strip_algebraic(algebraic).compare(

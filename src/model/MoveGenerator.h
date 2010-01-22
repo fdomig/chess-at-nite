@@ -16,11 +16,22 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include "../common/define.h"
 #include "../common/utils.h"
 #include "Board.h"
 
 using namespace std;
+
+class CompareCaptureMoves
+{
+public:
+    bool operator () (const move& m1, const move& m2) const
+    {
+       //sort them with the highest captured value first
+       return abs(m1.content) > abs(m2.content);
+    }
+};
 
 class MoveGenerator {
 public:
@@ -29,9 +40,12 @@ public:
 
     virtual ~MoveGenerator();
 
+    typedef vector<move> MovesCont;
+    typedef multiset<move, CompareCaptureMoves> CaptureMovesCont;
+
     void generate_all_moves();
     vector<move>& get_all_moves();
-    vector<move>& get_all_capture_moves();
+    CaptureMovesCont& get_all_capture_moves();
     vector<move>& get_all_moves(move best_move);
 
     //returns true if somebody can attack a specific square and stores in threats the attacked squares
@@ -46,7 +60,7 @@ private:
     Board* board;
     vector<move> all_moves;
     vector<move> normal_moves;
-    vector<move> capture_moves;
+    CaptureMovesCont capture_moves;
     vector<move> captures_of_last_moved_piece;
     vector<move> promotion_moves;
     vector<move> castling_moves;
