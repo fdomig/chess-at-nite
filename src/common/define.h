@@ -25,7 +25,7 @@
 #define COMMAND_LINE
 #define SHOW_SEARCH_INFO
 #define SHOW_BEST_SCORE_
-#define SHOW_THINKING_
+#define SHOW_THINKING
 
 // use features
 #define USE_HASH_TABLE_

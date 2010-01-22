@@ -98,6 +98,8 @@ void MoveGenerator::add_move(move possible_move) {
  *      add in the beginning all the moves that attacking the last moved piece!
  */
 void MoveGenerator::sort_moves() {
+	all_moves.reserve(captures_of_last_moved_piece.size() + capture_moves.size() + 
+                      promotion_moves.size() + castling_moves.size() + normal_moves.size());
     //insert the captures of the last moved piece in the beginning of the capture list...
     all_moves.insert(all_moves.end(), captures_of_last_moved_piece.rbegin(), captures_of_last_moved_piece.rend());
     all_moves.insert(all_moves.end(), capture_moves.begin(), capture_moves.end());
