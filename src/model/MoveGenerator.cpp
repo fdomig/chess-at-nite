@@ -98,7 +98,10 @@ void MoveGenerator::add_move(move possible_move) {
  *      add in the beginning all the moves that attacking the last moved piece!
  */
 void MoveGenerator::sort_moves() {
-    all_moves.insert(all_moves.end(), captures_of_last_moved_piece.rbegin(), captures_of_last_moved_piece.rend());
+    //insert the captures of the last moved piece in the beginning of the capture list...
+    for (vector<move>::iterator iter = captures_of_last_moved_piece.begin(); iter != captures_of_last_moved_piece.end(); iter++) {
+        capture_moves.insert(capture_moves.begin(), *iter);
+    }    
     all_moves.insert(all_moves.end(), capture_moves.begin(), capture_moves.end());
     all_moves.insert(all_moves.end(), promotion_moves.begin(), promotion_moves.end());
     all_moves.insert(all_moves.end(), castling_moves.begin(), castling_moves.end());
