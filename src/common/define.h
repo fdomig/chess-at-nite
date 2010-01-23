@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.7.004"
+#define VERSION "0.7.005"
 
 
 //defines for different compiles

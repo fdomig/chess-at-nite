@@ -79,44 +79,46 @@ string move_to_algebraic_simple(const move& m, const vector<move> &moves) {
             break;
     }
 
-    vector<move> same;
     //disambiguating moves
-    //same piece and same destination
-    same.clear();
-    for (unsigned int index = 0; index < moves.size(); index++) {
-        if ((moves[index].pos_old != m.pos_old) &&
-                (moves[index].moved_piece == m.moved_piece) &&
-                (moves[index].pos_new == m.pos_new)) {
-            same.push_back(moves[index]);
+    //same piece and same destination, but it's not affecting pawns. This only can
+    //happen while two pawns ara attacking the same piece so the file is added anyway
+    if (abs(m.moved_piece) != PAWN) {
+        vector<move> same;
+        same.clear();
+        for (unsigned int index = 0; index < moves.size(); index++) {
+            if ((moves[index].pos_old != m.pos_old) &&
+                    (moves[index].moved_piece == m.moved_piece) &&
+                    (moves[index].pos_new == m.pos_new)) {
+                same.push_back(moves[index]);
+            }
         }
-    }
-    int count = 0;
-    //check for different FILE of departure
-    for (unsigned int index = 0; index < same.size(); index++) {
-        if (FILE(same[index].pos_old) == FILE(m.pos_old)) {
-            count++;
-        }
-    }
-
-    if (!same.empty() && count == 0) {
-        char file = FILE(m.pos_old) + 'a';
-        result.push_back(file);
-    } else if (count > 0) {
-        count = 0;
+        int count = 0;
+        //check for different FILE of departure
         for (unsigned int index = 0; index < same.size(); index++) {
-            if (RANK(same[index].pos_old) == RANK(m.pos_old)) {
+            if (FILE(same[index].pos_old) == FILE(m.pos_old)) {
                 count++;
             }
         }
+
         if (!same.empty() && count == 0) {
-            char rank = RANK(m.pos_old) + '1';
-            result.push_back(rank);
+            char file = FILE(m.pos_old) + 'a';
+            result.push_back(file);
         } else if (count > 0) {
-            //square of departure
-            result.append(square_to_string(m.pos_old));
+            count = 0;
+            for (unsigned int index = 0; index < same.size(); index++) {
+                if (RANK(same[index].pos_old) == RANK(m.pos_old)) {
+                    count++;
+                }
+            }
+            if (!same.empty() && count == 0) {
+                char rank = RANK(m.pos_old) + '1';
+                result.push_back(rank);
+            } else if (count > 0) {
+                //square of departure
+                result.append(square_to_string(m.pos_old));
+            }
         }
     }
-
     //captures
     if (m.content != EMPTY) {
         if (abs(m.moved_piece) == PAWN) {
