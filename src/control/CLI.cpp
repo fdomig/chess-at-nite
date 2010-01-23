@@ -16,6 +16,9 @@
 CLI::CLI() {
     fen = DEFAULT_FEN;
     rotated_board = false;
+    max_thinking_time = DEFAULT_THINKING_TIME;
+    show_best_score = false;
+    show_thinking = false;
     show_about();
     start();
 }
@@ -23,6 +26,9 @@ CLI::CLI() {
 CLI::CLI(int option) {
     fen = DEFAULT_FEN;
     rotated_board = false;
+    max_thinking_time = DEFAULT_THINKING_TIME;
+    show_best_score = true;
+    show_thinking = true;
     show_about();
     apply_option(option);
 }
@@ -38,6 +44,30 @@ void CLI::start() {
         user_option = get_user_option();
         apply_option(user_option);
     }
+}
+
+void CLI::settings() {
+    int user_option = -1;
+    while (user_option != QUIT) {
+        show_settings();
+        user_option = get_user_option();
+        apply_settings(user_option);
+    }
+}
+
+void CLI::apply_settings(int option) {
+    switch (option) {
+        case SET_MAX_TIME:
+            set_max_time_from_user();
+            break;
+        case SET_SHOW_BEST_SCORE:
+            show_best_score = !show_best_score;
+            break;
+        case SET_SHOW_THINKING:
+            show_thinking = !show_thinking;
+            break;
+    }
+
 }
 
 void CLI::init_game(int game_type) {
@@ -63,6 +93,16 @@ void CLI::init_game(int game_type) {
             black_player = new ComputerPlayer();
             break;
     }
+
+    //if you reached at this point and players are not initialized.. then
+    //something went totally wrong...
+    white_player->set_max_thinking_time(max_thinking_time);
+    white_player->set_show_best_score(show_best_score);
+    white_player->set_show_thinking(show_thinking);
+
+    black_player->set_max_thinking_time(max_thinking_time);
+    black_player->set_show_best_score(show_best_score);
+    black_player->set_show_thinking(show_thinking);
 }
 
 void CLI::apply_option(int option) {
@@ -87,26 +127,49 @@ void CLI::apply_option(int option) {
         case WAC:
             run_wac_test();
             break;
+        case SETTINGS:
+            settings();
+            break;
         case QUIT:
-            cout << "Thanks for playing...!! Have fun.." << endl;
+            cout << "Thanks for playing...!! Have fun..\n";
             break;
     }
 }
 
 void CLI::show_options() {
-    cout << "-----------------------------------" << endl;
+    cout << "-----------------------------------\n";
+    cout << "   1. Human vs Computer\n";
+    cout << "   2. Computer vs Human\n";
+    cout << "   3. Human vs Human\n";
+    cout << "   4. Computer vs Computer\n";
+    cout << "   5. Load fen\n";
+    cout << "   6. Help (Moves/Commands)\n";
+    cout << "   7. Run Benchmark\n";
+    cout << "   8. Win At Chess Test\n";
+    cout << "   9. Settings\n";
+    cout << "-----------------------------------\n";
+    cout << "   0. Quit\n";
+    cout << "-----------------------------------\n";
+}
 
-    cout << "   1. Human vs Computer" << endl;
-    cout << "   2. Computer vs Human" << endl;
-    cout << "   3. Human vs Human" << endl;
-    cout << "   4. Computer vs Computer" << endl;
-    cout << "   5. Load fen" << endl;
-    cout << "   6. Help (Moves/Commands)" << endl;
-    cout << "   7. Run Benchmark" << endl;
-    cout << "   8. Win At Chess Test" << endl;
-    cout << "-----------------------------------" << endl;
-    cout << "   0. Quit" << endl;
-    cout << "-----------------------------------" << endl;
+void CLI::show_settings() {
+    cout << "-----------------------------------\n";
+    cout << "   1. Set max thinking time (" << max_thinking_time << "s)\n";
+
+    if (show_best_score) {
+        cout << "   2. Don't show best score\n";
+    } else {
+        cout << "   2. Show best score\n";
+    }
+
+    if (show_thinking) {
+        cout << "   3. Don't show what I'm thinking\n";
+    } else {
+        cout << "   3. Show what I'm thinking\n";
+    }
+    cout << "-----------------------------------\n";
+    cout << "   0. Back\n";
+    cout << "-----------------------------------\n";
 }
 
 string CLI::get_line() {
@@ -127,6 +190,22 @@ int CLI::get_user_option() {
     return result;
 }
 
+void CLI::set_max_time_from_user() {
+    string temp;
+
+    int seconds = 0;
+    while (seconds == 0) {
+        cout << "Current time: " << max_thinking_time << "s\n";
+        cout << "Enter thinking time (sec): ";
+        cin >> temp;
+        seconds = atoi(temp.c_str());
+        if (seconds == 0) {
+            cerr << "The time should be greater than 0!\n";
+        }
+    }
+    max_thinking_time = seconds;
+}
+
 void CLI::start_game() {
     board = new Board(fen, rotated_board);
     game = new Game(board, white_player, black_player, both_human);
@@ -142,9 +221,8 @@ void CLI::end_game() {
 }
 
 void CLI::show_about() {
-    cout << " Welcome to " << PROJECT_NAME << ", v" << VERSION;
-    cout << " (c) 2009-2010" << endl;
-    cout << "     http://chess-at-nite.googlecode.com" << endl;
+    cout << PROJECT_NAME << " " << VERSION << " (c) 2009-2010\n";
+    cout << "http://chess-at-nite.googlecode.com\n";
 }
 
 void CLI::select_fen() {
@@ -168,36 +246,37 @@ void CLI::select_fen() {
 void CLI::run_benchmark() {
     // old bench: "rq3rk1/4bppp/p1Rp1n2/8/4p3/1B2BP2/PP4PP/3Q1RK1 w - - 0 17"
     string fen = BENCHMARK_FEN;
-    Board* b = new Board(fen);
-    Player* p = new ComputerPlayer(false);
-    p->set_board(b);
+    Board* board = new Board(fen);
+    Player* player = new ComputerPlayer(false);
+    player->set_board(board);
+    player->set_max_thinking_time(max_thinking_time);
+    //during the benchmark show the thinking it's fun...
+    player->set_show_thinking(true);
 
-    cout << "----- The Game of the Century -----" << endl;
-    cout << "Donald Byrne vs Robert J. Fischer" << endl;
-    cout << "Rosenwald Memorial, Oct 17 1956" << endl;
-    cout << "Watch the game: http://goo.gl/Yp0o" << endl;
+    cout << "----- The Game of the Century -----\n";
+    cout << "Donald Byrne vs Robert J. Fischer\n";
+    cout << "Rosenwald Memorial, Oct 17 1956\n";
+    cout << "Watch the game: http://goo.gl/Yp0o\n";
 
-    cout << *b;
-    int t[3];
-    int n[3];
+    cout << *board;
+    int times[3];
+    int nodes[3];
     for (int i = 0; i < 3; i++) {
         int start = get_ms();
-        p->get_move();
-        t[i] = get_ms() - start;
-        n[i] = b->checked_nodes;
+        player->get_move();
+        times[i] = get_ms() - start;
+        nodes[i] = board->checked_nodes;
     }
-    cout << "-------- Benchmark Results --------" << endl;
+    cout << "-------- Benchmark Results --------\n";
     double total = 0;
     for (int i = 0; i < 3; i++) {
-        double nps = (n[i] / (double) t[i]) * 1000;
+        double nps = (nodes[i] / (double) times[i]) * 1000;
         total += nps;
-        cout << "     Run " << i + 1 << ": " << (int) nps << " nodes/sec"
-                << endl;
+        cout << "     Run " << i + 1 << ": " << (int) nps << " nodes/sec\n";
     }
-    cout << endl;
-    cout << "   Average: " << (int) (total / 3) << " nodes/sec" << endl;
-    delete p;
-    delete b;
+    cout << "   Average: " << (int) (total / 3) << " nodes/sec\n";
+    delete player;
+    delete board;
 }
 
 bool CLI::compare_found_move(string found, string should) {
@@ -223,7 +302,7 @@ void CLI::run_wac_test() {
     file.open(WAC_FILE);
     if (!file) {
         cerr << "Can not run Win At Chess test: Test file '" << WAC_FILE;
-        cerr << "' is missing." << endl;
+        cerr << "' is missing.\n";
         return;
     }
 
@@ -257,6 +336,9 @@ void CLI::run_wac_test() {
             Board board = Board(fen);
             Player* player = new ComputerPlayer(false);
             player->set_board(&board);
+            player->set_max_thinking_time(max_thinking_time);
+            player->set_show_best_score(show_best_score);
+            player->set_show_thinking(show_thinking);
             move m = player->get_move();
             algebraic = move_to_algebraic(m, board);
             found.push_back(algebraic);
@@ -285,13 +367,13 @@ void CLI::run_wac_test() {
 
     file.close();
 
-    cout << "---- Test Results ----" << endl;
+    cout << "---- Test Results ----\n";
     printf("Solved %d/%d tests (%.1f%%)\n\n",
             total_solved,
             total_tested,
             (float) (total_solved) / total_tested * 100);
 
-    cout << "---- Failed results ----" << endl;
+    cout << "---- Failed results ----\n";
 
     if (found.size() == should.size() && fens.size() == results.size()
             && fens.size() == found.size()) {
@@ -303,7 +385,7 @@ void CLI::run_wac_test() {
             }
         }
     } else {
-        cerr << "Something went wrong with the results. Check the test file." << endl;
+        cerr << "Something went wrong with the results. Check the test file.\n";
     }
 }
 

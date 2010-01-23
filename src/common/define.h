@@ -15,17 +15,15 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.6.910"
+#define VERSION "0.7.001"
 
 
 //defines for different compiles
-
+//when in debug mode show_best_score and show_thinking are true!
 #define DEBUG_
 //to run a command line interface
 #define COMMAND_LINE
 #define SHOW_SEARCH_INFO
-#define SHOW_BEST_SCORE_
-#define SHOW_THINKING_
 
 // use features
 #define USE_HASH_TABLE_
@@ -35,15 +33,9 @@
 #define UNICODE
 #endif
 
-#ifdef DEBUG
-#define SHOW_THINKING
-#define SHOW_SEARCH_INFO
-#endif
-
-
-//time in milliseconds
-#define MAX_THINKING_TIME 16000
-#define MAX_SEARCH_DEPTH 20
+//time in seconds
+#define DEFAULT_THINKING_TIME  16
+#define MAX_SEARCH_DEPTH       20
 // do not change!
 #define MAX_PLY 64
 

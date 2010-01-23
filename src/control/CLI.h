@@ -38,6 +38,14 @@ class Board;
 #define BENCHMARK       7
 #define WAC             8
 
+#define SETTINGS        9
+
+//setings defines
+#define SET_MAX_TIME         1
+#define SET_SHOW_BEST_SCORE  2
+#define SET_SHOW_THINKING    3
+
+
 #define BENCHMARK_FEN "r3r1k1/pp3pbp/1qp1b1p1/2B5/2BP4/Q1n2N2/P4PPP/3R1K1R w - - 0 18"
 
 class CLI {
@@ -57,9 +65,18 @@ private:
     //when the only human player is black.. 
     bool rotated_board;
     bool both_human;
+    //time is in seconds
+    int max_thinking_time;
+    bool show_best_score;
+    bool show_thinking;
     std::string fen;
 
     void show_options();
+    void apply_option(int option);
+    void show_settings();
+    void settings();
+    void apply_settings(int option);
+    void set_max_time_from_user();
     int get_user_option();
     void init_game(int game_type);
     void start_game();
@@ -68,7 +85,6 @@ private:
     void select_fen();
     void run_benchmark();
     void run_wac_test();
-    void apply_option(int option);
     std::string get_line();
 
     bool compare_found_move(string found, string should);

@@ -30,9 +30,9 @@ void test();
 
 int main(int argc, char **argv) {
 #ifdef DEBUG
-    cout << "!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
-    cout << "!!! DEBUG MODE IS ON !!!"<< endl;
-    cout << "!!!!!!!!!!!!!!!!!!!!!!!!"<< endl;
+    cout << "!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    cout << "!!! DEBUG MODE IS ON !!!" << endl;
+    cout << "!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 #endif
 
     init_globals();

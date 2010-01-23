@@ -39,16 +39,19 @@ move ComputerPlayer::get_move() {
 
 move ComputerPlayer::search_pv() {
     int start_time = get_ms();
-    board->stop_time = start_time + MAX_THINKING_TIME;
+    //time is in seconds
+    board->stop_time = start_time + max_thinking_time * 1000;
     board->time_exit = false;
 
     board->ply = 0;
     board->checked_nodes = 0;
 
     memset(board->pv, 0, sizeof (board->pv));
-#ifdef SHOW_THINKING
-    printf("ply  score   time   nodes  pv\n");
-#endif
+
+    if (show_thinking) {
+        printf("ply  score   time   nodes  pv\n");
+    }
+    
     move best_moves[MAX_SEARCH_DEPTH];
     int best_scores[MAX_SEARCH_DEPTH];
     int best_moves_plys[MAX_SEARCH_DEPTH];
@@ -62,25 +65,25 @@ move ComputerPlayer::search_pv() {
         best_moves_plys[depth] = board->pv_length[0];
         best_scores[depth] = score;
 
-#ifdef SHOW_THINKING
-        if (!board->time_exit) {
-            printf("%3d %6s %6s %7s  ", depth,
-                    display_score(score),
-                    display_time(start_time, get_ms()),
-                    display_nodes_count(board->checked_nodes));
-            //you have to simulate the game to print the algebraic correct
-            Board temp_board = Board(*board);
-            for (int j = 0; j < board->pv_length[0]; ++j) {
-                if (j % 2 == 0) {
-                    cout << (j / 2 + 1) << ". ";
+        if (show_thinking) {
+            if (!board->time_exit) {
+                printf("%3d %6s %6s %7s  ", depth,
+                        display_score(score),
+                        display_time(start_time, get_ms()),
+                        display_nodes_count(board->checked_nodes));
+                //you have to simulate the game to print the algebraic correct
+                Board temp_board = Board(*board);
+                for (int j = 0; j < board->pv_length[0]; ++j) {
+                    if (j % 2 == 0) {
+                        cout << (j / 2 + 1) << ". ";
+                    }
+                    printf("%s ", move_to_algebraic(board->pv[0][j], temp_board).c_str());
+                    temp_board.play_move(board->pv[0][j]);
                 }
-                printf("%s ", move_to_algebraic(board->pv[0][j], temp_board).c_str());
-                temp_board.play_move(board->pv[0][j]);
+                printf("\n");
+                fflush(stdout);
             }
-            printf("\n");
-            fflush(stdout);
         }
-#endif
         if (abs(score) >= MATE) {
             found_checkmate = true;
             break;
@@ -112,12 +115,11 @@ move ComputerPlayer::search_pv() {
             (board->checked_nodes / 1000.0) / total_time);
 #endif
 
-#ifdef SHOW_BEST_SCORE
-    cout << "Score for move " << move_to_algebraic(best_move, *board) << " is ";
-    cout << display_score(best_score) << " (" << best_move_plys << " plys)";
-    cout << endl;
-#endif
-
+    if (show_best_score) {
+        cout << "Score for move " << move_to_algebraic(best_move, *board) << " is ";
+        cout << display_score(best_score) << " (" << best_move_plys << " plys)";
+        cout << endl;
+    }
     return best_move;
 }
 

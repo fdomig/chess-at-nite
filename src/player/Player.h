@@ -26,8 +26,14 @@ public:
     virtual ~Player();
     void set_board(Board* board);
     virtual move get_move() = 0;
+    void set_max_thinking_time(int seconds);
+    void set_show_best_score(bool show);
+    void set_show_thinking(bool show);
 protected:
     Board* board;
+    int max_thinking_time;
+    bool show_best_score;
+    bool show_thinking;
 };
 
 #endif // PLAYER_H_
