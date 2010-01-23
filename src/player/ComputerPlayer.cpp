@@ -58,7 +58,7 @@ move ComputerPlayer::search_pv() {
 
     int depth = 1;
     bool found_checkmate = false;
-    for (; depth < MAX_SEARCH_DEPTH && !board->time_exit; depth++) {
+    for (; depth <= max_search_depth && !board->time_exit; depth++) {
         board->follow_pv = true;
         int score = alpha_beta(depth, -EVALUATION_START, EVALUATION_START);
         best_moves[depth] = board->pv[0][0];

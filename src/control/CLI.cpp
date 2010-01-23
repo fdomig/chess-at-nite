@@ -14,27 +14,28 @@
 #include "CLI.h"
 
 CLI::CLI() {
-    fen = DEFAULT_FEN;
-    rotated_board = false;
-    max_thinking_time = DEFAULT_THINKING_TIME;
-    show_best_score = false;
-    show_thinking = false;
+    init();
     show_about();
     start();
 }
 
 CLI::CLI(int option) {
-    fen = DEFAULT_FEN;
-    rotated_board = false;
-    max_thinking_time = DEFAULT_THINKING_TIME;
-    show_best_score = true;
-    show_thinking = true;
+    init();
     show_about();
     apply_option(option);
 }
 
 CLI::~CLI() {
 
+}
+
+void CLI::init() {
+    fen = DEFAULT_FEN;
+    rotated_board = false;
+    max_thinking_time = DEFAULT_THINKING_TIME;
+    max_search_depth = MAX_SEARCH_DEPTH;
+    show_best_score = false;
+    show_thinking = false;
 }
 
 void CLI::start() {
@@ -59,6 +60,9 @@ void CLI::apply_settings(int option) {
     switch (option) {
         case SET_MAX_TIME:
             set_max_time_from_user();
+            break;
+        case SET_MAX_DEPTH:
+            set_max_depth_from_user();
             break;
         case SET_SHOW_BEST_SCORE:
             show_best_score = !show_best_score;
@@ -97,10 +101,12 @@ void CLI::init_game(int game_type) {
     //if you reached at this point and players are not initialized.. then
     //something went totally wrong...
     white_player->set_max_thinking_time(max_thinking_time);
+    white_player->set_max_search_depth(max_search_depth);
     white_player->set_show_best_score(show_best_score);
     white_player->set_show_thinking(show_thinking);
 
     black_player->set_max_thinking_time(max_thinking_time);
+    black_player->set_max_search_depth(max_search_depth);
     black_player->set_show_best_score(show_best_score);
     black_player->set_show_thinking(show_thinking);
 }
@@ -154,18 +160,19 @@ void CLI::show_options() {
 
 void CLI::show_settings() {
     cout << "-----------------------------------\n";
-    cout << "   1. Set max thinking time (" << max_thinking_time << "s)\n";
+    cout << "   1. Set max thinking time (" << max_thinking_time << " sec)\n";
+    cout << "   2. Set max depth search (" << max_search_depth << " plies)\n";
 
     if (show_best_score) {
-        cout << "   2. Don't show best score\n";
+        cout << "   3. Don't show best score\n";
     } else {
-        cout << "   2. Show best score\n";
+        cout << "   3. Show best score\n";
     }
 
     if (show_thinking) {
-        cout << "   3. Don't show what I'm thinking\n";
+        cout << "   4. Don't show what I'm thinking\n";
     } else {
-        cout << "   3. Show what I'm thinking\n";
+        cout << "   4. Show what I'm thinking\n";
     }
     cout << "-----------------------------------\n";
     cout << "   0. Back\n";
@@ -195,7 +202,7 @@ void CLI::set_max_time_from_user() {
 
     int seconds = 0;
     while (seconds == 0) {
-        cout << "Current time: " << max_thinking_time << "s\n";
+        cout << "Current time: " << max_thinking_time << " sec\n";
         cout << "Enter thinking time (sec): ";
         cin >> temp;
         seconds = atoi(temp.c_str());
@@ -204,6 +211,22 @@ void CLI::set_max_time_from_user() {
         }
     }
     max_thinking_time = seconds;
+}
+
+void CLI::set_max_depth_from_user() {
+    string temp;
+
+    int depth = 0;
+    while (depth == 0) {
+        cout << "Current depth: " << max_search_depth << " plies\n";
+        cout << "Enter max search depth (plies): ";
+        cin >> temp;
+        depth = atoi(temp.c_str());
+        if (depth == 0) {
+            cerr << "The depth should be greater than 0!\n";
+        }
+    }
+    max_search_depth = depth;
 }
 
 void CLI::start_game() {

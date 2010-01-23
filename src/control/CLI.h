@@ -42,8 +42,9 @@ class Board;
 
 //setings defines
 #define SET_MAX_TIME         1
-#define SET_SHOW_BEST_SCORE  2
-#define SET_SHOW_THINKING    3
+#define SET_MAX_DEPTH        2
+#define SET_SHOW_BEST_SCORE  3
+#define SET_SHOW_THINKING    4
 
 
 #define BENCHMARK_FEN "r3r1k1/pp3pbp/1qp1b1p1/2B5/2BP4/Q1n2N2/P4PPP/3R1K1R w - - 0 18"
@@ -67,6 +68,7 @@ private:
     bool both_human;
     //time is in seconds
     int max_thinking_time;
+    int max_search_depth;
     bool show_best_score;
     bool show_thinking;
     std::string fen;
@@ -77,6 +79,7 @@ private:
     void settings();
     void apply_settings(int option);
     void set_max_time_from_user();
+    void set_max_depth_from_user();
     int get_user_option();
     void init_game(int game_type);
     void start_game();

@@ -14,7 +14,7 @@
 #include "Player.h"
 
 Player::Player() : max_thinking_time(DEFAULT_THINKING_TIME),
-show_best_score(false), show_thinking(false) {
+max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false), show_thinking(false) {
 #ifdef DEBUG
     show_thinking = true;
     show_best_score = true;
@@ -30,6 +30,10 @@ void Player::set_board(Board* new_board) {
 
 void Player::set_max_thinking_time(int seconds) {
     max_thinking_time = seconds;
+}
+
+void Player::set_max_search_depth(int depth) {
+    max_search_depth = depth;
 }
 
 void Player::set_show_best_score(bool show) {

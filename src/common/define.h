@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.7.001"
+#define VERSION "0.7.004"
 
 
 //defines for different compiles
@@ -35,6 +35,8 @@
 
 //time in seconds
 #define DEFAULT_THINKING_TIME  16
+//this should be big.. because of the quiescence search.. depth is only
+//affecting the iterations.. and we are using this constant to define the pv
 #define MAX_SEARCH_DEPTH       20
 // do not change!
 #define MAX_PLY 64
