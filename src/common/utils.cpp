@@ -433,7 +433,7 @@ void print_moves(const vector<move>& moves) {
     cout << "-----------------------------------" << endl;
 }
 
-void print_history(const vector<history_item>& history) {
+void print_history(const vector<string>& history) {
     if (history.size() == 0) {
         cout << "Nothing in the history..." << endl;
         return;
@@ -442,9 +442,9 @@ void print_history(const vector<history_item>& history) {
     unsigned int i;
     for (i = 0; i < history.size(); i++) {
         if (i % 2 == 0) {
-            cout << setw(3) << i / 2 + 1 << ": ";
+            cout << setw(3) << i / 2 + 1 << ".";
         }
-        cout << move_to_string(history[i].m, 20);
+        cout << " " << history[i];
 
         if ((i % 2) != 0) {
             cout << endl;

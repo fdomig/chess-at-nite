@@ -22,6 +22,7 @@ using namespace std;
 
 class HumanPlayer : public Player {
 public:
+    HumanPlayer();
     move get_move();
 
 protected:

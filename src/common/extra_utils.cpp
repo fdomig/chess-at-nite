@@ -12,6 +12,8 @@
  */
 
 
+#include <fstream>
+
 #include "extra_utils.h"
 
 int board_status(const Board& board) {
@@ -20,7 +22,7 @@ int board_status(const Board& board) {
     move_generator.generate_all_moves();
     if (move_generator.get_all_moves().empty()) {
         if (move_generator.king_under_check) {
-            return OPPONENT(b.to_move) ? STATUS_WHITE_CHECKMATE : STATUS_BLACK_CHECKMATE;
+            return b.to_move == BLACK ? STATUS_WHITE_CHECKMATE : STATUS_BLACK_CHECKMATE;
         } else {
             return STATUS_STALEMATE;
         }
@@ -30,7 +32,6 @@ int board_status(const Board& board) {
             repetitions(&b) >= THREEFOLD_REPITITION_RULE) {
         return STATUS_DRAW;
     }
-
     return STATUS_NORMAL;
 }
 
@@ -241,3 +242,69 @@ move algebraic_to_move(const string& algebraic, const Board& board) {
 
     return string_to_move(algebraic);
 }
+
+string pgn_game_result(int status) {
+    switch (status) {
+        case STATUS_DRAW:
+        case STATUS_STALEMATE:
+            return "1/2-1/2";
+        case STATUS_WHITE_CHECKMATE:
+        case STATUS_WHITE_WINS:
+            return "1-0";
+        case STATUS_BLACK_CHECKMATE:
+        case STATUS_BLACK_WINS:
+            return "0-1";
+    }
+    //still in progress..
+    return "*";
+}
+
+bool write_last_game_pgn(Board *board, const string& white, const string& black) {
+    ofstream last_game_pgn(LAST_PGN_FILE);
+    if (last_game_pgn.is_open()) {
+        string result = pgn_game_result(board->get_status());
+        time_t now;
+        time(&now);
+        struct tm *current = localtime(&now);
+        last_game_pgn << "[Event \"" << PROJECT_NAME << "\"]\n";
+        last_game_pgn << "[Site \"" << "?" << "\"]\n";
+        last_game_pgn << "[Date \"" << (current->tm_year + 1900);
+        last_game_pgn << "." << setw(2) << setfill('0') << (current->tm_mon + 1);
+        last_game_pgn << "." << setw(2) << setfill('0') << current->tm_mday << "\"]\n";
+
+        last_game_pgn << "[Round \"?\"]\n";
+        last_game_pgn << "[White \"" << white << "\"]\n";
+        last_game_pgn << "[Black \"" << black << "\"]\n";
+        last_game_pgn << "[Result \"" << result << "\"]\n";
+
+        last_game_pgn << "\n";
+        //movetext
+        string temp;
+        char move_num_char[10];
+        int width = 0;
+        for (unsigned int i = 0; i < board->pgn.size(); ++i) {
+            temp = "";
+            if (i % 2 == 0) {
+                sprintf(move_num_char, "%d. ", (i / 2 + 1));
+                temp.append(move_num_char);
+            }
+            temp.append(board->pgn[i]);
+            temp.append(" ");
+            if ((width + temp.size()) > MAX_FILE_WIDTH) {
+                last_game_pgn << "\n";
+                width = 0;
+            }
+            last_game_pgn << temp;
+            width += temp.size();
+        }
+        if (result.compare("*") != 0) {
+            last_game_pgn << result;
+        }
+
+        last_game_pgn << "\n";
+        last_game_pgn.close();
+        return true;
+    }
+    return false;
+}
+

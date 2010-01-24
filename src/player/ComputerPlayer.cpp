@@ -15,6 +15,9 @@
 
 ComputerPlayer::ComputerPlayer(bool use_book) :
 Player(), use_opening_book(use_book) {
+    name = PROJECT_NAME;
+    name.append(" ");
+    name.append(VERSION);
 }
 
 move ComputerPlayer::get_move() {

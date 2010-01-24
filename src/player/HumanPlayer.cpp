@@ -15,6 +15,10 @@
 
 using namespace std;
 
+HumanPlayer::HumanPlayer(): Player() {
+    name = "Human Player";
+}
+
 move HumanPlayer::get_move() {
     move m = get_valid_move_from_user();
     cout << "";
@@ -74,7 +78,7 @@ move HumanPlayer::get_valid_move_from_user() {
                 cout << "Asked for draw..!!" << endl;
                 continue;
             case MOVE_SHOW_HISOTRY:
-                print_history(board->history);
+                print_history(board->pgn);
                 continue;
             case MOVE_SHOW_BOARD:
                 cout << *board;

@@ -15,7 +15,7 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.7.005"
+#define VERSION "0.7.010"
 
 
 //defines for different compiles
@@ -41,8 +41,11 @@
 // do not change!
 #define MAX_PLY 64
 
-#define OPENING_BOOK "book"
+//File consts
+#define OPENING_BOOK_FILE "book"
 #define WAC_FILE "wac.ci"
+#define LAST_PGN_FILE "last_game.pgn"
+#define MAX_FILE_WIDTH            80
 
 #define BOARD_SIZE               128
 #define SIZE                       8
@@ -159,72 +162,15 @@
 typedef signed char byte;
 
 // squares for the 0x88 board
-
 typedef enum _SQUARE {
-    A1 = 0,
-    A2 = 16,
-    A3 = 32,
-    A4 = 48,
-    A5 = 64,
-    A6 = 80,
-    A7 = 96,
-    A8 = 112,
-    B1 = 1,
-    B2 = 17,
-    B3 = 33,
-    B4 = 49,
-    B5 = 65,
-    B6 = 81,
-    B7 = 97,
-    B8 = 113,
-    C1 = 2,
-    C2 = 18,
-    C3 = 34,
-    C4 = 50,
-    C5 = 66,
-    C6 = 82,
-    C7 = 98,
-    C8 = 114,
-    D1 = 3,
-    D2 = 19,
-    D3 = 35,
-    D4 = 51,
-    D5 = 67,
-    D6 = 83,
-    D7 = 99,
-    D8 = 115,
-    E1 = 4,
-    E2 = 20,
-    E3 = 36,
-    E4 = 52,
-    E5 = 68,
-    E6 = 84,
-    E7 = 100,
-    E8 = 116,
-    F1 = 5,
-    F2 = 21,
-    F3 = 37,
-    F4 = 53,
-    F5 = 69,
-    F6 = 85,
-    F7 = 101,
-    F8 = 117,
-    G1 = 6,
-    G2 = 22,
-    G3 = 38,
-    G4 = 54,
-    G5 = 70,
-    G6 = 86,
-    G7 = 102,
-    G8 = 118,
-    H1 = 7,
-    H2 = 23,
-    H3 = 39,
-    H4 = 55,
-    H5 = 71,
-    H6 = 87,
-    H7 = 103,
-    H8 = 119
+    A1 = 0, A2 = 16, A3 = 32, A4 = 48, A5 = 64, A6 = 80, A7 = 96, A8 = 112,
+    B1 = 1, B2 = 17, B3 = 33, B4 = 49, B5 = 65, B6 = 81, B7 = 97, B8 = 113,
+    C1 = 2, C2 = 18, C3 = 34, C4 = 50, C5 = 66, C6 = 82, C7 = 98, C8 = 114,
+    D1 = 3, D2 = 19, D3 = 35, D4 = 51, D5 = 67, D6 = 83, D7 = 99, D8 = 115,
+    E1 = 4, E2 = 20, E3 = 36, E4 = 52, E5 = 68, E6 = 84, E7 = 100, E8 = 116,
+    F1 = 5, F2 = 21, F3 = 37, F4 = 53, F5 = 69, F6 = 85, F7 = 101, F8 = 117,
+    G1 = 6, G2 = 22, G3 = 38, G4 = 54, G5 = 70, G6 = 86, G7 = 102, G8 = 118,
+    H1 = 7, H2 = 23, H3 = 39, H4 = 55, H5 = 71, H6 = 87, H7 = 103, H8 = 119
 } square;
 
 /* 32-bit number to hold the whole information of a move

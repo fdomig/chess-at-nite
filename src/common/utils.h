@@ -47,7 +47,7 @@ extern int get_promoted_piece(const char piece);
 bool operator == (const move& m1, const move& m2);
 
 extern void print_moves(const vector<move>& moves);
-extern void print_history(const vector<history_item>& history);
+extern void print_history(const vector<string>& history);
 extern string int_to_string(int);
 extern bool is_legal_move(const vector<move>& moves, move& m);
 

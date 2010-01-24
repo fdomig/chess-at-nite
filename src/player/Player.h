@@ -30,8 +30,10 @@ public:
     void set_max_search_depth(int depth);
     void set_show_best_score(bool show);
     void set_show_thinking(bool show);
+    string& get_name();
 protected:
     Board* board;
+    string name;
     int max_thinking_time;
     int max_search_depth;
 

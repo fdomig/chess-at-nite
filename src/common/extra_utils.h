@@ -14,6 +14,8 @@
 #ifndef _EXTRA_UTILS_H
 #define	_EXTRA_UTILS_H
 
+#include <iostream>
+#include <time.h>
 #include "define.h"
 #include "../model/Board.h"
 #include "../model/MoveGenerator.h"
@@ -27,6 +29,8 @@ extern string move_to_algebraic(const move& m, const Board& board);
 extern void print_algebraic_moves(const vector<move>& moves, const Board& board);
 extern string strip_algebraic(const string& algebraic);
 extern move algebraic_to_move(const string& algebraic, const Board& board);
+extern string pgn_game_result(int status);
+extern bool write_last_game_pgn(Board* board, const string& white, const string& black);
 
 #endif	/* _EXTRA_UTILS_H */
 

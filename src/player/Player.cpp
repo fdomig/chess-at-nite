@@ -13,8 +13,9 @@
 
 #include "Player.h"
 
-Player::Player() : max_thinking_time(DEFAULT_THINKING_TIME),
-max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false), show_thinking(false) {
+Player::Player() : name("uknown"), max_thinking_time(DEFAULT_THINKING_TIME),
+max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false), show_thinking(false)
+ {
 #ifdef DEBUG
     show_thinking = true;
     show_best_score = true;
@@ -22,6 +23,10 @@ max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false), show_thinking(false)
 }
 
 Player::~Player() {
+}
+
+string& Player::get_name() {
+    return name;
 }
 
 void Player::set_board(Board* new_board) {

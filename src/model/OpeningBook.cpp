@@ -16,7 +16,7 @@
 
 OpeningBook::OpeningBook() {
     srand(time(NULL));
-    book_file.open(OPENING_BOOK);
+    book_file.open(OPENING_BOOK_FILE);
     max_line_size = 0;
     book_open = false;
     if (book_file) {
@@ -165,7 +165,7 @@ void OpeningBook::parse_book() {
                 } else {
                     cerr << "Wrong book entry at line: " << line_number
                             << " index: " << index << " in book: "
-                            << OPENING_BOOK << endl;
+                            << OPENING_BOOK_FILE << endl;
                     error_at_line = true;
                     break;
                 }
