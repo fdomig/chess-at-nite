@@ -18,7 +18,7 @@
 //version system changed. it's a date written in the inverse order, so it's
 //always pretty obvious how recent it is and let's face it.. it's an arbitary
 //number anyway...
-#define VERSION "10.1.24"
+#define VERSION "10.1.25"
 
 
 //defines for different compiles
@@ -46,7 +46,7 @@
 
 //File consts
 #define OPENING_BOOK_FILE "book"
-#define WAC_FILE "wac.ci"
+#define WAC_FILE "wac"
 #define LAST_PGN_FILE "last_game.pgn"
 #define MAX_FILE_WIDTH            80
 

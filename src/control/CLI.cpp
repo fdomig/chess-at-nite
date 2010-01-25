@@ -291,13 +291,15 @@ void CLI::run_benchmark() {
         nodes[i] = board->checked_nodes;
     }
     cout << "-------- Benchmark Results --------\n";
-    double total = 0;
+    double best_nps = 0;
     for (int i = 0; i < 3; i++) {
         double nps = (nodes[i] / (double) times[i]) * 1000;
-        total += nps;
-        cout << "     Run " << i + 1 << ": " << (int) nps << " nodes/sec\n";
+        if (best_nps < nps) {
+            best_nps = nps;
+        }
+        cout << "     Run #" << i + 1 << ": " << (int) nps << " nodes/sec\n";
     }
-    cout << "   Average: " << (int) (total / 3) << " nodes/sec\n";
+    cout     << "  Best of 3: " << (int) (best_nps) << " nodes/sec\n";
     delete player;
     delete board;
 }
