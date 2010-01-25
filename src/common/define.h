@@ -33,7 +33,7 @@
 #define USE_OPENING_BOOK
 
 #ifndef WIN32
-#define UNICODE_
+#define UNICODE
 #endif
 
 //time in seconds
