@@ -13,7 +13,7 @@
 
 #include "Player.h"
 
-Player::Player() : name("uknown"), max_thinking_time(DEFAULT_THINKING_TIME),
+Player::Player() : name("unknown"), max_thinking_time(DEFAULT_THINKING_TIME),
 max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false), show_thinking(false)
  {
 #ifdef DEBUG

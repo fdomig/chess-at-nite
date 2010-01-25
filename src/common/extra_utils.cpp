@@ -22,7 +22,7 @@ int board_status(const Board& board) {
     move_generator.generate_all_moves();
     if (move_generator.get_all_moves().empty()) {
         if (move_generator.king_under_check) {
-            return b.to_move == BLACK ? STATUS_WHITE_CHECKMATE : STATUS_BLACK_CHECKMATE;
+            return b.to_move == BLACK ? STATUS_WHITE_MATES : STATUS_BLACK_MATES;
         } else {
             return STATUS_STALEMATE;
         }
@@ -173,8 +173,8 @@ string move_to_algebraic(const move& m, const Board& board) {
         case STATUS_CHECK:
             algebraic.append("+");
             break;
-        case STATUS_WHITE_CHECKMATE:
-        case STATUS_BLACK_CHECKMATE:
+        case STATUS_WHITE_MATES:
+        case STATUS_BLACK_MATES:
             algebraic.append("#");
             break;
     }
@@ -248,10 +248,10 @@ string pgn_game_result(int status) {
         case STATUS_DRAW:
         case STATUS_STALEMATE:
             return "1/2-1/2";
-        case STATUS_WHITE_CHECKMATE:
+        case STATUS_WHITE_MATES:
         case STATUS_WHITE_WINS:
             return "1-0";
-        case STATUS_BLACK_CHECKMATE:
+        case STATUS_BLACK_MATES:
         case STATUS_BLACK_WINS:
             return "0-1";
     }

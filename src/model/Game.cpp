@@ -75,8 +75,8 @@ void Game::play(Player* player1, Player* player2) {
 #endif
         //what to do in different cases
         switch (status) {
-            case STATUS_WHITE_CHECKMATE:
-            case STATUS_BLACK_CHECKMATE:
+            case STATUS_WHITE_MATES:
+            case STATUS_BLACK_MATES:
             case STATUS_WHITE_WINS:
             case STATUS_BLACK_WINS:
             case STATUS_STALEMATE:

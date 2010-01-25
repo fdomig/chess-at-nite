@@ -81,7 +81,7 @@ move HumanPlayer::get_valid_move_from_user() {
                 print_history(board->pgn);
                 continue;
             case MOVE_SHOW_BOARD:
-                cout << *board;
+                cout << *board << endl;
                 continue;
             case MOVE_SHOW_HELP:
                 print_help();

@@ -18,8 +18,9 @@ Board::Board(bool rotated) : rotated(rotated) {
 }
 
 //TODO: it's not copying eeeverything.. use it at your own risk!!!
+
 Board::Board(const Board& b) {
-    memcpy(board, b.board, sizeof(board[0]) * BOARD_SIZE);
+    memcpy(board, b.board, sizeof (board[0]) * BOARD_SIZE);
     history.insert(history.end(), b.history.begin(), b.history.end());
     pgn.insert(pgn.end(), b.pgn.begin(), b.pgn.end());
 
@@ -468,7 +469,6 @@ void Board::add_pgn(string algebraic) {
     pgn.push_back(algebraic);
 }
 
-
 void Board::initialize_hash() {
     // pieces
     for (int i = 0; i < 6; i++) {
@@ -601,8 +601,6 @@ void Board::hash_store(int depth, htype type, int score, move best) {
 }
 #endif // USE_HASH_TABLE
 
-#ifdef UNICODE
-
 ostream & operator<<(ostream& os, Board& board) {
     int square;
     unsigned int index;
@@ -658,7 +656,7 @@ ostream & operator<<(ostream& os, Board& board) {
                 break;
             case 6:
                 os << B_UD << " ";
-                os << (board.to_move == WHITE ? "White's move: " : "Black's move: ") << board.full_moves;
+                os << (board.to_move == WHITE ? "White's turn: " : "Black's turn: ") << board.full_moves;
                 break;
             case 5:
                 os << B_UD << " ";
@@ -666,17 +664,17 @@ ostream & operator<<(ostream& os, Board& board) {
                     case STATUS_CHECK:
                         os << "Check..!";
                         break;
-                    case STATUS_WHITE_CHECKMATE:
-                        os << "White Checkmate..! gg";
+                    case STATUS_WHITE_MATES:
+                        os << "White mates..! gg";
                         break;
-                    case STATUS_BLACK_CHECKMATE:
-                        os << "Black Checkmate..! gg";
+                    case STATUS_BLACK_MATES:
+                        os << "Black mates..! gg";
                         break;
                     case STATUS_WHITE_WINS:
-                        os << "White Wins..! gg";
+                        os << "White wins..! gg";
                         break;
                     case STATUS_BLACK_WINS:
-                        os << "Black Wins..! gg";
+                        os << "Black wins..! gg";
                         break;
                     case STATUS_STALEMATE:
                         os << "Stalemate.. gg";
@@ -710,12 +708,16 @@ ostream & operator<<(ostream& os, Board& board) {
     }
     os << B_UDL << endl;
 
-    //file captions
+    //next to move.. lower left corner
     os << B_UD << " ";
+#ifdef UNICODE
+    os << piece_symbol(PAWN * board.to_move);
+#else
+    os << " ";
+#endif
+    os << " " << B_UD;
 
-    os << piece_symbol(PAWN * board.to_move) << " ";
-    os << B_UD;
-    
+    //file captions
     if (!board.rotated) {
         os << " a b c d e f g h " << B_UD;
     } else {
@@ -728,7 +730,7 @@ ostream & operator<<(ostream& os, Board& board) {
     }
 
     if (!board.history.empty()) {
-        os << "  " << move_to_string(board.history.back().m);
+        os << "   " << move_to_string(board.history.back().m);
     }
 
     os << endl;
@@ -738,99 +740,10 @@ ostream & operator<<(ostream& os, Board& board) {
         os << B_LR << B_LR;
     }
     os << B_LU;
-    os << endl;
 #ifdef DEBUG
+    os << board.get_fen() << endl;
     os << "w_king: " << square_to_string(board.white_king);
     os << "  b_king: " << square_to_string(board.black_king) << endl;
-    os << board.get_fen() << endl;
 #endif
     return os;
 }
-
-#else
-
-ostream & operator<<(ostream& os, Board& board) {
-    int square;
-    for (int rank = SIZE; rank > 0; rank--) {
-        os << rank << " ";
-        for (int file = 0; file < SIZE; file++) {
-            square = (rank - 1) * NEXT_RANK + file * NEXT_FILE;
-            if (board.board[square] != EMPTY) {
-                os << piece_symbol(board.board[square]);
-            } else {
-                os << empty_square_to_string(square);
-            }
-            if (!board.history.empty() && board.history.back().m.pos_new
-                    == square) {
-                os << "*";
-            } else {
-                os << " ";
-            }
-        }
-
-        switch (rank) {
-            case SIZE:
-                os << "  ";
-                for (unsigned i = 0; i < board.black_captures.size(); i++) {
-                    os << piece_symbol(board.black_captures[i]);
-                }
-                break;
-            case 6:
-                os << "  ";
-                os << (board.to_move == WHITE ? "White's move: " : "Black's move: ") << board.full_moves;
-                break;
-            case 5:
-                os << "  ";
-                switch (board.get_status()) {
-                    case STATUS_CHECK:
-                        os << "Check..!";
-                        break;
-                    case STATUS_WHITE_CHECKMATE:
-                        os << "White Checkmate..! gg";
-                        break;
-                    case STATUS_BLACK_CHECKMATE:
-                        os << "Black Checkmate..! gg";
-                        break;
-                    case STATUS_WHITE_WINS:
-                        os << "White Wins..! gg";
-                        break;
-                    case STATUS_BLACK_WINS:
-                        os << "Black Wins..! gg";
-                        break;
-                    case STATUS_STALEMATE:
-                        os << "Stalemate.. gg";
-                        break;
-                    case STATUS_DRAW:
-                        os << "Draw.. gg";
-                        break;
-                }
-                break;
-            case 1:
-                os << "  ";
-                for (unsigned i = 0; i < board.white_captures.size(); i++) {
-                    os << piece_symbol(board.white_captures[i]);
-                }
-                break;
-        }
-        os << endl;
-    }
-    os << "  a b c d e f g h    ";
-    //last move
-    if (!board.pgn.empty()) {
-        os << " " << board.pgn.back();
-    }
-
-    if (!board.history.empty()) {
-        os << "  " << move_to_string(board.history.back().m);
-    }
-    os << endl;
-#ifdef DEBUG
-    os << "w_king: " << square_to_string(board.white_king);
-    os << "  b_king: " << square_to_string(board.black_king) << endl;
-    os << board.get_fen() << endl;
-#endif
-
-    return os;
-}
-
-#endif

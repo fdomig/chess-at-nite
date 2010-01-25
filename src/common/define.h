@@ -15,7 +15,10 @@
 #define DEFINE_H_
 
 #define PROJECT_NAME "chess-at-nite"
-#define VERSION "0.7.010"
+//version system changed. it's a date written in the inverse order, so it's
+//always pretty obvious how recent it is and let's face it.. it's an arbitary
+//number anyway...
+#define VERSION "10.1.24"
 
 
 //defines for different compiles
@@ -30,7 +33,7 @@
 #define USE_OPENING_BOOK
 
 #ifndef WIN32
-#define UNICODE
+#define UNICODE_
 #endif
 
 //time in seconds
@@ -94,8 +97,8 @@
 //for the status of the game!
 #define STATUS_NORMAL          0
 #define STATUS_CHECK           1
-#define STATUS_WHITE_CHECKMATE 2
-#define STATUS_BLACK_CHECKMATE 3
+#define STATUS_WHITE_MATES     2
+#define STATUS_BLACK_MATES     3
 #define STATUS_STALEMATE       4
 #define STATUS_DRAW            5
 #define STATUS_WHITE_WINS      6
@@ -228,6 +231,8 @@ typedef struct {
 #define OPPOSITE(a) (~a+1)
 
 // unicode border symbols for a better user experience
+#ifdef UNICODE
+
 #define B_RD  "\u2554"
 #define B_LD  "\u2557"
 #define B_LU  "\u255D"
@@ -242,5 +247,24 @@ typedef struct {
 #define B_LRU "\u2569"
 
 #define B_LRUD "\u256C"
+
+#else
+
+#define B_RD  "+"
+#define B_LD  "+"
+#define B_LU  "+"
+#define B_RU  "+"
+
+#define B_LR  "-"
+#define B_UD  "|"
+
+#define B_UDR "+"
+#define B_UDL "+"
+#define B_LRD "+"
+#define B_LRU "+"
+
+#define B_LRUD "+"
+
+#endif
 
 #endif /* DEFINE_H_ */
