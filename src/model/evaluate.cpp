@@ -201,61 +201,59 @@ int evaluate(Board* b) {
     int score[2] = {0, 0};
     int material[2] = {0, 0};
     // basic loop to evaluate each piece
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        if (b->board[i] == EMPTY) {
+    for (int i = 0; i < BOARD_SIZE - 8; ++i) {
+        //skip rightmost place of the board7 (always empty)
+         if ((i & 15) == 8) // &15 = mod 16
+            i += 8;
+         if (b->board[i] == EMPTY) {
             continue;
         }
-        // white
-        if (b->board[i] > 0) {
-            switch (b->board[i]) {
-                case WHITE_PAWN:
-                    material[0] += PAWN_VALUE;
-                    score[0] += evaluate_pawn(b, i);
-                    break;
-                case WHITE_KNIGHT:
-                    material[0] += KNIGHT_VALUE;
-                    score[0] += evaluate_knight(b, i);
-                    break;
-                case WHITE_BISHOP:
-                    material[0] += BISHOP_VALUE;
-                    score[0] += evaluate_bishop(b, i);
-                    break;
-                case WHITE_ROOK:
-                    material[0] += ROOK_VALUE;
-                    score[0] += evaluate_rook(b, i);
-                    break;
-                case WHITE_QUEEN:
-                    material[0] += QUEEN_VALUE;
-                    score[0] += evaluate_queen(b, i);
-                    break;
-                case WHITE_KING:
-                    break;
-            }
-        } else {
-            switch (b->board[i]) {
-                case BLACK_PAWN:
-                    material[1] += PAWN_VALUE;
-                    score[1] += evaluate_pawn(b, i);
-                    break;
-                case BLACK_KNIGHT:
-                    material[1] += KNIGHT_VALUE;
-                    score[1] += evaluate_knight(b, i);
-                    break;
-                case BLACK_BISHOP:
-                    material[1] += BISHOP_VALUE;
-                    score[1] += evaluate_bishop(b, i);
-                    break;
-                case BLACK_ROOK:
-                    material[1] += ROOK_VALUE;
-                    score[1] += evaluate_rook(b, i);
-                    break;
-                case BLACK_QUEEN:
-                    material[1] += QUEEN_VALUE;
-                    score[1] += evaluate_queen(b, i);
-                    break;
-                case BLACK_KING:
-                    break;
-            }
+       
+        switch (b->board[i]) {
+            case WHITE_PAWN:
+                material[0] += PAWN_VALUE;
+                score[0] += evaluate_pawn(b, i);
+                break;
+            case WHITE_KNIGHT:
+                material[0] += KNIGHT_VALUE;
+                score[0] += evaluate_knight(b, i);
+                break;
+            case WHITE_BISHOP:
+                material[0] += BISHOP_VALUE;
+                score[0] += evaluate_bishop(b, i);
+                break;
+            case WHITE_ROOK:
+                material[0] += ROOK_VALUE;
+                score[0] += evaluate_rook(b, i);
+                break;
+            case WHITE_QUEEN:
+                material[0] += QUEEN_VALUE;
+                score[0] += evaluate_queen(b, i);
+                break;
+            case WHITE_KING:
+                break;
+            case BLACK_PAWN:
+                material[1] += PAWN_VALUE;
+                score[1] += evaluate_pawn(b, i);
+                break;
+            case BLACK_KNIGHT:
+                material[1] += KNIGHT_VALUE;
+                score[1] += evaluate_knight(b, i);
+                break;
+            case BLACK_BISHOP:
+                material[1] += BISHOP_VALUE;
+                score[1] += evaluate_bishop(b, i);
+                break;
+            case BLACK_ROOK:
+                material[1] += ROOK_VALUE;
+                score[1] += evaluate_rook(b, i);
+                break;
+            case BLACK_QUEEN:
+                material[1] += QUEEN_VALUE;
+                score[1] += evaluate_queen(b, i);
+                break;
+            case BLACK_KING:
+                break;
         }
     }
 
