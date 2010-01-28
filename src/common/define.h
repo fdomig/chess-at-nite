@@ -59,6 +59,8 @@
 #define THREEFOLD_REPITITION_RULE  2
 
 #define DEFAULT_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+//the game of the century.. move 18
+#define BENCHMARK_FEN "r3r1k1/pp3pbp/1qp1b1p1/2B5/2BP4/Q1n2N2/P4PPP/3R1K1R w - - 0 18"
 
 #define NO_SQUARE -1
 

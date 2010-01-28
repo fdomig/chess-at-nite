@@ -44,7 +44,7 @@ byte lookup_piece(char piece) {
     }
 }
 
-void split(string& str, vector<string>& tokens, const char delimiter) {
+void split(const string& str, vector<string>& tokens, const char delimiter) {
     // Skip delimiters at beginning.
     string::size_type lastPos = str.find_first_not_of(delimiter, 0);
     // Find first "non-delimiter".

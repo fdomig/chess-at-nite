@@ -28,7 +28,7 @@
 using namespace std;
 
 extern byte lookup_piece(char piece);
-extern void split(string& str, vector<string>& tokens, const char delimiter);
+extern void split(const string& str, vector<string>& tokens, const char delimiter);
 extern string piece_symbol(int piece);
 extern char piece_char(int piece);
 extern int get_square(const string& sq);

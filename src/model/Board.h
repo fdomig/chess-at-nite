@@ -84,7 +84,7 @@ public:
 
     Board(bool rotated = false);
 
-    Board(string& fen, bool rotated= false);
+    Board(const string& fen, bool rotated = false);
     Board(const Board& b);
     virtual ~Board();
 
