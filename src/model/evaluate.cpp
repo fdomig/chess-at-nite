@@ -284,9 +284,9 @@ int evaluate(Board* b) {
 
         //if player to move is white then black just made a castling move
         if (b->to_move == WHITE) {
-            score_black += b->history.back().m.special * BONUS_CASTELING;
+            score_black += BONUS_CASTELING;
         } else {
-            score_white += b->history.back().m.special * BONUS_CASTELING;
+            score_white += BONUS_CASTELING;
         }
     }
 
