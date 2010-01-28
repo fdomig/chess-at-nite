@@ -54,7 +54,7 @@ move ComputerPlayer::search_pv() {
     if (show_thinking) {
         printf("ply  score   time   nodes  pv\n");
     }
-    
+
     move best_moves[MAX_SEARCH_DEPTH];
     int best_scores[MAX_SEARCH_DEPTH];
     int best_moves_plys[MAX_SEARCH_DEPTH];
@@ -77,9 +77,21 @@ move ComputerPlayer::search_pv() {
                 //you have to simulate the game to print the algebraic correct
                 Board temp_board = Board(*board);
                 for (int j = 0; j < board->pv_length[0]; ++j) {
-                    if (j % 2 == 0) {
-                        cout << (j / 2 + 1) << ". ";
+
+                    if (board->to_move == BLACK) {
+                        if (j == 0) {
+                            cout << "1. ... ";
+                        } else {
+                            if ((j + 1) % 2 == 0) {
+                                cout << (j / 2 + 2)  << ". ";
+                            }
+                        }
+                    } else {
+                        if (j % 2 == 0) {
+                            cout << (j / 2 + 1) << ". ";
+                        }
                     }
+
                     printf("%s ", move_to_algebraic(board->pv[0][j], temp_board).c_str());
                     temp_board.play_move(board->pv[0][j]);
                 }

@@ -89,7 +89,7 @@ void Game::play(Player* player1, Player* player2) {
             break;
         }
 
-        cout << color << "'s move " << "[" << board->number_of_moves / 2 + 1 << "]...";
+        cout << color << " (" << board->number_of_moves / 2 + 1 << ") ";
         move next_move = player1->get_move();
 
         switch (next_move.special) {
@@ -111,12 +111,7 @@ void Game::play(Player* player1, Player* player2) {
                 status = board->to_move == WHITE ? STATUS_BLACK_WINS : STATUS_WHITE_WINS;
                 board->set_status(status);
 
-                if (status == STATUS_BLACK_WINS) {
-                    cout << "White ";
-                } else {
-                    cout << "Black ";
-                }
-                cout << "resigned... GG" << endl;
+                cout << color + " resigned... GG" << endl;
                 game_over = true;
                 break;
         }

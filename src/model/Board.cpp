@@ -656,7 +656,7 @@ ostream & operator<<(ostream& os, Board& board) {
                 break;
             case 6:
                 os << B_UD << " ";
-                os << (board.to_move == WHITE ? "White's turn: " : "Black's turn: ") << board.full_moves;
+                os << (board.to_move == WHITE ? "White's turn (" : "Black's turn (") << board.full_moves << ")";
                 break;
             case 5:
                 os << B_UD << " ";
