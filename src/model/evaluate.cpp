@@ -154,7 +154,6 @@ int evaluate_queen(Board* b, int sq) {
 
 int evaluate_king(Board* b, int sq, int material_white, int material_black) {
     int score = 0;
-
     // WHITE
     if (b->board[sq] > 0) {
         if (material_white > END_GAME_LEVEL) {
@@ -165,8 +164,8 @@ int evaluate_king(Board* b, int sq, int material_white, int material_black) {
 
         // calculate king safety
         score *= material_black;
+        //TODO: define the 3100.. what is that number???!!
         score /= 3100;
-
     } else {
         // BLACK
         if (material_black > END_GAME_LEVEL) {
@@ -174,12 +173,11 @@ int evaluate_king(Board* b, int sq, int material_white, int material_black) {
         } else {
             score += king_table_end[flip[sq]];
         }
+        // calculate king safety
+        score *= material_white;
+        //TODO: define the 3100.. what is that number???!!
+        score /= 3100;
     }
-
-    // calculate king safety
-    score *= material_black;
-    score /= 3100;
-
     return score;
 }
 
