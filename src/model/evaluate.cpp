@@ -101,12 +101,12 @@ int king_table_end[] = {
     -50, -40, -30, -20, -20, -30, -40, -50, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-#define PENALTY_DOUBLE_PAWN       8
-#define BONUS_CASTELING          16
+#define PENALTY_DOUBLE_PAWN      -8
+#define BONUS_CASTLING           16
+#define BONUS_CHECK              50
+#define BONUS_ENDGAME_PAWN_MOVE  50
 #define END_GAME_LEVEL         1500
 #define MATE_SEARCH_LEVEL       600
-#define CHECK_BONUS              50
-#define BONUS_ENDGAME_PAWN_MOVE  50
 
 int evaluate_pawn(Board* b, int sq) {
     if (b->board[sq] > 0) {
@@ -264,9 +264,9 @@ int evaluate(Board* b) {
         if (g.check_for_check_simple()) {
             //if player to move is white.. then black just made a check move.
             if (b->to_move == WHITE) {
-                score_black += CHECK_BONUS;
+                score_black += BONUS_CHECK;
             } else {
-                score_white += CHECK_BONUS;
+                score_white += BONUS_CHECK;
             }
         }
     }
@@ -284,9 +284,9 @@ int evaluate(Board* b) {
 
         //if player to move is white then black just made a castling move
         if (b->to_move == WHITE) {
-            score_black += BONUS_CASTELING;
+            score_black += BONUS_CASTLING;
         } else {
-            score_white += BONUS_CASTELING;
+            score_white += BONUS_CASTLING;
         }
     }
 
