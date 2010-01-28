@@ -41,7 +41,7 @@ Board::Board(const Board& b) {
     current_hash = b.current_hash;
 }
 
-Board::Board(string& fen, bool rotated) : rotated(rotated) {
+Board::Board(const string& fen, bool rotated) : rotated(rotated) {
     inititalize();
     vector<string> tokens;
     split(fen, tokens, ' ');
@@ -512,11 +512,7 @@ void Board::update_hash(move m) {
     key ^= hash_pieces[piece][color][m.pos_new];
 
     if (m.content != 0) {
-        if (m.special == MOVE_EN_PASSANT) {
-            key ^= hash_pieces[PAWN][color][m.pos_new - m.moved_piece * NEXT_RANK];
-        } else {
-            key ^= hash_pieces[abs(m.content) - 1][color][m.pos_new];
-        }
+        key ^= hash_pieces[abs(m.content) - 1][color][m.pos_new];
     }
 
     switch (m.special) {
