@@ -259,8 +259,9 @@ string pgn_game_result(int status) {
     return "*";
 }
 
-bool write_last_game_pgn(Board *board, const string& white, const string& black) {
-    ofstream last_game_pgn(LAST_PGN_FILE);
+bool write_last_game_pgn(const string& file_name, Board *board,
+        const string& white, const string& black) {
+    ofstream last_game_pgn(file_name.c_str());
     if (last_game_pgn.is_open()) {
         string result = pgn_game_result(board->get_status());
         time_t now;

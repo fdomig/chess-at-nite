@@ -527,7 +527,7 @@ bool MoveGenerator::check_for_threat(int square, int color, bool skip_your_own_k
     return threats.size() > 0;
 }
 
-bool MoveGenerator::check_for_check_simple(int color) {
+bool MoveGenerator::check_for_check_simple() {
     int depth;
     int piece_found;
     int new_square;
@@ -535,7 +535,7 @@ bool MoveGenerator::check_for_check_simple(int color) {
     //check for knight attacks first
     for (int *delta = DELTA_KNIGHT; *delta; delta++) {
         new_square = king_square + *delta;
-        if (!(new_square & 0x88) && board->board[new_square] * OPPONENT(color) == KNIGHT) {
+        if (!(new_square & 0x88) && board->board[new_square] * OPPONENT(board->to_move) == KNIGHT) {
             return true;
             break;
         }
@@ -548,7 +548,7 @@ bool MoveGenerator::check_for_check_simple(int color) {
             //if it's positive it's opponents!!
             //if negative then it's ours
             //if 0 then it's empty
-            piece_found = board->board[new_square] * OPPONENT(color);
+            piece_found = board->board[new_square] * OPPONENT(board->to_move);
 
             //as long as its empty continue with next square
             if (piece_found == EMPTY) {

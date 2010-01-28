@@ -48,6 +48,7 @@
 #define OPENING_BOOK_FILE "book"
 #define WAC_FILE "wac"
 #define LAST_PGN_FILE "last_game.pgn"
+#define IN_PROGRESS_PGN_FILE "game_in_progress.pgn"
 #define MAX_FILE_WIDTH            80
 
 #define BOARD_SIZE               128

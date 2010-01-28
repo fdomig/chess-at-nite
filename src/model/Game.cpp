@@ -45,7 +45,8 @@ void Game::start_game() {
     } else {
         play(black_player, white_player);
     }
-    if (write_last_game_pgn(board, white_player->get_name(), black_player->get_name())) {
+    if (write_last_game_pgn(LAST_PGN_FILE, board,
+            white_player->get_name(), black_player->get_name())) {
         cout << "The game was saved in \"" << LAST_PGN_FILE << "\"\n";
     }
     int wait = get_ms() + 2000;
@@ -126,7 +127,8 @@ void Game::play(Player* player1, Player* player2) {
 
             board->add_pgn(move_to_algebraic(next_move, *board));
             board->play_move(next_move);
-            write_last_game_pgn(board, white_player->get_name(), black_player->get_name());
+            write_last_game_pgn(IN_PROGRESS_PGN_FILE, board,
+                    white_player->get_name(), black_player->get_name());
             success = true;
             play(player2, player1);
         }

@@ -54,7 +54,7 @@ public:
     void print_debug_info();
     //if there is any threat on our king.. it will stop and return true!
     //simple version!
-    bool check_for_check_simple(int color);
+    bool check_for_check_simple();
 
 private:
     Board* board;
