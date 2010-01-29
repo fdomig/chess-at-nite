@@ -68,7 +68,7 @@ void Game::play(Player* player1, Player* player2) {
 
         //if the move (last iteration) was successfull or the undo was valid 
         if (success) {
-            cout << *board << endl;
+            cout << *board;
         }
 
 #ifdef DEBUG

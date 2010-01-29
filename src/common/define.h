@@ -21,8 +21,7 @@
 #define VERSION "10.1.28"
 
 
-//defines for different compiles
-//when in debug mode show_best_score and show_thinking are true!
+//the DEBUG flag is automatically set if you're compiling with: make mode=debug
 #define DEBUG_
 //to run a command line interface
 #define COMMAND_LINE
@@ -45,9 +44,9 @@
 #define MAX_PLY 64
 
 //File consts
-#define OPENING_BOOK_FILE "book"
-#define WAC_FILE "wac"
-#define LAST_PGN_FILE "last_game.pgn"
+#define OPENING_BOOK_FILE    "book"
+#define WAC_FILE             "wac"
+#define LAST_PGN_FILE        "last_game.pgn"
 #define IN_PROGRESS_PGN_FILE "game_in_progress.pgn"
 #define MAX_FILE_WIDTH            80
 
@@ -152,7 +151,7 @@
 
 //castling distances
 #define CASTLING_SHORT_DIST_ROOK 3
-#define CASTLING_LONG_DIST_ROOK 4
+#define CASTLING_LONG_DIST_ROOK  4
 
 //directions
 #define MV_U   NEXT_RANK //move up
@@ -169,10 +168,10 @@ typedef signed char byte;
 
 // squares for the 0x88 board
 typedef enum _SQUARE {
-    A1 = 0, A2 = 16, A3 = 32, A4 = 48, A5 = 64, A6 = 80, A7 = 96, A8 = 112,
-    B1 = 1, B2 = 17, B3 = 33, B4 = 49, B5 = 65, B6 = 81, B7 = 97, B8 = 113,
-    C1 = 2, C2 = 18, C3 = 34, C4 = 50, C5 = 66, C6 = 82, C7 = 98, C8 = 114,
-    D1 = 3, D2 = 19, D3 = 35, D4 = 51, D5 = 67, D6 = 83, D7 = 99, D8 = 115,
+    A1 = 0, A2 = 16, A3 = 32, A4 = 48, A5 = 64, A6 = 80,  A7 = 96, A8 = 112,
+    B1 = 1, B2 = 17, B3 = 33, B4 = 49, B5 = 65, B6 = 81,  B7 = 97, B8 = 113,
+    C1 = 2, C2 = 18, C3 = 34, C4 = 50, C5 = 66, C6 = 82,  C7 = 98, C8 = 114,
+    D1 = 3, D2 = 19, D3 = 35, D4 = 51, D5 = 67, D6 = 83,  D7 = 99, D8 = 115,
     E1 = 4, E2 = 20, E3 = 36, E4 = 52, E5 = 68, E6 = 84, E7 = 100, E8 = 116,
     F1 = 5, F2 = 21, F3 = 37, F4 = 53, F5 = 69, F6 = 85, F7 = 101, F8 = 117,
     G1 = 6, G2 = 22, G3 = 38, G4 = 54, G5 = 70, G6 = 86, G7 = 102, G8 = 118,
@@ -189,12 +188,12 @@ typedef union _MOVE {
     unsigned int move;
 
     struct {
-        unsigned char pos_old : 8;
-        unsigned char pos_new : 8;
-        unsigned char special : 4; // all the special moves defined above
+        unsigned char pos_old :   8;
+        unsigned char pos_new :   8;
+        unsigned char special :   4; // all the special moves defined above
         signed char moved_piece : 4;
-        signed char content : 4;
-        signed char promoted : 4;
+        signed char content :     4;
+        signed char promoted :    4;
     };
 } move;
 

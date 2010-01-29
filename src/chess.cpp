@@ -25,6 +25,7 @@
 #include "player/ComputerPlayer.h"
 #include "control/CLI.h"
 #include "common/extra_utils.h"
+#include "control/PGN.h"
 
 void test();
 
@@ -73,14 +74,17 @@ void test() {
     //two Queens vs a Queen..
     default_board = "6k1/5qq1/8/8/8/8/Q7/4K3 w - - 0 1";
 
-    //two Rooks vs a Rook..
-    default_board = "6k1/5rr1/8/8/8/8/R7/4K3 w - - 0 1";
+    default_board = DEFAULT_FEN;
 
     Board board = Board(default_board);
 
     Player* white_player = new HumanPlayer();
     Player* black_player = new ComputerPlayer();
 
+    PGN pgn;
+    pgn.load(IN_PROGRESS_PGN_FILE);
+    pgn.print_info();
+    
     Game game = Game(&board, white_player, black_player);
     game.start_game();
 

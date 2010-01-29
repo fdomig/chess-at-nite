@@ -12,8 +12,6 @@
  */
 
 
-#include <fstream>
-
 #include "extra_utils.h"
 
 int board_status(const Board& board) {

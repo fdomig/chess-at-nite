@@ -244,6 +244,7 @@ void CLI::end_game() {
 }
 
 void CLI::show_about() {
+    cout << "-----------------------------------\n";
     cout << PROJECT_NAME << " " << VERSION << " (c) 2009-2010\n";
     cout << "http://chess-at-nite.googlecode.com\n";
 }

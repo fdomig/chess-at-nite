@@ -15,6 +15,7 @@
 #define	_EXTRA_UTILS_H
 
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include "define.h"
 #include "../model/Board.h"

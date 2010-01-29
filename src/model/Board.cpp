@@ -735,7 +735,7 @@ ostream & operator<<(ostream& os, Board& board) {
     for (index = 0; index < SIZE; index++) {
         os << B_LR << B_LR;
     }
-    os << B_LU;
+    os << B_LU << endl;
 #ifdef DEBUG
     os << board.get_fen() << endl;
     os << "w_king: " << square_to_string(board.white_king);
