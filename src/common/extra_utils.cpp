@@ -307,3 +307,71 @@ bool write_last_game_pgn(const string& file_name, Board *board,
     return false;
 }
 
+#include <fstream>
+bool read_pgn_file(const char* file_name, vector<string>& pgn, string& white, string& black, int& status)
+{
+    ifstream fh(file_name);
+    if(fh.fail() || fh.bad() || fh.eof())
+    {
+        cout << "Unable to open input file " << file_name << endl;
+        return false;
+    }
+
+    while(!fh.eof())
+    {
+        string tmp;
+        fh >> tmp;  //read next word (we assume all different elements are white-space seperated!).
+
+        char end_c = 0;
+        if(tmp[0] == '[')
+            end_c = ']';
+        else if (tmp[0] == '{')
+            end_c = '}';
+
+        if(end_c != 0)
+        {
+            // parse tags and comments
+            string tagName = tmp.substr(1); //keep 1st word of field seperately (for tag name identification)
+            string tagData;
+            char c = 0;
+            while(!fh.eof() && c != end_c)
+            {
+                fh >> c;
+                if(c != end_c)
+                {
+                    if(tagName.empty() && c == ' ')
+                        tagName.swap(tagData);  //keep 1st word of field seperately (for tag name identification)
+                    else
+                        tagData += c;
+                }
+            }
+            if(end_c != '}')
+            {
+                // check header for player name tags
+                std::transform(tagName.begin(), tagName.end(), tagName.begin(), ::tolower);
+                if(tagName == "white")
+                    white = tagData;
+                else if(tagName == "black")
+                    black = tagData;
+            }
+        }
+        else
+            if(tmp.find('.') == tmp.npos )
+            {   // not a position number (these end in . or ...)
+                if(tmp == "1/2-1/2")
+                    status = STATUS_STALEMATE;
+                else if(tmp == "1-0")
+                    status = STATUS_WHITE_WINS;
+                else if(tmp == "0-1")
+                    status = STATUS_BLACK_WINS;
+                else if(tmp == "*")
+                    status = STATUS_NORMAL;
+                else
+                    pgn.push_back(tmp); //if not an end-of-game semantic, then it is a move. We assume that moves 
+                                        //appear in order! (if not you have to parse the numbers too, and do some extra processing)
+           }
+     }
+
+    return true;
+}
+
