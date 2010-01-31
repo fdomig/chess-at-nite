@@ -23,6 +23,7 @@
 #include "../player/ComputerPlayer.h"
 #include "../player/HumanPlayer.h"
 #include "../common/utils.h"
+#include "PGN.h"
 
 class Player;
 class Game;
@@ -33,7 +34,7 @@ class Board;
 #define CPU_VS_HUMAN    2
 #define HUMAN_VS_HUMAN  3
 #define CPU_VS_CPU      4
-#define SELECT_FEN      5
+#define LOAD            5
 #define SHOW_HELP       6
 #define BENCHMARK       7
 #define WAC             8
@@ -46,13 +47,17 @@ class Board;
 #define SET_SHOW_BEST_SCORE  3
 #define SET_SHOW_THINKING    4
 
+//loading defines
+#define LOAD_NEW_GAME        1
+#define LOAD_LAST_GAME       2
+#define LOAD_FROM_PGN        3
+#define LOAD_FROM_FEN        4
 
 class CLI {
 public:
     CLI();
     CLI(int option);
     virtual ~CLI();
-
     void start();
 
 private:
@@ -61,29 +66,37 @@ private:
     Player* black_player;
     Board* board;
     Game* game;
+    PGN pgn;
+    string message;
     //when the only human player is black.. 
-    bool rotated_board;
+    bool inverse_board;
     bool both_human;
     //time is in seconds
     int max_thinking_time;
     int max_search_depth;
     bool show_best_score;
     bool show_thinking;
+    bool loaded_game;
     std::string fen;
 
+
+    void show_about();
     void show_options();
+    void print_messages();
     void apply_option(int option);
     void show_settings();
-    void settings();
+    void read_settings();
     void apply_settings(int option);
+    void show_load();
+    void read_load();
+    void apply_load(int option);
     void set_max_time_from_user();
     void set_max_depth_from_user();
     int get_user_option();
     void init_game(int game_type);
     void start_game();
     void end_game();
-    void show_about();
-    void select_fen();
+    void read_fen();
     void run_benchmark();
     void run_wac_test();
     std::string get_line();

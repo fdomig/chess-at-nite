@@ -80,10 +80,6 @@ void test() {
 
     Player* white_player = new HumanPlayer();
     Player* black_player = new ComputerPlayer();
-
-    PGN pgn;
-    pgn.load(IN_PROGRESS_PGN_FILE);
-    pgn.print_info();
     
     Game game = Game(&board, white_player, black_player);
     game.start_game();

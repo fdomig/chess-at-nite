@@ -13,7 +13,7 @@
 
 #include "Board.h"
 
-Board::Board(bool rotated) : rotated(rotated) {
+Board::Board(bool inversed) : inversed(inversed) {
     inititalize();
 }
 
@@ -38,12 +38,13 @@ Board::Board(const Board& b) {
     to_move = b.to_move;
     checked_nodes = b.checked_nodes;
     time_exit = b.time_exit;
-    rotated = b.rotated;
+    inversed = b.inversed;
     status = b.status;
     current_hash = b.current_hash;
+    //TODO: copy all the hash tables...
 }
 
-Board::Board(const string& fen, bool rotated) : rotated(rotated) {
+Board::Board(const string& fen, bool inversed) : inversed(inversed) {
     inititalize();
     vector<string> tokens;
     split(fen, tokens, ' ');
@@ -162,6 +163,10 @@ void Board::set_status(int s) {
 
 int Board::get_status() {
     return status;
+}
+
+void Board::set_inversed(int inverse) {
+    inversed = inverse;
 }
 
 string Board::get_fen() {
@@ -616,13 +621,13 @@ ostream & operator<<(ostream& os, Board& board) {
 
     for (int rank = SIZE; rank > 0; rank--) {
         new_rank = rank;
-        if (board.rotated) {
+        if (board.inversed) {
             new_rank = SIZE - rank + 1;
         }
         os << B_UD << " " << new_rank << " " << B_UD << " ";
         for (int file = 0; file < SIZE; file++) {
             new_file = file;
-            if (board.rotated) {
+            if (board.inversed) {
                 new_file = SIZE - file - 1;
             }
 
@@ -643,7 +648,7 @@ ostream & operator<<(ostream& os, Board& board) {
         switch (rank) {
             case SIZE:
                 os << B_UD << " ";
-                if (board.rotated) {
+                if (board.inversed) {
                     for (index = 0; index < board.white_captures.size(); index++) {
                         os << piece_symbol(board.white_captures[index]);
                     }
@@ -685,7 +690,7 @@ ostream & operator<<(ostream& os, Board& board) {
                 break;
             case 1:
                 os << B_UD << " ";
-                if (board.rotated) {
+                if (board.inversed) {
                     for (index = 0; index < board.black_captures.size(); index++) {
                         os << piece_symbol(board.black_captures[index]);
                     }
@@ -717,7 +722,7 @@ ostream & operator<<(ostream& os, Board& board) {
     os << " " << B_UD;
 
     //file captions
-    if (!board.rotated) {
+    if (!board.inversed) {
         os << " a b c d e f g h " << B_UD;
     } else {
         os << " h g f e d c b a " << B_UD;

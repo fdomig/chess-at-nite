@@ -43,7 +43,7 @@ bool PGN::read_from_file(const string& file_name) {
     init();
     ifstream fh(file_name.c_str());
     if (fh.fail() || fh.bad() || fh.eof()) {
-        cerr << "Unable to open PGN file " << file_name << endl;
+        cerr << "Unable to open PGN file: " << file_name << endl;
         return false;
     }
 

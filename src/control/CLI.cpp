@@ -31,11 +31,13 @@ CLI::~CLI() {
 
 void CLI::init() {
     fen = DEFAULT_FEN;
-    rotated_board = false;
+    inverse_board = false;
     max_thinking_time = DEFAULT_THINKING_TIME;
     max_search_depth = MAX_SEARCH_DEPTH;
     show_best_score = false;
     show_thinking = false;
+    loaded_game = false;
+    message = "";
 }
 
 void CLI::start() {
@@ -47,13 +49,20 @@ void CLI::start() {
     }
 }
 
-void CLI::settings() {
+void CLI::read_settings() {
     int user_option = -1;
     while (user_option != QUIT) {
         show_settings();
         user_option = get_user_option();
         apply_settings(user_option);
     }
+}
+
+void CLI::read_load() {
+    int user_option = -1;
+    show_load();
+    user_option = get_user_option();
+    apply_load(user_option);
 }
 
 void CLI::apply_settings(int option) {
@@ -71,11 +80,52 @@ void CLI::apply_settings(int option) {
             show_thinking = !show_thinking;
             break;
     }
+}
 
+void CLI::apply_load(int option) {
+    string file_name = "";
+    switch (option) {
+        case LOAD_NEW_GAME:
+            loaded_game = false;
+            break;
+        case LOAD_LAST_GAME:
+        case LOAD_FROM_PGN:
+            if (option == LOAD_LAST_GAME) {
+                file_name = IN_PROGRESS_PGN_FILE;
+            } else {
+                cout << "Enter a filename: ";
+                file_name = get_line();
+            }
+            if (pgn.read_from_file(file_name)) {
+                message = "A game was loaded properly.\n";
+                loaded_game = true;
+                board = new Board(pgn.get_board());
+                int status = board_status(*board);
+                if (status == STATUS_BLACK_MATES || status == STATUS_WHITE_MATES) {
+                    if (board->undo_move()) {
+                        message += " But the last move was removed\n because of a checkmate!\n";
+                    } else {
+                        message = "Something went totally wrong \n with the file you tried to load.";
+                        loaded_game = false;
+                    }
+                }
+                message += board->to_move == WHITE ? " White" : " Black";
+                message += " is playing next.";
+            } else {
+                message = "Error opening: " + file_name;
+                loaded_game = false;
+            }
+            break;
+        case LOAD_FROM_FEN:
+            //when reading from fen loaded_game should be false. Just change the fen variable
+            read_fen();
+            message = "Your FEN hopefully will work!\n" + fen;
+            break;
+    }
 }
 
 void CLI::init_game(int game_type) {
-    rotated_board = false;
+    inverse_board = false;
     both_human = false;
     switch (game_type) {
         case HUMAN_VS_CPU:
@@ -85,7 +135,7 @@ void CLI::init_game(int game_type) {
         case CPU_VS_HUMAN:
             white_player = new ComputerPlayer();
             black_player = new HumanPlayer();
-            rotated_board = true;
+            inverse_board = true;
             break;
         case HUMAN_VS_HUMAN:
             white_player = new HumanPlayer();
@@ -121,8 +171,8 @@ void CLI::apply_option(int option) {
             start_game();
             end_game();
             break;
-        case SELECT_FEN:
-            select_fen();
+        case LOAD:
+            read_load();
             break;
         case SHOW_HELP:
             print_help();
@@ -134,7 +184,7 @@ void CLI::apply_option(int option) {
             run_wac_test();
             break;
         case SETTINGS:
-            settings();
+            read_settings();
             break;
         case QUIT:
             cout << "Thanks for playing...!! Have fun..\n";
@@ -148,7 +198,7 @@ void CLI::show_options() {
     cout << "   2. Computer vs Human\n";
     cout << "   3. Human vs Human\n";
     cout << "   4. Computer vs Computer\n";
-    cout << "   5. Load fen\n";
+    cout << "   5. Load game\n";
     cout << "   6. Help (Moves/Commands)\n";
     cout << "   7. Run Benchmark\n";
     cout << "   8. Win At Chess Test\n";
@@ -156,6 +206,16 @@ void CLI::show_options() {
     cout << "-----------------------------------\n";
     cout << "   0. Quit\n";
     cout << "-----------------------------------\n";
+    print_messages();
+}
+
+void CLI::print_messages() {
+    if (message.size() > 0) {
+        cout << " " << message << endl;
+        cout << "-----------------------------------\n";
+        //clear the message after displaying it.
+        message = "";
+    }
 }
 
 void CLI::show_settings() {
@@ -174,6 +234,17 @@ void CLI::show_settings() {
     } else {
         cout << "   4. Show what I'm thinking\n";
     }
+    cout << "-----------------------------------\n";
+    cout << "   0. Back\n";
+    cout << "-----------------------------------\n";
+}
+
+void CLI::show_load() {
+    cout << "-----------------------------------\n";
+    cout << "   1. New game\n";
+    cout << "   2. Load last unfinished game\n";
+    cout << "   3. Load a PGN file\n";
+    cout << "   4. Enter a FEN\n";
     cout << "-----------------------------------\n";
     cout << "   0. Back\n";
     cout << "-----------------------------------\n";
@@ -199,7 +270,6 @@ int CLI::get_user_option() {
 
 void CLI::set_max_time_from_user() {
     string temp;
-
     int seconds = 0;
     while (seconds == 0) {
         cout << "Current time: " << max_thinking_time << " sec\n";
@@ -215,7 +285,6 @@ void CLI::set_max_time_from_user() {
 
 void CLI::set_max_depth_from_user() {
     string temp;
-
     int depth = 0;
     while (depth == 0) {
         cout << "Current depth: " << max_search_depth << " plies\n";
@@ -230,7 +299,11 @@ void CLI::set_max_depth_from_user() {
 }
 
 void CLI::start_game() {
-    board = new Board(fen, rotated_board);
+    if (loaded_game) {
+        board->set_inversed(inverse_board);
+    } else {
+        board = new Board(fen, inverse_board);
+    }
     game = new Game(board, white_player, black_player, both_human);
     game->start_game();
 }
@@ -240,6 +313,7 @@ void CLI::end_game() {
     delete game;
     delete white_player;
     delete black_player;
+    loaded_game = false;
     fen = DEFAULT_FEN;
 }
 
@@ -249,12 +323,11 @@ void CLI::show_about() {
     cout << "http://chess-at-nite.googlecode.com\n";
 }
 
-void CLI::select_fen() {
-    //lots of knights to test the algebraic notation
-    fen = "k7/8/8/2N1N3/1N3N2/8/1N3N2/2N1N2K w - - 0 18";
+void CLI::read_fen() {
     fen = BENCHMARK_FEN;
-    Board b = Board(fen);
-    cout << b << endl;
+    cout << "Enter a FEN: ";
+    //TODO: it's not really working the way it should.. :)
+    fen = get_line();
 }
 
 /**
@@ -300,7 +373,7 @@ void CLI::run_benchmark() {
         }
         cout << "     Run #" << i + 1 << ": " << (int) nps << " nodes/sec\n";
     }
-    cout     << "  Best of 3: " << (int) (best_nps) << " nodes/sec\n";
+    cout << "  Best of 3: " << (int) (best_nps) << " nodes/sec\n";
     delete player;
     delete board;
 }

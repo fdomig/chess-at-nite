@@ -102,6 +102,7 @@ public:
 
     void set_status(int status);
     int get_status();
+    void set_inversed(int inversed);
     friend ostream & operator<<(ostream& os, Board& board);
 
 #ifdef USE_HASH_TABLE
@@ -120,7 +121,7 @@ private:
     int generate_hash();
     void update_hash(move m);
 
-    bool rotated;
+    bool inversed;
     int status;
 
     //Current hash of this position
