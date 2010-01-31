@@ -53,8 +53,6 @@ public:
     //The number of full moves
     int full_moves;
 
-    //The number of moves
-    int number_of_moves;
     //Time to stop thinking for an AI player
     int stop_time;
 

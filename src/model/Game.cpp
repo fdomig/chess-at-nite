@@ -39,7 +39,6 @@ Game::~Game() {
 
 void Game::start_game() {
     game_over = false;
-    board->number_of_moves = 0;
     if (board->to_move == WHITE) {
         play(white_player, black_player);
     } else {
@@ -90,7 +89,7 @@ void Game::play(Player* player1, Player* player2) {
             break;
         }
 
-        cout << color << " (" << board->number_of_moves / 2 + 1 << ") ";
+        cout << color << " (" << board->full_moves << ") ";
         move next_move = player1->get_move();
 
         switch (next_move.special) {

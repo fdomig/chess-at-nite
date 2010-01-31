@@ -23,6 +23,8 @@ Board::Board(const Board& b) {
     memcpy(board, b.board, sizeof (board[0]) * BOARD_SIZE);
     history.insert(history.end(), b.history.begin(), b.history.end());
     pgn.insert(pgn.end(), b.pgn.begin(), b.pgn.end());
+    black_captures.insert(black_captures.end(), b.black_captures.begin(), b.black_captures.end());
+    white_captures.insert(white_captures.end(), b.white_captures.begin(), b.white_captures.end());
 
     black_king = b.black_king;
     white_king = b.white_king;
@@ -427,6 +429,9 @@ move Board::unfake_move() {
  * This is an expensive function! Should be called only when the actual move is
  * going to be played for the game.. if you want to use something for finding
  * a best move.. use the fake_move!!!
+ *
+ * !! You have to update the pgn vector if you want to have the history in PGN!
+ * add_pgn();
  */
 void Board::play_move(move m) {
     fake_move(m);
@@ -435,7 +440,6 @@ void Board::play_move(move m) {
     } else if (m.content < EMPTY) {
         white_captures.push_back(m.content);
     }
-    number_of_moves++;
 }
 
 /*
@@ -454,7 +458,6 @@ bool Board::undo_move() {
                 white_captures.pop_back();
             }
         }
-        number_of_moves--;
         result = true;
     }
 

@@ -33,6 +33,8 @@ extern move algebraic_to_move(const string& algebraic, const Board& board);
 extern string pgn_game_result(int status);
 extern bool write_last_game_pgn(const string& file_name, Board* board,
         const string& white, const string& black);
+extern bool read_pgn_file(const char* file_name, vector<string>& pgn, 
+        string& white, string& black, int& status);
 
 #endif	/* _EXTRA_UTILS_H */
 

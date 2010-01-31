@@ -19,6 +19,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "../common/extra_utils.h"
 
 using namespace std;
 
@@ -27,10 +28,11 @@ class PGN {
 public:
     PGN();
     virtual ~PGN();
-    bool load(const string& filename);
+
+    bool read_from_file(const string& file_name);
     void print_info();
+    Board& get_board();
 private:
-    bool loaded;
     string event;
     string site;
     string date;
@@ -38,7 +40,10 @@ private:
     string white;
     string black;
     string result;
+    Board* board;
     vector<string> algebraic_moves;
+    void init();
+    bool create_board();
 };
 
 #endif	/* _PGN_H */
