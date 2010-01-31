@@ -1,7 +1,13 @@
-# Makefile for the chess project
-# written by Franziskus Domig
+# This file is part of the chess-at-nite project [chess-at-nite.googlecode.com]
 #
-# http://code.google.com/p/chess-at-nite/
+# Copyright (c) 2009-2010 by
+#   Franziskus Domig
+#   Panayiotis Lipiridis
+#   Radoslav Petrik
+#   Thai Gia Tuong
+#
+# For the full copyright and license information, please visit:
+#   http://chess-at-nite.googlecode.com/svn/trunk/doc/LICENSE
 
 CC=g++
 #to use it:
