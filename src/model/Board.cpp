@@ -17,10 +17,16 @@ Board::Board(bool inversed) : inversed(inversed) {
     inititalize();
 }
 
-//TODO: it's not copying eeeverything.. use it at your own risk!!!
+//templated function, that performs a memcpy of compile-time know size objects
+template <class T>
+void objcpy(T& dst, const T& src)
+{
+    memcpy(&dst, &src, sizeof(T));
+}
 
+//TODO: it's not copying eeeverything.. use it at your own risk!!!
 Board::Board(const Board& b) {
-    memcpy(board, b.board, sizeof (board[0]) * BOARD_SIZE);
+    objcpy(board, b.board);
     history.insert(history.end(), b.history.begin(), b.history.end());
     pgn.insert(pgn.end(), b.pgn.begin(), b.pgn.end());
     black_captures.insert(black_captures.end(), b.black_captures.begin(), b.black_captures.end());
@@ -41,7 +47,12 @@ Board::Board(const Board& b) {
     inversed = b.inversed;
     status = b.status;
     current_hash = b.current_hash;
-    //TODO: copy all the hash tables...
+
+    objcpy(hash_casteling_black, b.hash_casteling_black);
+    objcpy(hash_casteling_white, b.hash_casteling_white);
+    objcpy(hash_en_passant, b.hash_en_passant);
+    objcpy(hash_pieces, b.hash_pieces);
+    objcpy(hash_promotion, b.hash_promotion);
 }
 
 Board::Board(const string& fen, bool inversed) : inversed(inversed) {
