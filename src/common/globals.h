@@ -24,7 +24,6 @@
 
 #include <stdio.h>  /* defines FILENAME_MAX */
 #include <string.h>
-#include "define.h"
 
 static char current_path[FILENAME_MAX];
 

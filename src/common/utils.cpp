@@ -230,10 +230,7 @@ string move_to_string_simple(const move& m) {
  * 
  */
 string move_to_string_basic(const move& m) {
-    string result("");
-    result.append(square_to_string(m.pos_old));
-    result.append(square_to_string(m.pos_new));
-    return result;
+    return square_to_string(m.pos_old) + square_to_string(m.pos_new);
 }
 
 /*

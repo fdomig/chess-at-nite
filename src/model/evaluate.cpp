@@ -202,7 +202,7 @@ int evaluate(Board* b) {
     int material_white = 0;
     int material_black = 0;
     // basic loop to evaluate each piece
-    for (int square = 0; square < BOARD_SIZE - SIZE; ++square) {
+    for (int square = 0; square < BOARD_SIZE; ++square) {
         //skip rightmost place of the board7 (always empty)
         if ((square & 15) == 8) // &15 = mod 16
             square += 8;

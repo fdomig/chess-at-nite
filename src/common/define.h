@@ -50,8 +50,11 @@
 #define IN_PROGRESS_PGN_FILE "game_in_progress.pgn"
 #define MAX_FILE_WIDTH            80
 
-#define BOARD_SIZE               128
+//should be 128 because of the 0x88 but the last 8 bytes are not used
+#define BOARD_SIZE               120
 #define SIZE                       8
+#define COLORS                     2
+#define PIECES                     6
 #define FIFTY_MOVES_RULE         100
 //how many repititions of the last move in history occured, without including
 //the last move. 2 is the value to define if the same position occured three times

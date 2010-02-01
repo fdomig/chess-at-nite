@@ -58,7 +58,7 @@ void MoveGenerator::reset() {
         last_move_square = board->history.back().m.pos_new;
     }
 
-    for (int square = 0; square < BOARD_SIZE; square++) {
+    for (int square = 0; square < BOARD_SIZE; ++square) {
         legal_delta[square] = 0;
         legal_ending[square] = false;
     }

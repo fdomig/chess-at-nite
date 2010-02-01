@@ -19,9 +19,8 @@ Board::Board(bool inversed) : inversed(inversed) {
 
 //templated function, that performs a memcpy of compile-time know size objects
 template <class T>
-void objcpy(T& dst, const T& src)
-{
-    memcpy(&dst, &src, sizeof(T));
+void objcpy(T& dst, const T& src) {
+    memcpy(&dst, &src, sizeof (T));
 }
 
 //TODO: it's not copying eeeverything.. use it at your own risk!!!
@@ -111,8 +110,8 @@ Board::~Board() {
 
 void Board::inititalize() {
     status = STATUS_NORMAL;
-    for (unsigned int i = 0; i < BOARD_SIZE; i++) {
-        board[i] = EMPTY;
+    for (int square = 0; square < BOARD_SIZE; ++square) {
+        board[square] = EMPTY;
     }
     to_move = WHITE;
     en_passant = NO_SQUARE;
@@ -490,26 +489,26 @@ void Board::add_pgn(string algebraic) {
 
 void Board::initialize_hash() {
     // pieces
-    for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 2; j++) {
-            for (int k = 0; k < 120; k++) {
-                hash_pieces[i][j][k] = hash_rand();
+    for (int piece = 0; piece < PIECES; piece++) {
+        for (int color = 0; color < COLORS; color++) {
+            for (int square = 0; square < BOARD_SIZE; square++) {
+                hash_pieces[piece][color][square] = hash_rand();
             }
         }
     }
     // en passant
-    for (int i = 0; i < 120; i++) {
-        hash_en_passant[i] = hash_rand();
+    for (int square = 0; square < BOARD_SIZE; square++) {
+        hash_en_passant[square] = hash_rand();
     }
     // castling options
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i <= CASTLE_LONG; i++) {
         hash_casteling_black[i] = hash_rand();
         hash_casteling_white[i] = hash_rand();
     }
 
     // promotion pieces
-    for (int i = 0; i < 6; i++) {
-        hash_promotion[i] = hash_rand();
+    for (int piece = 0; piece < PIECES; piece++) {
+        hash_promotion[piece] = hash_rand();
     }
 
     // side
@@ -525,7 +524,7 @@ int Board::get_hash() {
 
 void Board::update_hash(move m) {
     int key = current_hash;
-    int color = m.moved_piece > 0 ? 0 : 1;
+    int color = m.moved_piece > EMPTY ? 0 : 1;
     int piece = abs(m.moved_piece) - 1;
     key ^= hash_pieces[piece][color][m.pos_old];
     key ^= hash_pieces[piece][color][m.pos_new];
@@ -560,18 +559,19 @@ void Board::update_hash(move m) {
 
 int Board::generate_hash() {
     int key = 0;
-    for (int i = 0; i < 120; i++) {
-        int piece = board[i];
-        if (piece > 0) {
-            key ^= hash_pieces[piece - 1][0][i];
-        } else if (piece < 0) {
-            key ^= hash_pieces[-piece - 1][1][i];
+    for (int square = 0; square < BOARD_SIZE; square++) {
+        int piece = board[square];
+        if (piece > EMPTY) {
+            key ^= hash_pieces[piece - 1][0][square];
+        } else if (piece < EMPTY) {
+            key ^= hash_pieces[-piece - 1][1][square];
         }
     }
     key ^= hash_casteling_white[white_castle];
     key ^= hash_casteling_black[black_castle];
-    if (to_move == BLACK)
+    if (to_move == BLACK) {
         key ^= hash_side;
+    }
     return key;
 }
 

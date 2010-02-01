@@ -126,12 +126,12 @@ private:
 
     //Current hash of this position
     int current_hash;
-    int hash_pieces[6][2][120]; // [piece][color][square];
-    int hash_casteling_white[4];
-    int hash_casteling_black[4];
-    int hash_en_passant[120];
+    int hash_pieces[PIECES][COLORS][BOARD_SIZE];
+    int hash_casteling_white[CASTLE_LONG + 1]; //to use it as index
+    int hash_casteling_black[CASTLE_LONG + 1]; //to use it as index
+    int hash_en_passant[BOARD_SIZE];
     int hash_side;
-    int hash_promotion[6];
+    int hash_promotion[PIECES];
 
 #ifdef USE_HASH_TABLE
     htentry ht[HT_SIZE];

@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     cout << "!!! DEBUG MODE IS ON !!!" << endl;
     cout << "!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 #endif
-
+    srand(time(NULL));
     init_globals();
     int user_option = 0;
     if (argc > 1) {
@@ -80,7 +80,7 @@ void test() {
 
     Player* white_player = new HumanPlayer();
     Player* black_player = new ComputerPlayer();
-    
+
     Game game = Game(&board, white_player, black_player);
     game.start_game();
 
