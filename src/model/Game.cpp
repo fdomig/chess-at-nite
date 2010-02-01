@@ -101,9 +101,7 @@ void Game::play(Player* player1, Player* player2) {
                     success = board->undo_move();
                 }
 
-                if (success) {
-                    cout << *board << endl;
-                } else {
+                if (!success) {
                     cout << "There is nothing in the history to undo.." << endl;
                 }
                 continue;

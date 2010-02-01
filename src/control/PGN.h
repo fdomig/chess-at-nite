@@ -18,6 +18,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "../common/extra_utils.h"
 
 using namespace std;

@@ -72,7 +72,7 @@ bool PGN::read_from_file(const string& file_name) {
             }
             if (end_c != '}') {
                 // check header for player name tags
-                std::transform(tagName.begin(), tagName.end(), tagName.begin(), ::tolower);
+                transform(tagName.begin(), tagName.end(), tagName.begin(), ::tolower);
                 if (tagName == "white")
                     white = tagData;
                 else if (tagName == "black")
