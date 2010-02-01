@@ -243,8 +243,8 @@ void CLI::show_load() {
     cout << "-----------------------------------\n";
     cout << "   1. New game\n";
     cout << "   2. Load last unfinished game\n";
-    cout << "   3. Load a PGN file\n";
-    cout << "   4. Enter a FEN\n";
+    cout << "   3. Load PGN file\n";
+//    cout << "   4. Load FEN ()\n";
     cout << "-----------------------------------\n";
     cout << "   0. Back\n";
     cout << "-----------------------------------\n";
