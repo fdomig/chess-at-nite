@@ -306,3 +306,11 @@ bool write_last_game_pgn(const string& file_name, Board *board,
     return false;
 }
 
+void print_history_debug(Board* board) {
+    for (unsigned i = 0; i < board->history.size(); ++i) {
+        cout << setw(3) << i << ". ";
+        cout << move_to_string_basic(board->history[i].m);
+        cout << setw(13) << board->history[i].hash;
+        cout << endl;
+    }
+}
