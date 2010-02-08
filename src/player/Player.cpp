@@ -14,8 +14,9 @@
 #include "Player.h"
 
 Player::Player() : name("unknown"), max_thinking_time(DEFAULT_THINKING_TIME),
-max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false), show_thinking(false)
- {
+max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false),
+show_thinking(false), xboard(false) {
+
 #ifdef DEBUG
     show_thinking = true;
     show_best_score = true;
@@ -53,4 +54,8 @@ void Player::set_show_thinking(bool show) {
 #ifdef DEBUG
     show_thinking = true;
 #endif
+}
+
+void Player::set_xboard(bool value) {
+    xboard = value;
 }

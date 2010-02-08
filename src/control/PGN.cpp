@@ -58,35 +58,35 @@ bool PGN::read_from_file(const string& file_name) {
 
         if (end_c != 0) {
             // parse tags and comments
-            string tagName = tmp.substr(1); //keep 1st word of field seperately (for tag name identification)
-            string tagData;
+            string tag_name = tmp.substr(1); //keep 1st word of field seperately (for tag name identification)
+            string tag_data;
             char c = 0;
             while (!fh.eof() && c != end_c) {
                 fh >> c;
                 if (c != end_c) {
-                    if (tagName.empty() && c == ' ')
-                        tagName.swap(tagData); //keep 1st word of field seperately (for tag name identification)
+                    if (tag_name.empty() && c == ' ')
+                        tag_name.swap(tag_data); //keep 1st word of field seperately (for tag name identification)
                     else
-                        tagData += c;
+                        tag_data += c;
                 }
             }
             if (end_c != '}') {
                 // check header for player name tags
-                transform(tagName.begin(), tagName.end(), tagName.begin(), ::tolower);
-                if (tagName == "white")
-                    white = tagData;
-                else if (tagName == "black")
-                    black = tagData;
-                else if (tagName == "event")
-                    event = tagData;
-                else if (tagName == "date")
-                    date = tagData;
-                else if (tagName == "site")
-                    site = tagData;
-                else if (tagName == "round")
-                    round = tagData;
-                else if (tagName == "result")
-                    result = tagData;
+                transform(tag_name.begin(), tag_name.end(), tag_name.begin(), ::tolower);
+                if (tag_name == "white")
+                    white = tag_data;
+                else if (tag_name == "black")
+                    black = tag_data;
+                else if (tag_name == "event")
+                    event = tag_data;
+                else if (tag_name == "date")
+                    date = tag_data;
+                else if (tag_name == "site")
+                    site = tag_data;
+                else if (tag_name == "round")
+                    round = tag_data;
+                else if (tag_name == "result")
+                    result = tag_data;
 
             }
         } else if (tmp.find('.') == tmp.npos) {

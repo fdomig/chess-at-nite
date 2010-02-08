@@ -26,24 +26,34 @@
 #include "control/CLI.h"
 #include "common/extra_utils.h"
 #include "control/PGN.h"
+#include "control/XBoard.h"
 
 void test();
 
 int main(int argc, char **argv) {
 #ifdef DEBUG
-    cout << "!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-    cout << "!!! DEBUG MODE IS ON !!!" << endl;
-    cout << "!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    cerr << "!!!!!!!!!!!!!!!!!!!!!!!!\n";
+    cerr << "!!! DEBUG MODE IS ON !!!\n";
+    cerr << "!!!!!!!!!!!!!!!!!!!!!!!!\n";
 #endif
     srand(time(NULL));
     init_globals();
+    bool xboard_mode = false;
     int user_option = 0;
     if (argc > 1) {
-        user_option = atoi(argv[1]);
+        string tmp(argv[1]);
+        if (tmp == "xboard") {
+            xboard_mode = true;
+        } else {
+            user_option = atoi(argv[1]);
+        }
     }
 
 #ifdef COMMAND_LINE
-    if (user_option > 0) {
+    if (xboard_mode) {
+        XBoard xboard;
+        xboard.start();
+    } else if (user_option > 0) {
         CLI cli(user_option);
     } else {
         CLI cli;

@@ -230,7 +230,12 @@ string move_to_string_simple(const move& m) {
  * 
  */
 string move_to_string_basic(const move& m) {
-    return square_to_string(m.pos_old) + square_to_string(m.pos_new);
+    string result;
+    result = square_to_string(m.pos_old) + square_to_string(m.pos_new);
+    if (m.special == MOVE_PROMOTION) {
+        result += piece_symbol(-abs(m.promoted));
+    }
+    return result;
 }
 
 /*

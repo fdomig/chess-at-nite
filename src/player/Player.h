@@ -30,6 +30,7 @@ public:
     void set_max_search_depth(int depth);
     void set_show_best_score(bool show);
     void set_show_thinking(bool show);
+    void set_xboard(bool xboard);
     string& get_name();
 protected:
     Board* board;
@@ -39,6 +40,7 @@ protected:
 
     bool show_best_score;
     bool show_thinking;
+    bool xboard;
 };
 
 #endif // PLAYER_H_

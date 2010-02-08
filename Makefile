@@ -27,7 +27,7 @@ TEMP_BIN=bin
 
 SRC_DIR=src
 COMMON_SOURCES=$(SRC_DIR)/common/utils.cpp $(SRC_DIR)/common/extra_utils.cpp
-CONTROL_SOURCES=$(SRC_DIR)/control/CLI.cpp $(SRC_DIR)/control/PGN.cpp
+CONTROL_SOURCES=$(SRC_DIR)/control/CLI.cpp $(SRC_DIR)/control/PGN.cpp $(SRC_DIR)/control/XBoard.cpp
 MODEL_SOURCES=$(SRC_DIR)/model/Board.cpp $(SRC_DIR)/model/evaluate.cpp $(SRC_DIR)/model/Game.cpp $(SRC_DIR)/model/MoveGenerator.cpp $(SRC_DIR)/model/OpeningBook.cpp
 PLAYER_SOURCES=$(SRC_DIR)/player/ComputerPlayer.cpp $(SRC_DIR)/player/HumanPlayer.cpp $(SRC_DIR)/player/Player.cpp
 SOURCES=$(SRC_DIR)/chess.cpp $(COMMON_SOURCES) $(CONTROL_SOURCES) $(MODEL_SOURCES) $(PLAYER_SOURCES)

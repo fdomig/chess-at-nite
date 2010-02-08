@@ -18,6 +18,7 @@ Player(), use_opening_book(use_book) {
     name = PROJECT_NAME;
     name.append(" ");
     name.append(VERSION);
+    cout.setf(ios::unitbuf);
 }
 
 move ComputerPlayer::get_move() {
@@ -29,13 +30,17 @@ move ComputerPlayer::get_move() {
         generator.generate_all_moves();
         vector<move>& moves = generator.get_all_moves();
         if (opening_book.get_move(moves, board->history, m)) {
-            cout << " from book: " << move_to_algebraic(m, *board) << endl;
+            if (!xboard) {
+                cout << " from book: " << move_to_algebraic(m, *board) << endl;
+            }
             return m;
         }
     }
 #endif
 
-    cout << " thinking... " << endl;
+    if (!xboard) {
+        cout << " thinking... " << endl;
+    }
     m = search_pv();
     return m;
 }
@@ -51,8 +56,8 @@ move ComputerPlayer::search_pv() {
 
     memset(board->pv, 0, sizeof (board->pv));
 
-    if (show_thinking) {
-        printf("ply  score   time   nodes  pv\n");
+    if (!xboard && show_thinking) {
+        cout << "ply  score   time   nodes  pv\n";
     }
 
     move best_moves[MAX_SEARCH_DEPTH];
@@ -68,7 +73,7 @@ move ComputerPlayer::search_pv() {
         best_moves_plys[depth] = board->pv_length[0];
         best_scores[depth] = score;
 
-        if (show_thinking) {
+        if (!xboard && show_thinking) {
             if (!board->time_exit) {
                 printf("%3d %6s %6s %7s  ", depth,
                         display_score(score),
@@ -83,7 +88,7 @@ move ComputerPlayer::search_pv() {
                             cout << "1. ... ";
                         } else {
                             if ((j + 1) % 2 == 0) {
-                                cout << (j / 2 + 2)  << ". ";
+                                cout << (j / 2 + 2) << ". ";
                             }
                         }
                     } else {
@@ -124,13 +129,15 @@ move ComputerPlayer::search_pv() {
     }
 
 #ifdef SHOW_SEARCH_INFO
-    float total_time = (float) (get_ms() - start_time) / 1000;
-    printf("%s nodes searched in %.2f secs (%.1fK nodes/sec)\n",
-            display_nodes_count(board->checked_nodes), total_time,
-            (board->checked_nodes / 1000.0) / total_time);
+    if (!xboard) {
+        float total_time = (float) (get_ms() - start_time) / 1000;
+        printf("%s nodes searched in %.2f secs (%.1fK nodes/sec)\n",
+                display_nodes_count(board->checked_nodes), total_time,
+                (board->checked_nodes / 1000.0) / total_time);
+    }
 #endif
 
-    if (show_best_score) {
+    if (!xboard && show_best_score) {
         cout << "Score for move " << move_to_algebraic(best_move, *board) << " is ";
         cout << display_score(best_score) << " (" << best_move_plys << " plys)";
         cout << endl;
