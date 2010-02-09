@@ -67,7 +67,7 @@ private:
     Board* board;
     move xboard_move;
 
-    bool flag;
+    bool show_thinking;
     bool legal_move(const string& input);
 
     int xboard_command(const string& line, vector<string>& args);

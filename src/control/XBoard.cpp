@@ -13,7 +13,7 @@
 
 #include "XBoard.h"
 
-XBoard::XBoard() : game_started(false), version(0) {
+XBoard::XBoard() : game_started(false), version(0), show_thinking(false) {
     cout.setf(ios::unitbuf);
     cerr.setf(ios::unitbuf);
 }
@@ -79,10 +79,10 @@ void XBoard::start() {
                     cout << " done=1" << endl;
                     break;
                 case XB_POST:
-                    player->set_show_thinking(true);
+                    show_thinking = true;
                     break;
                 case XB_NOPOST:
-                    player->set_show_thinking(false);
+                    show_thinking = false;
                     break;
                 case XB_USERMOVE:
                     xboard_moved();
@@ -231,6 +231,7 @@ void XBoard::xboard_moved() {
 void XBoard::computer_move() {
     int status;
     move m;
+    player->set_show_thinking(show_thinking);
     m = player->get_move();
     board->play_move(m);
     cout << "move " << move_to_algebraic(m, *board) << endl;
