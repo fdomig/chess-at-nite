@@ -118,8 +118,8 @@ void CLI::apply_load(int option) {
             break;
         case LOAD_FROM_FEN:
             //when reading from fen loaded_game should be false. Just change the fen variable
-            read_fen();
-            message = "Your FEN hopefully will work!\n" + fen;
+//            read_fen();
+//            message = "Your FEN hopefully will work!\n" + fen;
             break;
     }
 }

@@ -18,7 +18,7 @@
 //version system changed. it's a date written in the inverse order, so it's
 //always pretty obvious how recent it is and let's face it.. it's an arbitary
 //number anyway...
-#define VERSION "10.2.9"
+#define VERSION "10.2.10"
 
 
 //the DEBUG flag is automatically set if you're compiling with: make mode=debug
