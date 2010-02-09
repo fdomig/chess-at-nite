@@ -16,11 +16,6 @@
 Player::Player() : name("unknown"), max_thinking_time(DEFAULT_THINKING_TIME),
 max_search_depth(MAX_SEARCH_DEPTH), show_best_score(false),
 show_thinking(false), xboard(false) {
-
-#ifdef DEBUG
-    show_thinking = true;
-    show_best_score = true;
-#endif
 }
 
 Player::~Player() {
@@ -44,16 +39,10 @@ void Player::set_max_search_depth(int depth) {
 
 void Player::set_show_best_score(bool show) {
     show_best_score = show;
-#ifdef DEBUG
-    show_best_score = true;
-#endif
 }
 
 void Player::set_show_thinking(bool show) {
     show_thinking = show;
-#ifdef DEBUG
-    show_thinking = true;
-#endif
 }
 
 void Player::set_xboard(bool value) {

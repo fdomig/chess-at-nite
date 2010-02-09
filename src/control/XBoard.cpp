@@ -37,7 +37,6 @@ void XBoard::start() {
                 case XB_RANDOM:
                 case XB_TIME:
                 case XB_OTIM:
-                case XB_FORCE:
                 case XB_HARD:
                 case XB_COMPUTER:
                 case XB_LEVEL:
@@ -63,20 +62,24 @@ void XBoard::start() {
                     cout << "feature myname=\"" << PROJECT_NAME;
                     cout << " " << VERSION << "\" ";
                     //features on
+                    cout << " variants=\"normal\" ";
                     cout << " usermove=1 "; //send usermove before the move
                     cout << " san=1 "; //use algebraic notations for moves
                     cout << " setboard=1 "; //setting the board using FEN
+                    cout << " ping=1 ";
 
                     //features off
                     cout << " time=0 ";
                     cout << " sigint=0 ";
                     cout << " sigterm=0 ";
                     cout << " colors=0 ";
-                    cout << " ping=0 ";
                     cout << " draw=0 ";
                     cout << " analyze=0 ";
                     cout << " ics=0 ";
                     cout << " done=1" << endl;
+                    break;
+                case XB_PING:
+                    cout << "pong " << options[0] << endl;
                     break;
                 case XB_POST:
                     show_thinking = true;
@@ -87,8 +90,12 @@ void XBoard::start() {
                 case XB_USERMOVE:
                     xboard_moved();
                     break;
+                case XB_FORCE:
+                    force_mode = true;
+                    break;
                 case XB_GO:
                     computer_move();
+                    force_mode = false;
                     break;
                 case XB_REMOVE:
                     remove_move();
@@ -178,6 +185,10 @@ int XBoard::xboard_command(const string& line, vector<string>& args) {
         if (args[0] == "nopost") {
             return XB_NOPOST;
         }
+        if (args[0] == "ping") {
+            args.erase(args.begin());
+            return XB_PING;
+        }
         if (args[0] == "quit") {
             end_game();
             return XB_QUIT;
@@ -203,6 +214,7 @@ void XBoard::new_game(const string& fen) {
     player->set_xboard(true);
     player->set_board(board);
     game_started = true;
+    force_mode = false;
 }
 
 void XBoard::end_game() {
@@ -222,8 +234,9 @@ void XBoard::xboard_moved() {
     board -> set_status(status);
 
     if (pgn_game_result(status) != "*") {
-        cout << pgn_game_result(status) << " {Game over}" << endl;
-    } else {
+        cout << pgn_game_result(status);
+        cout << " {" << pgn_game_result_comment(status) << "}" << endl;
+    } else if (!force_mode) {
         computer_move();
     }
 }
@@ -233,12 +246,14 @@ void XBoard::computer_move() {
     move m;
     player->set_show_thinking(show_thinking);
     m = player->get_move();
-    board->play_move(m);
+    //do not change the order.. otherwise the algebraic notation will be wrong
     cout << "move " << move_to_algebraic(m, *board) << endl;
+    board->play_move(m);
+
     status = update_board_status(board);
-    board -> set_status(status);
     if (pgn_game_result(status) != "*") {
-        cout << pgn_game_result(status) << " {Game over}" << endl;
+        cout << pgn_game_result(status);
+        cout << " {" << pgn_game_result_comment(status) << "}" << endl;
     }
 }
 

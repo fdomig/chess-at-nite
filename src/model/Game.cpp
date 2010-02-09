@@ -62,9 +62,6 @@ void Game::play(Player* player1, Player* player2) {
     while (!game_over) {
         color = board -> to_move == WHITE ? "White" : "Black";
         status = update_board_status(board);
-
-        board -> set_status(status);
-
         //if the move (last iteration) was successfull or the undo was valid 
         if (success) {
             cout << *board;

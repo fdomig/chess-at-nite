@@ -27,6 +27,7 @@
 #define XB_XBOARD     10
 #define XB_PROTOVER   20
 #define XB_ACCEPTED   21
+#define XB_PING       22
 #define XB_NEW        30
 #define XB_RANDOM     31
 #define XB_LEVEL      32
@@ -41,7 +42,7 @@
 #define XB_RESULT     44
 #define XB_MOVE_NOW   49
 #define XB_FORCE      50
-#define XB_GO         60
+#define XB_GO         51
 #define XB_TIME       70
 #define XB_OTIM       71
 #define XB_POST       72
@@ -68,6 +69,7 @@ private:
     move xboard_move;
 
     bool show_thinking;
+    bool force_mode;
     bool legal_move(const string& input);
 
     int xboard_command(const string& line, vector<string>& args);
