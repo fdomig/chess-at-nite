@@ -73,35 +73,41 @@ move ComputerPlayer::search_pv() {
         best_moves_plys[depth] = board->pv_length[0];
         best_scores[depth] = score;
 
-        if (!xboard && show_thinking) {
+        if (show_thinking) {
             if (!board->time_exit) {
-                printf("%3d %6s %6s %7s  ", depth,
-                        display_score(score),
-                        display_time(start_time, get_ms()),
-                        display_nodes_count(board->checked_nodes));
+                if (xboard) {
+                    //ply score time nodes pv
+                    int centiseconds = (int) ((double) (get_ms() - start_time) / 10);
+                    cout << setw(3) << depth;
+                    cout << setw(7) << score << " ";
+                    cout << setw(5) << centiseconds << " ";
+                    cout << setw(8) << board->checked_nodes << " ";
+                } else {
+                    printf("%3d %6s %6s %7s  ", depth,
+                            display_score(score),
+                            display_time(start_time, get_ms()),
+                            display_nodes_count(board->checked_nodes));
+                }
                 //you have to simulate the game to print the algebraic correct
                 Board temp_board = Board(*board);
                 for (int j = 0; j < board->pv_length[0]; ++j) {
-
                     if (board->to_move == BLACK) {
                         if (j == 0) {
-                            cout << "1. ... ";
+                            cout << board->full_moves << ". ... ";
                         } else {
                             if ((j + 1) % 2 == 0) {
-                                cout << (j / 2 + 2) << ". ";
+                                cout << board->full_moves + (j / 2 + 1) << ". ";
                             }
                         }
                     } else {
                         if (j % 2 == 0) {
-                            cout << (j / 2 + 1) << ". ";
+                            cout << board->full_moves + (j / 2) << ". ";
                         }
                     }
-
-                    printf("%s ", move_to_algebraic(board->pv[0][j], temp_board).c_str());
+                    cout << move_to_algebraic(board->pv[0][j], temp_board) << " ";
                     temp_board.play_move(board->pv[0][j]);
                 }
-                printf("\n");
-                fflush(stdout);
+                cout << endl;
             }
         }
         if (abs(score) >= MATE) {

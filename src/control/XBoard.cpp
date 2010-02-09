@@ -24,6 +24,7 @@ XBoard::~XBoard() {
 
 void XBoard::start() {
     string line = "";
+    string fen;
     vector<string> options;
     int command = 0;
     while (command != XB_QUIT) {
@@ -36,8 +37,6 @@ void XBoard::start() {
                 case XB_RANDOM:
                 case XB_TIME:
                 case XB_OTIM:
-                case XB_POST:
-                case XB_NOPOST:
                 case XB_FORCE:
                 case XB_HARD:
                 case XB_COMPUTER:
@@ -47,24 +46,45 @@ void XBoard::start() {
                 case XB_NEW:
                     new_game();
                     break;
+                case XB_SETBOARD:
+                    fen = options[0];
+                    for (unsigned index = 1; index < options.size(); ++index) {
+                        fen.append(" ");
+                        fen.append(options[index]);
+                    }
+                    new_game(fen);
+                    break;
                 case XB_RESULT:
                     end_game();
                     break;
                 case XB_PROTOVER:
                     version = atoi(options[0].c_str());
-                    cerr << "can: version " << version << endl;
                     //name
                     cout << "feature myname=\"" << PROJECT_NAME;
                     cout << " " << VERSION << "\" ";
-                    //sigint off
+                    //features on
+                    cout << " usermove=1 "; //send usermove before the move
+                    cout << " san=1 "; //use algebraic notations for moves
+                    cout << " setboard=1 "; //setting the board using FEN
+
+                    //features off
+                    cout << " time=0 ";
                     cout << " sigint=0 ";
-                    //sigterm off
                     cout << " sigterm=0 ";
-                    //colors off
                     cout << " colors=0 ";
+                    cout << " ping=0 ";
+                    cout << " draw=0 ";
+                    cout << " analyze=0 ";
+                    cout << " ics=0 ";
                     cout << " done=1" << endl;
                     break;
-                case XB_MOVE:
+                case XB_POST:
+                    player->set_show_thinking(true);
+                    break;
+                case XB_NOPOST:
+                    player->set_show_thinking(false);
+                    break;
+                case XB_USERMOVE:
                     xboard_moved();
                     break;
                 case XB_GO:
@@ -77,7 +97,11 @@ void XBoard::start() {
                     undo_move();
                     break;
                 case XB_ILLEGAL_MOVE:
-                    cout << "Illegal move" << endl;
+                    cout << "Illegal move";
+                    if (board->get_status() == STATUS_CHECK) {
+                        cout << " (in check)";
+                    }
+                    cout << ": " << options[0] << endl;
                     break;
                 case XB_UNKNOWN_COMMAND:
                     cout << "Error (unkown command): " << line << endl;
@@ -86,7 +110,7 @@ void XBoard::start() {
                     end_game();
                     break;
                 default:
-                    cerr << "Default: " << command << ": " << line << endl;
+                    cerr << "#not handled: " << command << ": " << line << endl;
             }
         }
     }
@@ -94,7 +118,6 @@ void XBoard::start() {
 
 int XBoard::xboard_command(const string& line, vector<string>& args) {
     split(line, args, ' ');
-
     if (args.size() > 0) {
         if (args[0] == "xboard") {
             return XB_XBOARD;
@@ -108,6 +131,10 @@ int XBoard::xboard_command(const string& line, vector<string>& args) {
         }
         if (args[0] == "new") {
             return XB_NEW;
+        }
+        if (args[0] == "setboard") {
+            args.erase(args.begin());
+            return XB_SETBOARD;
         }
         if (args[0] == "force") {
             return XB_FORCE;
@@ -155,12 +182,11 @@ int XBoard::xboard_command(const string& line, vector<string>& args) {
             end_game();
             return XB_QUIT;
         }
-
-
-        //if you reached at this point.. probably there is a move
-        if (args.size() == 1 && (args[0].size() == 4 || args[0].size() == 5)) {
-            if (legal_move(args[0])) {
-                return XB_MOVE;
+        if (args[0] == "usermove") {
+            args.erase(args.begin());
+            xboard_move = algebraic_to_move(args[0], *board);
+            if (xboard_move.special != MOVE_ERROR) {
+                return XB_USERMOVE;
             }
             return XB_ILLEGAL_MOVE;
         }
@@ -168,11 +194,10 @@ int XBoard::xboard_command(const string& line, vector<string>& args) {
     return XB_UNKNOWN_COMMAND;
 }
 
-void XBoard::new_game() {
+void XBoard::new_game(const string& fen) {
     if (game_started) {
         end_game();
     }
-    string fen = DEFAULT_FEN;
     board = new Board(fen);
     player = new ComputerPlayer();
     player->set_xboard(true);
@@ -190,7 +215,6 @@ void XBoard::end_game() {
 
 void XBoard::xboard_moved() {
     int status;
-
     board->add_pgn(move_to_algebraic(xboard_move, *board));
     board->play_move(xboard_move);
 
@@ -208,9 +232,8 @@ void XBoard::computer_move() {
     int status;
     move m;
     m = player->get_move();
-    board->add_pgn(move_to_algebraic(m, *board));
     board->play_move(m);
-    cout << "move " << move_to_string_basic(m) << endl;
+    cout << "move " << move_to_algebraic(m, *board) << endl;
     status = update_board_status(board);
     board -> set_status(status);
     if (pgn_game_result(status) != "*") {

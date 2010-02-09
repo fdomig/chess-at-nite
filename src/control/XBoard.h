@@ -32,9 +32,10 @@
 #define XB_LEVEL      32
 #define XB_HARD       33
 #define XB_COMPUTER   34
+#define XB_SETBOARD   35
 
 
-#define XB_MOVE       40
+#define XB_USERMOVE   40
 #define XB_REMOVE     41
 #define XB_UNDO       42
 #define XB_RESULT     44
@@ -70,7 +71,7 @@ private:
     bool legal_move(const string& input);
 
     int xboard_command(const string& line, vector<string>& args);
-    void new_game();
+    void new_game(const string& fen=DEFAULT_FEN);
     void end_game();
     void xboard_moved();
     void computer_move();

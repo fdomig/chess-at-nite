@@ -236,8 +236,9 @@ move algebraic_to_move(const string& algebraic, const Board& board) {
             return moves[i];
         }
     }
-
-    return string_to_move(algebraic);
+    move m;
+    m.special = MOVE_ERROR;
+    return m;
 }
 
 string pgn_game_result(int status) {

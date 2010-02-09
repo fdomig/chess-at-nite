@@ -38,7 +38,12 @@ move HumanPlayer::get_move_from_user() {
     string input;
     cin.clear();
     cin >> input;
-    return algebraic_to_move(input, *board);
+    move m = algebraic_to_move(input, *board);
+
+    if (m.special == MOVE_ERROR) {
+        m = string_to_move(input);
+    }
+    return m;
 }
 
 move HumanPlayer::get_valid_move_from_user() {
