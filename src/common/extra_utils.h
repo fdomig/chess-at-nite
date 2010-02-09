@@ -31,6 +31,7 @@ extern void print_algebraic_moves(const vector<move>& moves, const Board& board)
 extern string strip_algebraic(const string& algebraic);
 extern move algebraic_to_move(const string& algebraic, const Board& board);
 extern string pgn_game_result(int status);
+extern string pgn_game_result_comment(int status);
 extern bool write_last_game_pgn(const string& file_name, Board* board,
         const string& white, const string& black);
 extern void print_history_debug(Board* board);

@@ -257,6 +257,24 @@ string pgn_game_result(int status) {
     return "*";
 }
 
+string pgn_game_result_comment(int status) {
+    switch (status) {
+        case STATUS_DRAW:
+            return "Draw";
+        case STATUS_STALEMATE:
+            return "Stalemate";
+        case STATUS_WHITE_MATES:
+            return "White mates";
+        case STATUS_WHITE_WINS:
+            return "Black resigned";
+        case STATUS_BLACK_MATES:
+            return "Black mates";
+        case STATUS_BLACK_WINS:
+            return "White resigned";
+    }
+    return "In progress";
+}
+
 bool write_last_game_pgn(const string& file_name, Board *board,
         const string& white, const string& black) {
     ofstream last_game_pgn(file_name.c_str());
