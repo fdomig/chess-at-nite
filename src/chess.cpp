@@ -20,7 +20,7 @@
 #ifdef WIN32
 #include <conio.h>
 #else
-#include "common/unixio.c"
+//#include "common/unixio.h"    //for future use
 #endif
 
 #include "common/define.h"
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     {
         //check cin for "xboard" message
         string inp;
-        int check_time = get_ms() + 5000;    //check for 500 msecs
+        int check_time = get_ms() + 500;    //check for 500 msecs
         while(get_ms() < check_time)
         {
 #ifdef WIN32
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
               char ch = getch();
 #else
           int chi;
-          if(kbdhit(&chi))
+          if(false) //kbdhit(&chi)) //for future usage
           {
               char ch = char(chi);
 #endif
