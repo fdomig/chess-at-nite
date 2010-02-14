@@ -60,7 +60,7 @@ bool PGN::read_from_file(const string& file_name) {
             // parse tags and comments
             string tag_name = tmp.substr(1); //keep 1st word of field seperately (for tag name identification)
             string tag_data;
-            char c = 0;
+            char c = tmp.find(end_c) == tmp.npos ? 0 : end_c;
             while (!fh.eof() && c != end_c) {
                 fh >> c;
                 if (c != end_c) {
@@ -87,7 +87,6 @@ bool PGN::read_from_file(const string& file_name) {
                     round = tag_data;
                 else if (tag_name == "result")
                     result = tag_data;
-
             }
         } else if (tmp.find('.') == tmp.npos) {
             // not a position number (these end in . or ...)

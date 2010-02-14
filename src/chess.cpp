@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+#include <conio.h>
 
 #include "common/define.h"
 #include "model/MoveGenerator.h"
@@ -46,6 +47,25 @@ int main(int argc, char **argv) {
             xboard_mode = true;
         } else {
             user_option = atoi(argv[1]);
+        }
+    }
+    else
+    {
+        //check cin for "xboard" message
+        string inp;
+        int check_time = get_ms() + 5000;    //check for 500 msecs
+        while(get_ms() < check_time)
+        {
+          if(kbhit())
+          {
+              char ch = getch();
+              inp += ch;
+              if(inp == "xboard")
+              {
+                xboard_mode = true;
+                break;
+              }
+          }
         }
     }
 
