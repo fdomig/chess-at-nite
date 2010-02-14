@@ -16,7 +16,12 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+
+#ifdef WIN32
 #include <conio.h>
+#else
+#include "common/unixio.c"
+#endif
 
 #include "common/define.h"
 #include "model/MoveGenerator.h"
@@ -56,9 +61,16 @@ int main(int argc, char **argv) {
         int check_time = get_ms() + 5000;    //check for 500 msecs
         while(get_ms() < check_time)
         {
+#ifdef WIN32
           if(kbhit())
           {
               char ch = getch();
+#else
+          int chi;
+          if(kbdhit(&chi))
+          {
+              char ch = char(chi);
+#endif
               inp += ch;
               if(inp == "xboard")
               {
