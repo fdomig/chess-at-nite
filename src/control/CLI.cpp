@@ -16,13 +16,6 @@
 CLI::CLI() {
     init();
     show_about();
-    start();
-}
-
-CLI::CLI(int option) {
-    init();
-    show_about();
-    apply_option(option);
 }
 
 CLI::~CLI() {
@@ -40,12 +33,15 @@ void CLI::init() {
     message = "";
 }
 
-void CLI::start() {
-    int user_option = -1;
-    while (user_option != QUIT) {
-        show_options();
-        user_option = get_user_option();
-        apply_option(user_option);
+void CLI::start(int option) {
+    if (option >= 0) {
+        apply_option(option);
+    } else {
+        while (option != QUIT) {
+            show_options();
+            option = get_user_option();
+            apply_option(option);
+        }
     }
 }
 
@@ -118,8 +114,8 @@ void CLI::apply_load(int option) {
             break;
         case LOAD_FROM_FEN:
             //when reading from fen loaded_game should be false. Just change the fen variable
-//            read_fen();
-//            message = "Your FEN hopefully will work!\n" + fen;
+            //            read_fen();
+            //            message = "Your FEN hopefully will work!\n" + fen;
             break;
     }
 }
@@ -244,7 +240,7 @@ void CLI::show_load() {
     cout << "   1. New game\n";
     cout << "   2. Load last unfinished game\n";
     cout << "   3. Load PGN file\n";
-//    cout << "   4. Load FEN ()\n";
+    //    cout << "   4. Load FEN ()\n";
     cout << "-----------------------------------\n";
     cout << "   0. Back\n";
     cout << "-----------------------------------\n";

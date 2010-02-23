@@ -17,12 +17,6 @@
 #include <vector>
 #include <stdlib.h>
 
-#ifdef WIN32
-#include <conio.h>
-#else
-//#include "common/unixio.h"    //for future use
-#endif
-
 #include "common/define.h"
 #include "model/MoveGenerator.h"
 #include "model/Game.h"
@@ -44,51 +38,30 @@ int main(int argc, char **argv) {
 #endif
     srand(time(NULL));
     init_globals();
-    bool xboard_mode = false;
+    bool cli_mode = false;
     int user_option = 0;
     if (argc > 1) {
         string tmp(argv[1]);
-        if (tmp == "xboard") {
-            xboard_mode = true;
+        if (tmp == "cli") {
+            cli_mode = true;
         } else {
             user_option = atoi(argv[1]);
         }
     }
-    else
-    {
-        //check cin for "xboard" message
-        string inp;
-        int check_time = get_ms() + 500;    //check for 500 msecs
-        while(get_ms() < check_time)
-        {
-#ifdef WIN32
-          if(kbhit())
-          {
-              char ch = getch();
-#else
-          int chi;
-          if(false) //kbdhit(&chi)) //for future usage
-          {
-              char ch = char(chi);
-#endif
-              inp += ch;
-              if(inp == "xboard")
-              {
-                xboard_mode = true;
-                break;
-              }
-          }
-        }
-    }
 
 #ifdef COMMAND_LINE
-    if (xboard_mode) {
-        XBoard xboard;
-        xboard.start();
-    } else if (user_option > 0) {
-        CLI cli(user_option);
-    } else {
+    if (cli_mode) {
         CLI cli;
+        cli.start();
+    } else if (user_option > 0) {
+        CLI cli;
+        cli.start(user_option);
+    } else {
+        XBoard xboard;
+        if (!xboard.start()) {
+            CLI cli;
+            cli.start();
+        }
     }
 #else
     // for testing

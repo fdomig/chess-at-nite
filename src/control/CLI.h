@@ -56,9 +56,8 @@ class Board;
 class CLI {
 public:
     CLI();
-    CLI(int option);
     virtual ~CLI();
-    void start();
+    void start(int option=-1);
 
 private:
     void init();

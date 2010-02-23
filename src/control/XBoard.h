@@ -52,6 +52,7 @@
 #define XB_UNKNOWN_COMMAND   -2
 #define XB_ILLEGAL_MOVE      -3
 #define XB_QUIT            1000
+#define ABORT              2000
 
 
 using namespace std;
@@ -60,7 +61,7 @@ class XBoard {
 public:
     XBoard();
     virtual ~XBoard();
-    void start();
+    bool start();
 private:
     bool game_started;
     int version;

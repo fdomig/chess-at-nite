@@ -22,12 +22,22 @@ XBoard::~XBoard() {
     end_game();
 }
 
-void XBoard::start() {
+bool XBoard::start() {
+    cout << "# " << PROJECT_NAME << " " << VERSION << ", (c) 2009-2010\n";
+    cout << "# The default mode is using xboard commands for graphical user interface.\n";
+#ifndef WIN32
+    cout << "#    Download and run XBoard using this command:\n";
+    cout << "#    xboard -fcp \"./chess-at-nite\" -fd \"/path/to/chess-at-nite/bin/\"\n";
+#else
+    cout << "#    Download and run WinBoard by providing \"chess-at-nite.exe\" as an engine.\n";
+#endif
+    cout << "# If you want to play chess using the command line interface type \"cli\".\n";
+
     string line = "";
     string fen;
     vector<string> options;
     int command = 0;
-    while (command != XB_QUIT) {
+    while (command != XB_QUIT && command != ABORT) {
         if (getline(cin, line)) {
             options.clear();
             command = xboard_command(line, options);
@@ -116,11 +126,15 @@ void XBoard::start() {
                 case XB_QUIT:
                     end_game();
                     break;
+                case ABORT:
+                    break;
                 default:
                     cerr << "#not handled: " << command << ": " << line << endl;
             }
         }
     }
+
+    return command == XB_QUIT;
 }
 
 int XBoard::xboard_command(const string& line, vector<string>& args) {
@@ -190,8 +204,10 @@ int XBoard::xboard_command(const string& line, vector<string>& args) {
             return XB_PING;
         }
         if (args[0] == "quit") {
-            end_game();
             return XB_QUIT;
+        }
+        if (args[0] == "cli") {
+            return ABORT;
         }
         if (args[0] == "usermove") {
             args.erase(args.begin());
