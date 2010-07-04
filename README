@@ -1,1 +1,26 @@
-Get more information at http://code.google.com/p/chess-at-nite/
+This project page is about the chess engine chess-at-nite.
+
+The program is written by
+	Franziskus Domig,
+	Panayiotis Lipiridis,
+	Radoslav Petrik,
+	Thai Gia Tuong.
+
+chess-at-nite is a chess engine written in C/C++. It supports the usage
+of xboard/winboard for a graphical representation.
+
+chess-at-nite uses a x88 board representation to do fast move generation
+and calculations. The basic search algorithm is a heavly modified alpha-
+beta implementation with several heuristics.
+
+You can try using xboard/winboard support by starting xboard using the
+chess-at-nite engine (Mac OSX/Linux):
+
+$ xboard -fcp "./chess-at-nite" -fd "/path/to/chess-at-nite/bin/"
+
+or downloading a bundled Windows version at
+http://code.google.com/p/chess-at-nite/
+
+
+chess-at-nite is released under the MIT License. See LICENSE.
+Feel free to download, modify, test and contribute to this project. 
