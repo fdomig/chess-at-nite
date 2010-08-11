@@ -53,7 +53,7 @@ extern bool is_legal_move(const vector<move>& moves, move& m);
 
 extern int get_ms();
 
-extern int hash_rand();
+extern hash_t hash_rand();
 extern move string_to_move(const string& text);
 extern void print_help();
 

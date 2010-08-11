@@ -11,6 +11,9 @@
  *   http://chess-at-nite.googlecode.com/svn/trunk/doc/LICENSE
  */
 
+#include <stdlib.h>
+#include <stdint.h>
+
 #ifndef DEFINE_H_
 #define DEFINE_H_
 
@@ -22,7 +25,7 @@
 
 
 //the DEBUG flag is automatically set if you're compiling with: make mode=debug
-#define DEBUG_
+#define DEBUG
 //to run a command line interface
 #define COMMAND_LINE
 #define SHOW_SEARCH_INFO
@@ -32,7 +35,7 @@
 #define USE_OPENING_BOOK
 
 #ifndef WIN32
-#define UNICODE
+#define UNICODE_
 #endif
 
 //time in seconds
@@ -200,13 +203,16 @@ typedef union _MOVE {
     };
 } move;
 
+typedef uint64_t hash_t;
+//typedef int hash_t;
+
 typedef struct _HISTORY_ITEM {
     move m;
     int white_castle;
     int black_castle;
     int en_passant;
     int fifty_moves;
-    int hash;
+    hash_t hash;
 } history_item;
 
 #ifdef USE_HASH_TABLE
@@ -221,7 +227,7 @@ typedef struct {
     int score;
     int depth;
     int wtm;
-    int key;
+    hash_t key;
     move best;
     htype type;
 

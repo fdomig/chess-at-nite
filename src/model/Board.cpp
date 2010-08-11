@@ -518,12 +518,12 @@ void Board::initialize_hash() {
     current_hash = generate_hash();
 }
 
-int Board::get_hash() {
+hash_t Board::get_hash() {
     return current_hash;
 }
 
 void Board::update_hash(move m) {
-    int key = current_hash;
+    hash_t key = current_hash;
     int color = m.moved_piece > EMPTY ? 0 : 1;
     int piece = abs(m.moved_piece) - 1;
     key ^= hash_pieces[piece][color][m.pos_old];
@@ -557,8 +557,8 @@ void Board::update_hash(move m) {
     current_hash = key;
 }
 
-int Board::generate_hash() {
-    int key = 0;
+hash_t Board::generate_hash() {
+    hash_t key = 0;
     for (int square = 0; square < BOARD_SIZE; square++) {
         int piece = board[square];
         if (piece > EMPTY) {
@@ -601,7 +601,7 @@ htype Board::hash_probe(int depth, int* alpha, int beta) {
     return NO;
 }
 
-htentry* Board::hash_entry(int key) {
+htentry* Board::hash_entry(hash_t key) {
     return &ht[(unsigned) key % HT_SIZE];
 }
 
@@ -757,6 +757,7 @@ ostream & operator<<(ostream& os, Board& board) {
     os << B_LU << endl;
 #ifdef DEBUG
     os << board.get_fen() << endl;
+    os << "Hash: " << board.get_hash() << endl;
     os << "w_king: " << square_to_string(board.white_king);
     os << "  b_king: " << square_to_string(board.black_king) << endl;
 #endif

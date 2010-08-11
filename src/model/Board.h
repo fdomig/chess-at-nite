@@ -98,7 +98,7 @@ public:
     bool undo_move();
     void add_pgn(string algebraic);
 
-    int get_hash();
+    hash_t get_hash();
 
     void set_status(int status);
     int get_status();
@@ -108,7 +108,7 @@ public:
 #ifdef USE_HASH_TABLE
     htype hash_probe(int depth, int* alpha, int beta);
     void hash_store(int depth, htype type, int score, move best);
-    htentry* hash_entry(int key);
+    htentry* hash_entry(hash_t key);
 #endif
 
 
@@ -118,20 +118,20 @@ private:
     move parse_input(string& input);
 
     void initialize_hash();
-    int generate_hash();
+    hash_t generate_hash();
     void update_hash(move m);
 
     bool inversed;
     int status;
 
     //Current hash of this position
-    int current_hash;
-    int hash_pieces[PIECES][COLORS][BOARD_SIZE];
-    int hash_casteling_white[CASTLE_LONG + 1]; //to use it as index
-    int hash_casteling_black[CASTLE_LONG + 1]; //to use it as index
-    int hash_en_passant[BOARD_SIZE];
-    int hash_side;
-    int hash_promotion[PIECES];
+    hash_t current_hash;
+    hash_t hash_pieces[PIECES][COLORS][BOARD_SIZE];
+    hash_t hash_casteling_white[CASTLE_LONG + 1]; //to use it as index
+    hash_t hash_casteling_black[CASTLE_LONG + 1]; //to use it as index
+    hash_t hash_en_passant[BOARD_SIZE];
+    hash_t hash_side;
+    hash_t hash_promotion[PIECES];
 
 #ifdef USE_HASH_TABLE
     htentry ht[HT_SIZE];

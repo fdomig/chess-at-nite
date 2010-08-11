@@ -458,11 +458,11 @@ string int_to_string(int i) {
     return ss.str();
 }
 
-int hash_rand() {
-    int i;
-    int r = 0;
+hash_t hash_rand() {
+    hash_t i;
+    hash_t r = 0;
 
-    for (i = 0; i < 32; ++i)
+    for (i = 0; i < 64; ++i)
         r ^= rand() << i;
     return r;
 }
