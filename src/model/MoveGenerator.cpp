@@ -242,8 +242,11 @@ void MoveGenerator::generate_move_pawn(int old_square, int new_square, bool star
     possible_move.pos_new = new_square;
     possible_move.special = MOVE_ORDINARY;
     possible_move.promoted = EMPTY;
-
-    if (!king_under_check || legal_ending[new_square]) {
+    // if king is under check, verify whether an en_passant can remove this threat	
+    bool en_passant_removes_threat = false;
+    if (king_under_check && board->en_passant == new_square) 
+    	en_passant_removes_threat = legal_ending[new_square + (MV_D * board->to_move)];
+    if ((!king_under_check || legal_ending[new_square]) || en_passant_removes_threat) {
         //attacks or en passant
         if (FILE(old_square) != FILE(new_square)) {
             //!! en passanto
