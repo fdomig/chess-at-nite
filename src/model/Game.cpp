@@ -13,7 +13,16 @@
 
 #include "Game.h"
 
-using namespace std;
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
 
 Game::Game(Board* board, Player* new_white_player, Player* new_black_player,
         bool both_human) :

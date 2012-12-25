@@ -13,6 +13,11 @@
 
 #include "utils.h"
 
+using std::cout;
+using std::endl;
+using std::setw;
+using std::stringstream;
+
 byte lookup_piece(char piece) {
     switch (piece) {
         case 'K':
@@ -44,13 +49,13 @@ byte lookup_piece(char piece) {
     }
 }
 
-void split(const string& str, vector<string>& tokens, const char delimiter) {
+void split(const std::string& str, std::vector<std::string>& tokens, const char delimiter) {
     // Skip delimiters at beginning.
-    string::size_type lastPos = str.find_first_not_of(delimiter, 0);
+    std::string::size_type lastPos = str.find_first_not_of(delimiter, 0);
     // Find first "non-delimiter".
-    string::size_type pos = str.find_first_of(delimiter, lastPos);
+    std::string::size_type pos = str.find_first_of(delimiter, lastPos);
 
-    while (string::npos != pos || string::npos != lastPos) {
+    while (std::string::npos != pos || std::string::npos != lastPos) {
         // Found a token, add it to the vector.
         tokens.push_back(str.substr(lastPos, pos - lastPos));
         // Skip delimiters.  Note the "not_of"
@@ -60,7 +65,7 @@ void split(const string& str, vector<string>& tokens, const char delimiter) {
     }
 }
 
-string string_to_lower(string str) {
+std::string string_to_lower(std::string str) {
     for (unsigned i = 0; i < strlen(str.c_str()); i++) {
         if (str[i] >= 'A' && str[i] <= 'Z') {
             str[i] = str[i] + 0x20;
@@ -72,7 +77,7 @@ string string_to_lower(string str) {
 /*
  * Replaces the previous piece_char
  */
-string piece_symbol(int piece) {
+std::string piece_symbol(int piece) {
 #ifdef UNICODE
     switch (piece) {
         case WHITE_KING:
@@ -159,7 +164,7 @@ char piece_char(int piece) {
     return '.';
 }
 
-string square_names[] = {
+std::string square_names[] = {
     "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "##", "##", "##", "##", "##", "##", "##", "##",
     "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "##", "##", "##", "##", "##", "##", "##", "##",
     "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "##", "##", "##", "##", "##", "##", "##", "##",
@@ -170,7 +175,7 @@ string square_names[] = {
     "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "##", "##", "##", "##", "##", "##", "##", "##",
 };
 
-string square_to_string(int index) {
+std::string square_to_string(int index) {
     if (index == NO_SQUARE) {
         return "-";
     }
@@ -209,8 +214,8 @@ void print_legal_endings(bool* table) {
     }
 }
 
-string move_to_string_simple(const move& m) {
-    string result = "";
+std::string move_to_string_simple(const move& m) {
+    std::string result = "";
     result.append(piece_symbol(m.moved_piece));
     result.append(": ");
     result.append(square_to_string(m.pos_old));
@@ -229,8 +234,8 @@ string move_to_string_simple(const move& m) {
  * departure/destination squares.
  * 
  */
-string move_to_string_basic(const move& m) {
-    string result;
+std::string move_to_string_basic(const move& m) {
+    std::string result;
     result = square_to_string(m.pos_old) + square_to_string(m.pos_new);
     if (m.special == MOVE_PROMOTION) {
         result += piece_symbol(-abs(m.promoted));
@@ -241,8 +246,8 @@ string move_to_string_basic(const move& m) {
 /*
  * Always returns string of 4 characters with pos_old and pos_new
  */
-string move_to_string_very_basic(const move& m) {
-    string result("");
+std::string move_to_string_very_basic(const move& m) {
+    std::string result("");
     result.append(square_to_string(m.pos_old));
     result.append(square_to_string(m.pos_new));
     return result;
@@ -252,7 +257,7 @@ string move_to_string_very_basic(const move& m) {
  * String representation of the move..
  * define the length of that string if you want to..
  */
-string move_to_string(const move& m, unsigned int length) {
+std::string move_to_string(const move& m, unsigned int length) {
     int unicodes = 0;
 
 #ifdef UNICODE
@@ -261,7 +266,7 @@ string move_to_string(const move& m, unsigned int length) {
         unicodes += 2;
     }
 #endif
-    string result = move_to_string_simple(m);
+    std::string result = move_to_string_simple(m);
 
     switch (m.special) {
         case MOVE_ORDINARY:
@@ -292,7 +297,7 @@ string move_to_string(const move& m, unsigned int length) {
     return result;
 }
 
-string empty_square_to_string(int square) {
+std::string empty_square_to_string(int square) {
     if ((RANK(square) + FILE(square)) & 1) {
         return ".";
     } else {
@@ -305,7 +310,7 @@ string empty_square_to_string(int square) {
  * Translates the square from a string format to index of our board
  *  'E4' > 52
  */
-int get_square(const string& sq) {
+int get_square(const std::string& sq) {
     if (toupper(sq[0]) >= 'A' && toupper(sq[0]) <= 'H' && toupper(sq[1]) >= '1' && toupper(sq[1]) <= '8') {
         return (toupper(sq[0]) - 'A') * NEXT_FILE + (toupper(sq[1]) - '1') * NEXT_RANK;
     }
@@ -330,8 +335,8 @@ bool operator ==(const move& m1, const move& m2) {
     return (m1.pos_new == m2.pos_new) && (m1.pos_old == m2.pos_old);
 }
 
-bool is_legal_move(const vector<move>& moves, move& m) {
-    for (vector<move>::const_iterator it = moves.begin(); it != moves.end(); ++it) {
+bool is_legal_move(const std::vector<move>& moves, move& m) {
+    for (std::vector<move>::const_iterator it = moves.begin(); it != moves.end(); ++it) {
         if (*it == m) {
             if (m.special == MOVE_PROMOTION) {
                 //if it's the promotion move.. then the moved_piece is the pawn (-1 or 1)
@@ -350,7 +355,7 @@ bool is_legal_move(const vector<move>& moves, move& m) {
     return false;
 }
 
-move string_to_move(const string& text) {
+move string_to_move(const std::string& text) {
     move m;
     m.special = MOVE_ERROR;
 
@@ -410,7 +415,7 @@ move string_to_move(const string& text) {
     return m;
 }
 
-void print_moves(const vector<move>& moves) {
+void print_moves(const std::vector<move>& moves) {
     if (moves.size() == 0) {
         cout << "No available moves... :(" << endl;
         return;
@@ -429,7 +434,7 @@ void print_moves(const vector<move>& moves) {
     cout << "-----------------------------------" << endl;
 }
 
-void print_history(const vector<string>& history) {
+void print_history(const std::vector<std::string>& history) {
     if (history.size() == 0) {
         cout << "Nothing in the history..." << endl;
         return;
@@ -452,7 +457,7 @@ void print_history(const vector<string>& history) {
     cout << "-----------------------------------" << endl;
 }
 
-string int_to_string(int i) {
+std::string int_to_string(int i) {
     stringstream ss;
     ss << i;
     return ss.str();

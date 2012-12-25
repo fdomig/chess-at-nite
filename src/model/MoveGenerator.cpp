@@ -13,6 +13,17 @@
 
 #include "MoveGenerator.h"
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
+
 #define KING_MOVES    8
 #define QUEEN_MOVES   8
 #define ROOK_MOVES    4

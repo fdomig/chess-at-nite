@@ -13,6 +13,17 @@
 
 #include "XBoard.h"
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
+
 XBoard::XBoard() : game_started(false), version(0), show_thinking(false) {
     cout.setf(ios::unitbuf);
     cerr.setf(ios::unitbuf);

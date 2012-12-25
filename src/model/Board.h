@@ -22,7 +22,9 @@
 #include "../common/define.h"
 #include "../common/utils.h"
 
-using namespace std;
+using std::string;
+using std::ostream;
+using std::vector;
 
 /*
  * Class to represent a chess board.

@@ -25,36 +25,39 @@
 
 #include "define.h"
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::setw;
+using std::stringstream;
 
 extern byte lookup_piece(char piece);
-extern void split(const string& str, vector<string>& tokens, const char delimiter);
-extern string piece_symbol(int piece);
+extern void split(const std::string& str, std::vector<std::string>& tokens, const char delimiter);
+extern std::string piece_symbol(int piece);
 extern char piece_char(int piece);
-extern int get_square(const string& sq);
-extern string square_to_string(int index);
-extern string get_piece_unicode(int piece);
+extern int get_square(const std::string& sq);
+extern std::string square_to_string(int index);
+extern std::string get_piece_unicode(int piece);
 extern void print_possible_deltas(int* table);
 extern void print_legal_endings(bool* table);
 
-extern string move_to_string(const move& m, unsigned int length=0);
-extern string empty_square_to_string(int square);
-extern string move_to_string_simple(const move& m);
-extern string move_to_string_basic(const move& m);
-extern string move_to_string_very_basic(const move& m);
-extern string string_to_lower(string str);
+extern std::string move_to_string(const move& m, unsigned int length=0);
+extern std::string empty_square_to_string(int square);
+extern std::string move_to_string_simple(const move& m);
+extern std::string move_to_string_basic(const move& m);
+extern std::string move_to_string_very_basic(const move& m);
+extern std::string string_to_lower(std::string str);
 extern int get_promoted_piece(const char piece);
 bool operator == (const move& m1, const move& m2);
 
-extern void print_moves(const vector<move>& moves);
-extern void print_history(const vector<string>& history);
-extern string int_to_string(int);
-extern bool is_legal_move(const vector<move>& moves, move& m);
+extern void print_moves(const std::vector<move>& moves);
+extern void print_history(const std::vector<std::string>& history);
+extern std::string int_to_string(int);
+extern bool is_legal_move(const std::vector<move>& moves, move& m);
 
 extern int get_ms();
 
 extern int hash_rand();
-extern move string_to_move(const string& text);
+extern move string_to_move(const std::string& text);
 extern void print_help();
 
 extern char* display_nodes_count(float nodes);

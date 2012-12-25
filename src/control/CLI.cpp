@@ -13,6 +13,14 @@
 
 #include "CLI.h"
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+
 CLI::CLI() {
     init();
     show_about();

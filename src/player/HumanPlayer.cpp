@@ -13,7 +13,16 @@
 
 #include "HumanPlayer.h"
 
-using namespace std;
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
 
 HumanPlayer::HumanPlayer(): Player() {
     name = "Human Player";

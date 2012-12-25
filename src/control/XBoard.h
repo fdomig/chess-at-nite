@@ -55,7 +55,8 @@
 #define ABORT              2000
 
 
-using namespace std;
+using std::string;
+using std::vector;
 
 class XBoard {
 public:

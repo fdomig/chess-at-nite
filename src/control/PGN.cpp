@@ -13,6 +13,15 @@
 
 #include "PGN.h"
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+
 PGN::PGN() {
     init();
 }

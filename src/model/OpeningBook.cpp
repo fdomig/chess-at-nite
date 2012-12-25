@@ -14,6 +14,17 @@
 #include "OpeningBook.h"
 #include <algorithm>
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
+
 OpeningBook::OpeningBook() {
     srand(time(NULL));
     book_file.open(OPENING_BOOK_FILE);

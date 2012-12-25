@@ -13,6 +13,17 @@
 
 #include "Board.h"
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
+
 Board::Board(bool inversed) : inversed(inversed) {
     inititalize();
 }

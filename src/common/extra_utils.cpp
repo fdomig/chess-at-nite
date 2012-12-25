@@ -13,6 +13,12 @@
 
 #include "extra_utils.h"
 
+using std::cout;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+
 int board_status(const Board& board) {
     Board b = Board(board);
     MoveGenerator move_generator(&b);

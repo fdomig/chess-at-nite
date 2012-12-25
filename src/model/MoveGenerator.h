@@ -21,7 +21,9 @@
 #include "../common/utils.h"
 #include "Board.h"
 
-using namespace std;
+using std::string;
+using std::vector;
+using std::multiset;
 
 class CompareCaptureMoves
 {

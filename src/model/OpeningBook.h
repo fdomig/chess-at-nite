@@ -23,7 +23,9 @@
 #include "../common/utils.h"
 #include "Board.h"
 
-using namespace std;
+using std::vector;
+using std::string;
+using std::ifstream;
 
 class OpeningBook {
 public:

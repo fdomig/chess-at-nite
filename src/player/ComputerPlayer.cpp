@@ -13,6 +13,17 @@
 
 #include "ComputerPlayer.h"
 
+using std::cout;
+using std::cerr;
+using std::cin;
+using std::endl;
+using std::setw;
+using std::ofstream;
+using std::setfill;
+using std::ifstream;
+using std::ios;
+using std::endl;
+
 ComputerPlayer::ComputerPlayer(bool use_book) :
 Player(), use_opening_book(use_book) {
     name = PROJECT_NAME;
